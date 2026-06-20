@@ -1,0 +1,198 @@
+{
+  "profile": {
+    "id": "local-admin",
+    "name": "Ehtesham Aalam",
+    "email": "admin@example.com",
+    "role": "admin",
+    "resumeUrl": "/resume/ehtesham-aalam-resume.pdf",
+    "socials": [
+      {
+        "label": "GitHub",
+        "href": "https://github.com/ehteshamaalam",
+        "icon": "Github"
+      },
+      {
+        "label": "LinkedIn",
+        "href": "https://www.linkedin.com/in/ehtesham-aalam",
+        "icon": "Linkedin"
+      },
+      {
+        "label": "Email",
+        "href": "mailto:hello@ehtesham-aalam.dev",
+        "icon": "Mail"
+      }
+    ]
+  },
+  "projects": [
+    {
+      "title": "Portfolio Admin System",
+      "slug": "portfolio-admin-system",
+      "summary": "A full-stack portfolio with CRUD dashboards, auth, uploads, and MongoDB persistence.",
+      "description": "Built with Next.js App Router, TypeScript, Mongoose, API routes, and a polished glassmorphism UI.",
+      "imageUrl": "/images/portfolio-hero.png",
+      "liveUrl": "",
+      "repoUrl": "",
+      "tags": [
+        "Next.js",
+        "TypeScript",
+        "MongoDB",
+        "Tailwind"
+      ],
+      "featured": true,
+      "status": "Live",
+      "sortOrder": 1,
+      "id": "b25d9f32-36e4-4679-80df-29401c1fa6e7",
+      "createdAt": "2026-06-14T04:32:58.714Z",
+      "updatedAt": "2026-06-14T04:32:58.714Z"
+    }
+  ],
+  "skills": [
+    {
+      "name": "Next.js",
+      "category": "Frontend",
+      "level": 88,
+      "icon": "Layers",
+      "years": 2,
+      "featured": true,
+      "sortOrder": 1,
+      "id": "b8f61605-8e80-42e3-ba6e-dd7eb7522983",
+      "createdAt": "2026-06-14T04:32:58.721Z",
+      "updatedAt": "2026-06-14T04:32:58.721Z"
+    },
+    {
+      "name": "TypeScript",
+      "category": "Frontend",
+      "level": 84,
+      "icon": "Code2",
+      "years": 2,
+      "featured": true,
+      "sortOrder": 2,
+      "id": "0ea538c0-a625-4662-9855-bb4db2a57f25",
+      "createdAt": "2026-06-14T04:32:58.721Z",
+      "updatedAt": "2026-06-14T04:32:58.721Z"
+    },
+    {
+      "name": "React",
+      "category": "Frontend",
+      "level": 86,
+      "icon": "Atom",
+      "years": 2,
+      "featured": true,
+      "sortOrder": 3,
+      "id": "a9f0a61c-471d-48eb-b343-e3666424025e",
+      "createdAt": "2026-06-14T04:32:58.721Z",
+      "updatedAt": "2026-06-14T04:32:58.721Z"
+    },
+    {
+      "name": "Tailwind CSS",
+      "category": "Design",
+      "level": 90,
+      "icon": "Palette",
+      "years": 2,
+      "featured": true,
+      "sortOrder": 4,
+      "id": "9bbe2be0-08f2-4f86-816d-cd82a7db2311",
+      "createdAt": "2026-06-14T04:32:58.721Z",
+      "updatedAt": "2026-06-14T04:32:58.721Z"
+    },
+    {
+      "name": "MongoDB",
+      "category": "Backend",
+      "level": 80,
+      "icon": "Database",
+      "years": 1,
+      "featured": true,
+      "sortOrder": 5,
+      "id": "dfba96be-ca04-4ac0-8d35-8b759d7026b8",
+      "createdAt": "2026-06-14T04:32:58.721Z",
+      "updatedAt": "2026-06-14T04:32:58.721Z"
+    },
+    {
+      "name": "Mongoose",
+      "category": "Backend",
+      "level": 78,
+      "icon": "Workflow",
+      "years": 1,
+      "featured": false,
+      "sortOrder": 6,
+      "id": "a670bb91-c556-46a3-98a7-1b8d16d33dd7",
+      "createdAt": "2026-06-14T04:32:58.721Z",
+      "updatedAt": "2026-06-14T04:32:58.721Z"
+    },
+    {
+      "name": "API Routes",
+      "category": "Backend",
+      "level": 82,
+      "icon": "Server",
+      "years": 2,
+      "featured": true,
+      "sortOrder": 7,
+      "id": "f57fdd02-2f75-45f5-a0e7-ba71e215009a",
+      "createdAt": "2026-06-14T04:32:58.721Z",
+      "updatedAt": "2026-06-14T04:32:58.721Z"
+    },
+    {
+      "name": "Framer Motion",
+      "category": "Design",
+      "level": 76,
+      "icon": "Sparkles",
+      "years": 1,
+      "featured": false,
+      "sortOrder": 8,
+      "id": "c883445b-214e-4f37-ad1a-b57558e2dd71",
+      "createdAt": "2026-06-14T04:32:58.721Z",
+      "updatedAt": "2026-06-14T04:32:58.721Z"
+    },
+    {
+      "name": "UI/UX",
+      "category": "Product",
+      "level": 83,
+      "icon": "MousePointer2",
+      "years": 2,
+      "featured": true,
+      "sortOrder": 9,
+      "id": "22750908-ab06-4fb9-8a6e-a5ccf90f4cc2",
+      "createdAt": "2026-06-14T04:32:58.721Z",
+      "updatedAt": "2026-06-14T04:32:58.721Z"
+    }
+  ],
+  "certificates": [
+    {
+      "title": "BS in Data Science and Applications",
+      "issuer": "IIT Madras",
+      "issueDate": "2026-01-01",
+      "credentialUrl": "",
+      "imageUrl": "",
+      "featured": true,
+      "sortOrder": 1,
+      "id": "96721b0e-8c11-486c-8798-d01be9d8ffa0",
+      "createdAt": "2026-06-14T04:32:58.721Z",
+      "updatedAt": "2026-06-14T04:32:58.721Z"
+    },
+    {
+      "title": "Full Stack Web Development",
+      "issuer": "Project-Based Learning",
+      "issueDate": "2025-08-01",
+      "credentialUrl": "",
+      "imageUrl": "",
+      "featured": true,
+      "sortOrder": 2,
+      "id": "26742b74-acb7-49b5-9a60-a82e00daa112",
+      "createdAt": "2026-06-14T04:32:58.721Z",
+      "updatedAt": "2026-06-14T04:32:58.721Z"
+    },
+    {
+      "title": "Modern JavaScript and TypeScript",
+      "issuer": "Self-Paced Certification",
+      "issueDate": "2025-03-01",
+      "credentialUrl": "",
+      "imageUrl": "",
+      "featured": false,
+      "sortOrder": 3,
+      "id": "909ad2f5-4e08-4469-a4e7-4f78e8ba2765",
+      "createdAt": "2026-06-14T04:32:58.721Z",
+      "updatedAt": "2026-06-14T04:32:58.721Z"
+    }
+  ],
+  "messages": []
+}
