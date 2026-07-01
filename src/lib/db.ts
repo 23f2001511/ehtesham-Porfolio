@@ -9,7 +9,6 @@ declare global {
   var mongooseCache: MongooseCache | undefined;
 }
 
-const MONGODB_URI = process.env.MONGODB_URI;
 const globalWithMongoose = globalThis as typeof globalThis & {
   mongooseCache?: MongooseCache;
 };
@@ -26,7 +25,9 @@ function getMongooseCache(): MongooseCache {
 }
 
 export async function connectToDatabase() {
-  if (!MONGODB_URI) {
+  const uri = process.env.MONGODB_URI;
+
+  if (!uri) {
     throw new Error("MONGODB_URI is not defined. Add it to your environment variables.");
   }
 
@@ -37,9 +38,14 @@ export async function connectToDatabase() {
   }
 
   if (!cache.promise) {
-    cache.promise = mongoose.connect(MONGODB_URI, {
-      bufferCommands: false
-    });
+    cache.promise = mongoose
+      .connect(uri, {
+        bufferCommands: false
+      })
+      .catch((error) => {
+        cache.promise = null;
+        throw error;
+      });
   }
 
   cache.conn = await cache.promise;

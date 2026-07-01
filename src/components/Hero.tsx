@@ -3,14 +3,12 @@
 import Image from "next/image";
 import Link from "next/link";
 import { ArrowRight, Download, Sparkles } from "lucide-react";
-import { motion, useReducedMotion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { heroStats, siteConfig } from "@/constants";
 import { usePublicProfile } from "@/hooks/usePublicProfile";
 
 export default function Hero() {
-  const reducedMotion = useReducedMotion();
   const profile = usePublicProfile();
 
   return (
@@ -27,23 +25,26 @@ export default function Hero() {
       <div className="absolute inset-x-0 bottom-0 -z-10 h-40 bg-gradient-to-t from-[#05070d] to-transparent" />
 
       <div className="section-shell grid min-h-[calc(100vh-4rem)] items-center py-16 lg:grid-cols-[1.02fr_0.98fr] lg:py-20">
-        <motion.div
-          initial={reducedMotion ? false : { opacity: 0, y: 28 }}
-          animate={reducedMotion ? undefined : { opacity: 1, y: 0 }}
-          transition={{ duration: 0.7, ease: "easeOut" }}
-          className="max-w-3xl"
-        >
-          <Badge tone="cyan" className="mb-5">
-            <Sparkles className="h-3.5 w-3.5" aria-hidden="true" />
-            Available for full-stack work
-          </Badge>
+        <div className="max-w-3xl hero-stagger">
+          <div>
+            <Badge tone="cyan" className="mb-5">
+              <Sparkles className="h-3.5 w-3.5" aria-hidden="true" />
+              Available for full-stack work
+            </Badge>
+          </div>
 
           <h1 className="text-balance text-5xl font-black leading-[1.05] text-white sm:text-6xl lg:text-7xl">
             {siteConfig.name}
           </h1>
-          <p className="mt-5 max-w-2xl text-xl font-semibold text-cyan-100 sm:text-2xl">
+
+          <p className="mt-5 max-w-2xl text-xl font-semibold sm:text-2xl" style={{
+            background: "linear-gradient(90deg, #22d3ee, #10b981)",
+            WebkitBackgroundClip: "text",
+            WebkitTextFillColor: "transparent",
+          }}>
             {siteConfig.role} building fast, elegant web products.
           </p>
+
           <p className="mt-5 max-w-2xl text-base leading-8 text-slate-300 sm:text-lg">
             {siteConfig.description} I care about the full path from schema design to UI details,
             so the finished app feels sharp and dependable.
@@ -65,13 +66,13 @@ export default function Hero() {
 
           <div className="mt-10 grid max-w-2xl grid-cols-1 gap-3 sm:grid-cols-3">
             {heroStats.map((stat) => (
-              <div key={stat.label} className="rounded-lg border border-white/12 bg-black/24 p-4 backdrop-blur-md">
-                <p className="text-2xl font-black text-white">{stat.value}</p>
-                <p className="mt-1 text-sm text-slate-300">{stat.label}</p>
+              <div key={stat.label} className="stat-card rounded-lg border border-white/12 bg-black/24 p-4 backdrop-blur-md">
+                <p className="relative z-10 text-2xl font-black text-white">{stat.value}</p>
+                <p className="relative z-10 mt-1 text-sm text-slate-300">{stat.label}</p>
               </div>
             ))}
           </div>
-        </motion.div>
+        </div>
       </div>
     </section>
   );

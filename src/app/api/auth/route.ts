@@ -86,8 +86,12 @@ export async function POST(request: Request) {
     const body = loginSchema.parse(await request.json());
 
     if (!process.env.MONGODB_URI) {
-      const adminEmail = process.env.ADMIN_EMAIL || "admin@example.com";
-      const adminPassword = process.env.ADMIN_PASSWORD || "Ehtesham123";
+      const adminEmail = process.env.ADMIN_EMAIL;
+      const adminPassword = process.env.ADMIN_PASSWORD;
+
+      if (!adminEmail || !adminPassword) {
+        return fail("ADMIN_EMAIL and ADMIN_PASSWORD must be set in environment variables.", 500);
+      }
 
       if (body.email !== adminEmail || body.password !== adminPassword) {
         return fail("Invalid email or password.", 401);

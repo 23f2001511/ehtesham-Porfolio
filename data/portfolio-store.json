@@ -43,7 +43,7 @@
       "sortOrder": 1,
       "id": "b25d9f32-36e4-4679-80df-29401c1fa6e7",
       "createdAt": "2026-06-14T04:32:58.714Z",
-      "updatedAt": "2026-06-14T04:32:58.714Z"
+      "updatedAt": "2026-06-30T09:33:02.773Z"
     }
   ],
   "skills": [
@@ -156,43 +156,6 @@
       "updatedAt": "2026-06-14T04:32:58.721Z"
     }
   ],
-  "certificates": [
-    {
-      "title": "BS in Data Science and Applications",
-      "issuer": "IIT Madras",
-      "issueDate": "2026-01-01",
-      "credentialUrl": "",
-      "imageUrl": "",
-      "featured": true,
-      "sortOrder": 1,
-      "id": "96721b0e-8c11-486c-8798-d01be9d8ffa0",
-      "createdAt": "2026-06-14T04:32:58.721Z",
-      "updatedAt": "2026-06-14T04:32:58.721Z"
-    },
-    {
-      "title": "Full Stack Web Development",
-      "issuer": "Project-Based Learning",
-      "issueDate": "2025-08-01",
-      "credentialUrl": "",
-      "imageUrl": "",
-      "featured": true,
-      "sortOrder": 2,
-      "id": "26742b74-acb7-49b5-9a60-a82e00daa112",
-      "createdAt": "2026-06-14T04:32:58.721Z",
-      "updatedAt": "2026-06-14T04:32:58.721Z"
-    },
-    {
-      "title": "Modern JavaScript and TypeScript",
-      "issuer": "Self-Paced Certification",
-      "issueDate": "2025-03-01",
-      "credentialUrl": "",
-      "imageUrl": "",
-      "featured": false,
-      "sortOrder": 3,
-      "id": "909ad2f5-4e08-4469-a4e7-4f78e8ba2765",
-      "createdAt": "2026-06-14T04:32:58.721Z",
-      "updatedAt": "2026-06-14T04:32:58.721Z"
-    }
-  ],
+  "certificates": [],
   "messages": []
 }

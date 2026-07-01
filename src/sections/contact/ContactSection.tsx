@@ -57,7 +57,7 @@ export default function ContactSection() {
         <SectionHeading
           eyebrow="Contact"
           title="Have a project, role, or collaboration in mind?"
-          description="Send a clear note and I will respond with next steps. The form stores messages securely in MongoDB for the admin dashboard."
+          description="Drop me a message through the form or email me directly. I typically respond within 24 hours."
         />
 
         <div className="grid gap-6 lg:grid-cols-[0.82fr_1.18fr]">
@@ -72,12 +72,15 @@ export default function ContactSection() {
                 and systems that need both clean data and clean UX.
               </p>
               <a
-                href={`mailto:${siteConfig.email}`}
-                className="mt-6 inline-flex items-center gap-2 text-sm font-semibold text-cyan-100 transition hover:text-white"
+                href={`mailto:${siteConfig.email}?subject=Hiring%20Inquiry%20-%20${encodeURIComponent(siteConfig.name)}`}
+                className="mt-6 inline-flex h-11 items-center justify-center gap-2 rounded-md bg-primary text-primary-foreground px-5 text-sm font-semibold shadow-lg shadow-cyan-500/20 transition hover:bg-cyan-300"
               >
                 <Mail className="h-4 w-4" aria-hidden="true" />
-                {siteConfig.email}
+                Email Me Directly
               </a>
+              <p className="mt-3 text-xs text-muted-foreground">
+                {siteConfig.email}
+              </p>
             </div>
           </Reveal>
 

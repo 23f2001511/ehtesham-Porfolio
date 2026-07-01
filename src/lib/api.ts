@@ -39,8 +39,10 @@ export function handleRouteError(error: unknown) {
     );
   }
 
+  const isDev = process.env.NODE_ENV === "development";
+
   if (error instanceof Error) {
-    return fail(error.message, 500);
+    return fail(isDev ? error.message : "Unexpected server error", 500);
   }
 
   return fail("Unexpected server error", 500);
