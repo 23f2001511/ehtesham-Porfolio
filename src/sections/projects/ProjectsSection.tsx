@@ -3,8 +3,8 @@
 import Image from "next/image";
 import Link from "next/link";
 import { ArrowUpRight, Github } from "lucide-react";
-import Reveal from "@/components/shared/Reveal";
 import SectionHeading from "@/components/shared/SectionHeading";
+import FloatingCard from "@/components/shared/FloatingCard";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { EmptyState } from "@/components/ui/empty-state";
@@ -40,8 +40,12 @@ export default function ProjectsSection() {
         ) : projects.length ? (
           <div className="grid gap-5 lg:grid-cols-3">
             {projects.map((project, index) => (
-              <Reveal key={project.slug || project.title} delay={index * 0.05}>
-                <article className="group flex h-full flex-col overflow-hidden rounded-lg border border-white/10 bg-white/[0.04] transition hover:-translate-y-1 hover:border-cyan-300/35 hover:bg-white/[0.07]">
+              <FloatingCard
+                key={project.slug || project.title}
+                delay={index * 0.08}
+                glowColor="rgba(16, 185, 129, 0.12)"
+              >
+                <article className="floating-card-inner group flex h-full flex-col overflow-hidden rounded-lg border border-white/10 bg-white/[0.04]">
                   <div className="relative aspect-[16/10] overflow-hidden bg-slate-900">
                     {project.imageUrl ? (
                       <Image
@@ -92,7 +96,7 @@ export default function ProjectsSection() {
                     </div>
                   </div>
                 </article>
-              </Reveal>
+              </FloatingCard>
             ))}
           </div>
         ) : (

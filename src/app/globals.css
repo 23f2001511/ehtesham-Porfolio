@@ -281,6 +281,51 @@ select {
   }
 }
 
+/* ── Floating card anti-gravity effect ─────────────── */
+
+.floating-card {
+  transition: box-shadow 0.3s ease;
+}
+
+.floating-card:hover {
+  box-shadow: 0 12px 40px var(--glow-color, rgba(34, 211, 238, 0.12));
+}
+
+.floating-card-inner {
+  transition: border-color 0.3s ease, background-color 0.3s ease;
+}
+
+.floating-card:hover .floating-card-inner {
+  border-color: rgba(34, 211, 238, 0.35);
+  background-color: rgba(255, 255, 255, 0.07);
+}
+
+/* ── Typing cursor blink ─────────────────────────────── */
+
+@keyframes blink-cursor {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0;
+  }
+}
+
+/* ── Anti-gravity idle float ─────────────────────────── */
+
+@keyframes idle-float {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-6px);
+  }
+}
+
+.idle-float {
+  animation: idle-float 3s ease-in-out infinite;
+}
+
 /* ── Reduced motion ─────────────────────────────── */
 
 @media (prefers-reduced-motion: reduce) {
@@ -293,3 +338,4 @@ select {
     transition-duration: 0.01ms !important;
   }
 }
+

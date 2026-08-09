@@ -104,7 +104,7 @@ export default function SocialLinksManager() {
                 id={`href-${index}`}
                 value={link.href}
                 onChange={(event) => updateLink(index, "href", event.target.value)}
-                placeholder="https://github.com/username"
+                placeholder="https://github.com/23f2001511"
               />
             </div>
             <div className="space-y-2">

@@ -11,8 +11,8 @@ import {
   Sparkles,
   Workflow
 } from "lucide-react";
-import Reveal from "@/components/shared/Reveal";
 import SectionHeading from "@/components/shared/SectionHeading";
+import FloatingCard from "@/components/shared/FloatingCard";
 import { Badge } from "@/components/ui/badge";
 import { EmptyState } from "@/components/ui/empty-state";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -62,8 +62,12 @@ export default function SkillsSection() {
               const Icon = iconMap[skill.icon as keyof typeof iconMap] ?? Code2;
 
               return (
-                <Reveal key={`${skill.name}-${skill.category}`} delay={index * 0.04}>
-                  <article className="rounded-lg border border-white/10 bg-white/[0.04] p-5 transition hover:-translate-y-1 hover:border-cyan-300/35 hover:bg-white/[0.07]">
+                <FloatingCard
+                  key={`${skill.name}-${skill.category}`}
+                  delay={index * 0.06}
+                  glowColor="rgba(34, 211, 238, 0.12)"
+                >
+                  <article className="floating-card-inner rounded-lg border border-white/10 bg-white/[0.04] p-5">
                     <div className="flex items-start justify-between gap-4">
                       <div className="grid h-11 w-11 place-items-center rounded-md border border-cyan-300/25 bg-cyan-300/10 text-cyan-100">
                         <Icon className="h-5 w-5" aria-hidden="true" />
@@ -74,13 +78,13 @@ export default function SkillsSection() {
                     <p className="mt-1 text-sm text-muted-foreground">{skill.category}</p>
                     <div className="mt-5 h-2 rounded-full bg-white/10">
                       <div
-                        className="h-full rounded-full bg-gradient-to-r from-cyan-300 to-emerald-300"
+                        className="h-full rounded-full bg-gradient-to-r from-cyan-300 to-emerald-300 transition-all duration-700"
                         style={{ width: `${skill.level}%` }}
                       />
                     </div>
                     <p className="mt-2 text-xs text-slate-400">{skill.level}% working proficiency</p>
                   </article>
-                </Reveal>
+                </FloatingCard>
               );
             })}
           </div>

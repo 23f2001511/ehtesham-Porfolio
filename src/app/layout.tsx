@@ -2,6 +2,7 @@ import "./globals.css";
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import AnimatedBackground from "@/components/AnimatedBackground";
+import ParticleBackground from "@/components/ParticleBackground";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -48,6 +49,7 @@ export default function RootLayout({
     <html lang="en" className={inter.variable}>
       <body>
         <AnimatedBackground />
+        <ParticleBackground />
         {children}
       </body>
     </html>

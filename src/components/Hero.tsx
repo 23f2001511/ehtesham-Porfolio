@@ -7,6 +7,14 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { heroStats, siteConfig } from "@/constants";
 import { usePublicProfile } from "@/hooks/usePublicProfile";
+import TypingAnimation from "@/components/TypingAnimation";
+
+const typingTexts = [
+  `Hi, I'm ${siteConfig.name}`,
+  "Full Stack Developer",
+  "Web Developer & Engineer",
+  "Next.js & TypeScript Expert",
+];
 
 export default function Hero() {
   const profile = usePublicProfile();
@@ -33,8 +41,13 @@ export default function Hero() {
             </Badge>
           </div>
 
-          <h1 className="text-balance text-5xl font-black leading-[1.05] text-white sm:text-6xl lg:text-7xl">
-            {siteConfig.name}
+          <h1 className="text-balance text-4xl font-black leading-[1.08] text-white sm:text-5xl lg:text-6xl min-h-[1.2em]">
+            <TypingAnimation
+              texts={typingTexts}
+              typingSpeed={70}
+              deletingSpeed={35}
+              pauseDuration={2500}
+            />
           </h1>
 
           <p className="mt-5 max-w-2xl text-xl font-semibold sm:text-2xl" style={{
