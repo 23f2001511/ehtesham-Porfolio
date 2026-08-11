@@ -1,78 +1,15 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useMemo } from "react";
 import { ExternalLink, RefreshCw } from "lucide-react";
-import { usePublicProfile } from "@/hooks/usePublicProfile";
-import type { ApiResponse } from "@/types";
+import { useLeetcodeData } from "../osData";
 import { AppEmptyState, AppSection, AppSurface, StatTile } from "./appShared";
-
-type LeetcodeData = {
-  username: string;
-  realName: string;
-  avatar: string;
-  ranking: number | null;
-  reputation: number | null;
-  solved: { all: number; easy: number; medium: number; hard: number };
-  submissions: { all: number; easy: number; medium: number; hard: number };
-  languages: Array<{ name: string; solved: number }>;
-  badges: Array<{ name: string; icon: string }>;
-  calendar: Record<string, number>;
-  contest: {
-    attended: number;
-    rating: number;
-    globalRanking: number | null;
-    topPercentage: number | null;
-  } | null;
-  recent: Array<{ title: string; slug: string; timestamp: number }>;
-};
 
 const DIFFICULTIES = [
   { key: "easy", label: "Easy", className: "os-progress--easy" },
   { key: "medium", label: "Medium", className: "os-progress--medium" },
   { key: "hard", label: "Hard", className: "os-progress--hard" }
 ] as const;
-
-function useLeetcodeData(username: string, resolved: boolean) {
-  const [data, setData] = useState<LeetcodeData | null>(null);
-  const [error, setError] = useState("");
-  const [loading, setLoading] = useState(false);
-  const [reloadKey, setReloadKey] = useState(0);
-
-  useEffect(() => {
-    if (!resolved || !username) {
-      return;
-    }
-    let active = true;
-    setLoading(true);
-    setError("");
-    fetch(`/api/leetcode?username=${encodeURIComponent(username)}`)
-      .then(async (response) => {
-        const payload = (await response.json()) as ApiResponse<LeetcodeData>;
-        if (!payload.success) {
-          throw new Error(payload.error);
-        }
-        if (active) {
-          setData(payload.data);
-        }
-      })
-      .catch((caught: unknown) => {
-        if (active) {
-          setData(null);
-          setError(caught instanceof Error ? caught.message : "LeetCode data unavailable.");
-        }
-      })
-      .finally(() => {
-        if (active) {
-          setLoading(false);
-        }
-      });
-    return () => {
-      active = false;
-    };
-  }, [username, resolved, reloadKey]);
-
-  return { data, error, loading, reload: () => setReloadKey((key) => key + 1) };
-}
 
 function formatDateFromSeconds(value: number) {
   const date = new Date(value * 1000);
@@ -117,9 +54,7 @@ function DifficultyBar({
 }
 
 export default function LeetcodeApp() {
-  const { profile, resolved } = usePublicProfile();
-  const username = (profile.leetcodeUsername || "").trim();
-  const { data, error, loading, reload } = useLeetcodeData(username, resolved);
+  const { data, error, loading, resolved, username, reload } = useLeetcodeData();
 
   const totalSolved = data ? data.solved.all : 0;
   const acceptance = useMemo(() => {

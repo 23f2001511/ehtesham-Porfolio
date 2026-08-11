@@ -98,6 +98,8 @@ export type UserProfile = {
   location?: string;
   githubUsername?: string;
   leetcodeUsername?: string;
+  collegeEmail?: string;
+  otherEmail?: string;
   experience?: ExperienceItem[];
   education?: EducationItem[];
 };

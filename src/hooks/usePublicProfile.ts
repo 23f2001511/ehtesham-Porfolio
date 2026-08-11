@@ -14,8 +14,10 @@ const fallbackProfile: UserProfile = {
   aboutBio: "",
   phone: "",
   location: "",
-  githubUsername: "",
-  leetcodeUsername: "",
+  githubUsername: siteConfig.githubUsername,
+  leetcodeUsername: siteConfig.leetcodeUsername,
+  collegeEmail: siteConfig.collegeEmail,
+  otherEmail: siteConfig.otherEmail,
   experience: [],
   education: []
 };

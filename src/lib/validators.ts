@@ -153,6 +153,8 @@ export const profileSchema = z.object({
   location: optionalShort,
   githubUsername: optionalShort,
   leetcodeUsername: optionalShort,
+  collegeEmail: optionalShort,
+  otherEmail: optionalShort,
   experience: z.array(experienceItemSchema).max(30).optional(),
   education: z.array(educationItemSchema).max(30).optional()
 });

@@ -14,6 +14,10 @@ import Taskbar from "./Taskbar";
 import WindowManager from "./WindowManager";
 import CommandPalette from "./CommandPalette";
 import BootScreen from "./BootScreen";
+import HeroOverlay from "./HeroOverlay";
+import WorkstationBackdrop from "./WorkstationBackdrop";
+
+const HERO_SEEN_KEY = "portfolio-os-hero-dismissed";
 
 function AppRegistrar() {
   const { registerApp } = useOS();
@@ -27,9 +31,13 @@ function AppRegistrar() {
   return null;
 }
 
-function DesktopIconGrid() {
+export function DesktopIconGrid() {
+  const { isMobile } = useOS();
+  const style = isMobile
+    ? undefined
+    : { ["--os-icon-columns" as string]: 7, top: "calc(var(--os-hero-height, 452px) + 16px)" };
   return (
-    <nav className="os-desktop-grid" aria-label="Portfolio applications">
+    <nav className="os-desktop-grid" style={style} aria-label="Portfolio applications">
       {OS_DESKTOP_APPS.map((app) => (
         <DesktopIcon key={app.id} appId={app.id as OsIconId} label={app.title} />
       ))}
@@ -47,21 +55,39 @@ function MobileNotice() {
 }
 
 function OSShell() {
-  const { isMobile, openApp } = useOS();
+  const { isMobile, windows } = useOS();
   const reducedMotion = usePrefersReducedMotion();
   const [booted, setBooted] = useState(false);
+  const [heroVisible, setHeroVisible] = useState(false);
 
-  const finishBoot = useCallback(() => setBooted(true), []);
-
-  // Double-tap opens About on mobile; open About by default on desktop for a
-  // staffed first impression.
-  useEffect(() => {
-    if (!booted) {
+  const finishBoot = useCallback(() => {
+    setBooted(true);
+    if (isMobile) {
+      // Mobile goes straight to the launcher; no hero / 3D there.
       return;
     }
-    openApp(isMobile ? "launcher" : "about");
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [booted]);
+    let seen = false;
+    try {
+      seen = window.sessionStorage.getItem(HERO_SEEN_KEY) === "1";
+    } catch {
+      seen = false;
+    }
+    setHeroVisible(!seen);
+  }, [isMobile]);
+
+  const dismissHero = useCallback(() => {
+    setHeroVisible(false);
+    try {
+      window.sessionStorage.setItem(HERO_SEEN_KEY, "1");
+    } catch {
+      // storage is best-effort
+    }
+  }, []);
+
+  // Keep the hero readable: it yields the moment any window opens or is
+  // maximized (desktop icons, palette, 3D nodes, CTA all open windows).
+  const heroSuppressed = windows.some((win) => win.state !== "minimized");
+  const showHero = heroVisible && !heroSuppressed;
 
   return (
     <div className="os-root">
@@ -82,8 +108,16 @@ function OSShell() {
       {booted && (
         <>
           <AppRegistrar />
+          {!isMobile && (
+            <div className="os-3d-wrap" aria-hidden="true">
+              <WorkstationBackdrop />
+            </div>
+          )}
           <DesktopIconGrid />
           <MobileNotice />
+          <AnimatePresence>
+            {showHero && <HeroOverlay key="hero" onDismiss={dismissHero} />}
+          </AnimatePresence>
           <WindowManager />
           <CommandPalette />
           <Taskbar />

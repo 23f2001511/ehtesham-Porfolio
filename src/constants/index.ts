@@ -3,14 +3,17 @@ import type { Certificate, EducationItem, ExperienceItem, Project, Skill, Social
 export const siteConfig = {
   name: "Ehtesham Aalam",
   role: "Full Stack Developer",
-  email: "hello@ehtesham-aalam.dev",
+  email: "alamehtesham88@gmail.com",
+  collegeEmail: "ehteshama.ug24.ee@nitp.ac.in",
+  otherEmail: "23f2001511@ds.study.iitm.ac.in",
   location: "India",
   resumeUrl: "/resume/ehtesham-aalam-resume.pdf",
   description:
     "I build polished, scalable web applications with Next.js, TypeScript, MongoDB, and thoughtful product design.",
   tagline: "Full-stack developer building data-driven products and polished web experiences.",
-  githubUsername: "",
-  leetcodeUsername: ""
+  githubUsername: "23f2001511",
+  leetcodeUsername: "Ehteshsam_alam",
+  linkedinUrl: "https://www.linkedin.com/in/ehtesham-aalam"
 };
 
 export const navItems = [
@@ -41,13 +44,18 @@ export const heroStats = [
 export const socialLinks: SocialLink[] = [
   {
     label: "GitHub",
-    href: "https://github.com/ehteshamaalam",
+    href: "https://github.com/23f2001511",
     icon: "Github"
   },
   {
     label: "LinkedIn",
-    href: "https://www.linkedin.com/in/ehtesham-aalam",
+    href: siteConfig.linkedinUrl,
     icon: "Linkedin"
+  },
+  {
+    label: "LeetCode",
+    href: "https://leetcode.com/u/Ehteshsam_alam/",
+    icon: "Code"
   },
   {
     label: "Email",

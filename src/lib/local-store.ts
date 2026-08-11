@@ -46,10 +46,14 @@ function createInitialStore(): LocalStore {
     profile: {
       id: "local-admin",
       name: siteConfig.name,
-      email: process.env.ADMIN_EMAIL || "admin@example.com",
+      email: process.env.ADMIN_EMAIL || siteConfig.email,
       role: "admin",
       resumeUrl: siteConfig.resumeUrl,
-      socials: socialLinks
+      socials: socialLinks,
+      githubUsername: siteConfig.githubUsername,
+      leetcodeUsername: siteConfig.leetcodeUsername,
+      collegeEmail: siteConfig.collegeEmail,
+      otherEmail: siteConfig.otherEmail
     },
     projects: fallbackProjects.map(withMeta),
     skills: fallbackSkills.map(withMeta),
@@ -169,6 +173,8 @@ export const localStore = {
         | "location"
         | "githubUsername"
         | "leetcodeUsername"
+        | "collegeEmail"
+        | "otherEmail"
         | "experience"
         | "education"
       >

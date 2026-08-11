@@ -1,90 +1,9 @@
 "use client";
 
-import { useCallback, useEffect, useMemo, useState } from "react";
 import { ExternalLink, RefreshCw } from "lucide-react";
-import { usePublicProfile } from "@/hooks/usePublicProfile";
 import { cn } from "@/lib/utils";
-import type { ApiResponse } from "@/types";
+import { useGithubData } from "../osData";
 import { AppEmptyState, AppSection, AppSurface, StatTile } from "./appShared";
-
-type GithubData = {
-  profile: {
-    login: string;
-    name: string;
-    avatarUrl: string;
-    bio: string;
-    company: string;
-    location: string;
-    blog: string;
-    followers: number;
-    following: number;
-    publicRepos: number;
-    createdAt: string;
-    htmlUrl: string;
-  };
-  totals: { stars: number; forks: number };
-  languages: Array<{ name: string; count: number }>;
-  repos: Array<{
-    name: string;
-    description: string;
-    url: string;
-    homepage: string;
-    stars: number;
-    forks: number;
-    language: string;
-    topics: string[];
-    updatedAt: string | null;
-  }>;
-  activity: Array<{ type: string; repo: string; createdAt: string }>;
-  contributions: Array<{ date: string; count: number; level: number }> | null;
-};
-
-function useGithubData(username: string, resolved: boolean) {
-  const [data, setData] = useState<GithubData | null>(null);
-  const [error, setError] = useState("");
-  const [loading, setLoading] = useState(false);
-  const [reloadKey, setReloadKey] = useState(0);
-
-  const reload = useCallback(() => setReloadKey((key) => key + 1), []);
-
-  useEffect(() => {
-    if (!resolved || !username) {
-      setData(null);
-      setError("");
-      setLoading(false);
-      return;
-    }
-    let active = true;
-    setLoading(true);
-    setError("");
-    fetch(`/api/github?username=${encodeURIComponent(username)}`)
-      .then(async (response) => {
-        const payload = (await response.json()) as ApiResponse<GithubData>;
-        if (!payload.success) {
-          throw new Error(payload.error);
-        }
-        if (active) {
-          setData(payload.data);
-        }
-      })
-      .catch((caught: unknown) => {
-        if (active) {
-          setData(null);
-          setError(caught instanceof Error ? caught.message : "GitHub data unavailable.");
-        }
-      })
-      .finally(() => {
-        if (active) {
-          setLoading(false);
-        }
-      });
-    return () => {
-      active = false;
-    };
-  }, [username, resolved, reloadKey]);
-
-  return { data, error, loading, reload };
-}
 
 const HEAT_LEVELS = ["var(--heat-0)", "var(--heat-1)", "var(--heat-2)", "var(--heat-3)", "var(--heat-4)"];
 
@@ -128,22 +47,7 @@ async function copyUrl(url: string) {
 }
 
 export default function GitHubApp() {
-  const profile = usePublicProfile();
-  const [resolved, setResolved] = useState(false);
-  const username = useMemo(() => (profile.profile.githubUsername || "").trim(), [profile.profile.githubUsername]);
-  const { data, error, loading, reload } = useGithubData(username, resolved);
-
-  useEffect(() => {
-    // usePublicProfile resolves once the fetch settles (success or fallback).
-    const id = window.setTimeout(() => setResolved(true), 1200);
-    return () => window.clearTimeout(id);
-  }, []);
-
-  useEffect(() => {
-    if (username) {
-      setResolved(true);
-    }
-  }, [username]);
+  const { data, error, loading, resolved, username, reload } = useGithubData();
 
   if (!resolved) {
     return (

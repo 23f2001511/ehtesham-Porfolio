@@ -133,7 +133,7 @@ A modern, production-grade portfolio built with **Next.js 15**, **TypeScript**, 
 
 ```bash
 # Clone the repository
-git clone https://github.com/ehteshamaalam/portfolio.git
+git clone https://github.com/23f2001511/portfolio.git
 cd portfolio
 
 # Install dependencies

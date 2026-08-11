@@ -17,7 +17,11 @@ const fallbackProfile: UserProfile = {
   email: siteConfig.email,
   role: "admin",
   resumeUrl: siteConfig.resumeUrl,
-  socials: socialLinks
+  socials: socialLinks,
+  githubUsername: siteConfig.githubUsername,
+  leetcodeUsername: siteConfig.leetcodeUsername,
+  collegeEmail: siteConfig.collegeEmail,
+  otherEmail: siteConfig.otherEmail
 };
 
 function sanitizeUser(user: unknown): UserProfile {
@@ -35,8 +39,10 @@ function sanitizeUser(user: unknown): UserProfile {
     aboutBio: data.aboutBio || "",
     phone: data.phone || "",
     location: data.location || "",
-    githubUsername: data.githubUsername || "",
-    leetcodeUsername: data.leetcodeUsername || "",
+    githubUsername: data.githubUsername || siteConfig.githubUsername,
+    leetcodeUsername: data.leetcodeUsername || siteConfig.leetcodeUsername,
+    collegeEmail: data.collegeEmail || siteConfig.collegeEmail,
+    otherEmail: data.otherEmail || siteConfig.otherEmail,
     experience: Array.isArray(data.experience) ? data.experience : [],
     education: Array.isArray(data.education) ? data.education : []
   };
@@ -182,6 +188,8 @@ export async function PATCH(request: Request) {
         location: body.location,
         githubUsername: body.githubUsername,
         leetcodeUsername: body.leetcodeUsername,
+        collegeEmail: body.collegeEmail,
+        otherEmail: body.otherEmail,
         experience: body.experience,
         education: body.education
       });
@@ -207,7 +215,9 @@ export async function PATCH(request: Request) {
       "phone",
       "location",
       "githubUsername",
-      "leetcodeUsername"
+      "leetcodeUsername",
+      "collegeEmail",
+      "otherEmail"
     ] as const;
 
     for (const key of scalarKeys) {

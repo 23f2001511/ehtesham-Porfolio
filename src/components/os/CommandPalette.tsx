@@ -132,6 +132,64 @@ export default function CommandPalette() {
       });
     }
 
+    const openExternal = (url: string) => {
+      window.open(url, "_blank", "noopener,noreferrer");
+    };
+
+    const ghUser = (profile.githubUsername || "").trim();
+    if (ghUser) {
+      items.push({
+        id: "action-github-profile",
+        kind: "action",
+        title: `GitHub · ${ghUser}`,
+        subtitle: "Open GitHub profile in browser",
+        appId: "github",
+        keywords: `${ghUser} github profile repos open browser`,
+        run: () => openExternal(`https://github.com/${ghUser}`)
+      });
+    }
+
+    const lcUser = (profile.leetcodeUsername || "").trim();
+    if (lcUser) {
+      items.push({
+        id: "action-leetcode-profile",
+        kind: "action",
+        title: `LeetCode · ${lcUser}`,
+        subtitle: "Open LeetCode profile in browser",
+        appId: "leetcode",
+        keywords: `${lcUser} leetcode profile dsa open browser`,
+        run: () => openExternal(`https://leetcode.com/u/${encodeURIComponent(lcUser)}/`)
+      });
+    }
+
+    const linkedin = (profile.socials || []).find((link) => /linkedin/i.test(link.label));
+    if (linkedin) {
+      items.push({
+        id: "action-linkedin-profile",
+        kind: "action",
+        title: "LinkedIn",
+        subtitle: "Open LinkedIn profile in browser",
+        appId: "contact",
+        keywords: "linkedin profile social open browser",
+        run: () => openExternal(linkedin.href)
+      });
+    }
+
+    const primaryEmail = (profile.email || "").trim();
+    if (primaryEmail) {
+      items.push({
+        id: "action-copy-email",
+        kind: "action",
+        title: `Copy email · ${primaryEmail}`,
+        subtitle: "Copy primary email address",
+        appId: "contact",
+        keywords: `${primaryEmail} email contact copy`,
+        run: () => {
+          void navigator.clipboard?.writeText(primaryEmail).catch(() => {});
+        }
+      });
+    }
+
     const terminalWin = windows.find((win) => win.appId === "terminal");
     items.push({
       id: "action-terminal",
@@ -144,7 +202,7 @@ export default function CommandPalette() {
     });
 
     return items;
-  }, [openApp, profile.name, projects, skills, windows]);
+  }, [openApp, profile.name, profile.githubUsername, profile.leetcodeUsername, profile.email, profile.socials, projects, skills, windows]);
 
   const results = useMemo(() => {
     const q = normalize(query.trim());

@@ -133,7 +133,7 @@ export function OSProvider({ children }: { children: ReactNode }) {
   const [clipboard, setClipboard] = useState("");
   const [isMobile, setIsMobile] = useState(false);
   const [wallpaperIndex, setWallpaperIndex] = useState(0);
-  const [accent, setAccentState] = useState("#22d3ee");
+  const [accent, setAccentState] = useState("#34d399");
   const [particlesEnabled, setParticlesEnabled] = useState(true);
   const zRef = useRef(20);
   const appsRef = useRef(new Map<string, AppDefinition>());

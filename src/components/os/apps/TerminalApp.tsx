@@ -77,8 +77,11 @@ export default function TerminalApp({ openApp }: AppProps) {
           "  certificates        certificates",
           "  resume              open the Resume app",
           "  github              open the GitHub app",
+          "  github url          print the GitHub profile URL",
           "  leetcode            open the LeetCode app",
+          "  leetcode url        print the LeetCode profile URL",
           "  contact             print contact + open Contact app",
+          "  email               print email addresses",
           "  neofetch            system summary",
           "  theme [0-3]         change wallpaper",
           "  date                current system time",
@@ -199,15 +202,35 @@ export default function TerminalApp({ openApp }: AppProps) {
         print(["Opened Resume"]);
         break;
 
-      case "github":
+      case "github": {
+        if (arg === "url") {
+          const username = (profile.githubUsername || "").trim();
+          print(username ? [`https://github.com/${username}`] : ["GitHub username not configured."]);
+          break;
+        }
         openApp("github");
         print(["Opened GitHub"]);
         break;
+      }
 
-      case "leetcode":
+      case "leetcode": {
+        if (arg === "url") {
+          const username = (profile.leetcodeUsername || "").trim();
+          print(username ? [`https://leetcode.com/u/${username}/`] : ["LeetCode username not configured."]);
+          break;
+        }
         openApp("leetcode");
         print(["Opened LeetCode"]);
         break;
+      }
+
+      case "email": {
+        const emails = [profile.email, profile.collegeEmail, profile.otherEmail].filter(
+          (value): value is string => Boolean(value && value.trim())
+        );
+        print(emails.length ? emails : ["No email configured."]);
+        break;
+      }
 
       case "contact": {
         const channels = [profile.email, profile.phone, ...(profile.socials?.map((s) => s.href) ?? [])].filter(
@@ -286,7 +309,7 @@ export default function TerminalApp({ openApp }: AppProps) {
       }
     } else if (event.key === "Tab") {
       event.preventDefault();
-      const commands = ["help", "about", "projects", "skills", "experience", "education", "certificates", "resume", "github", "leetcode", "contact", "clear"];
+      const commands = ["help", "about", "projects", "skills", "experience", "education", "certificates", "resume", "github", "leetcode", "email", "contact", "clear"];
       const match = commands.find((cmd) => cmd.startsWith(input.trim().toLowerCase()));
       if (match) {
         setInput(match);

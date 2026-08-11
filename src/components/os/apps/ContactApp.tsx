@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, type FormEvent } from "react";
-import { Mail, Send } from "lucide-react";
+import { Mail, Send, Copy, Check } from "lucide-react";
 import { usePublicProfile } from "@/hooks/usePublicProfile";
 import type { ApiResponse } from "@/types";
 import type { AppProps } from "../OSContext";
@@ -14,8 +14,21 @@ export default function ContactApp({ openApp }: AppProps) {
   const { profile } = usePublicProfile();
   const [state, setState] = useState<FormState>("idle");
   const [error, setError] = useState("");
+  const [copied, setCopied] = useState("");
   const email = profile.email || "";
+  const collegeEmail = (profile.collegeEmail || "").trim();
+  const otherEmail = (profile.otherEmail || "").trim();
   const phone = (profile.phone || "").trim();
+
+  async function copyEmail(label: string, value: string) {
+    try {
+      await navigator.clipboard.writeText(value);
+      setCopied(label);
+      window.setTimeout(() => setCopied((current) => (current === label ? "" : current)), 1800);
+    } catch {
+      setCopied("");
+    }
+  }
 
   async function onSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -109,12 +122,61 @@ export default function ContactApp({ openApp }: AppProps) {
               {email}
             </a>
           )}
+          {collegeEmail && (
+            <a className="os-btn os-btn--ghost os-interactive" href={`mailto:${collegeEmail}`}>
+              <Mail className="h-4 w-4" aria-hidden="true" />
+              {collegeEmail}
+            </a>
+          )}
+          {otherEmail && (
+            <a className="os-btn os-btn--ghost os-interactive" href={`mailto:${otherEmail}`}>
+              <Mail className="h-4 w-4" aria-hidden="true" />
+              {otherEmail}
+            </a>
+          )}
           {phone && (
             <a className="os-btn os-btn--ghost os-interactive" href={`tel:${phone}`}>
               {phone}
             </a>
           )}
         </div>
+        <div className="os-chip-row">
+          {email && (
+            <button
+              type="button"
+              className="os-btn os-btn--ghost os-interactive"
+              onClick={() => void copyEmail("email", email)}
+            >
+              {copied === "email" ? <Check className="h-4 w-4" aria-hidden="true" /> : <Copy className="h-4 w-4" aria-hidden="true" />}
+              {copied === "email" ? "Copied" : "Copy email"}
+            </button>
+          )}
+          {collegeEmail && (
+            <button
+              type="button"
+              className="os-btn os-btn--ghost os-interactive"
+              onClick={() => void copyEmail("collegeEmail", collegeEmail)}
+            >
+              {copied === "collegeEmail" ? <Check className="h-4 w-4" aria-hidden="true" /> : <Copy className="h-4 w-4" aria-hidden="true" />}
+              {copied === "collegeEmail" ? "Copied" : "Copy college email"}
+            </button>
+          )}
+          {otherEmail && (
+            <button
+              type="button"
+              className="os-btn os-btn--ghost os-interactive"
+              onClick={() => void copyEmail("otherEmail", otherEmail)}
+            >
+              {copied === "otherEmail" ? <Check className="h-4 w-4" aria-hidden="true" /> : <Copy className="h-4 w-4" aria-hidden="true" />}
+              {copied === "otherEmail" ? "Copied" : "Copy other email"}
+            </button>
+          )}
+        </div>
+        {copied && (
+          <p className="os-form__status--success" role="status">
+            Copied to clipboard.
+          </p>
+        )}
         {profile.socials.length > 0 && (
           <div className="os-chip-row">
             {profile.socials.map((link) => (

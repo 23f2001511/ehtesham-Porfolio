@@ -61,6 +61,8 @@ const UserSchema = new Schema(
     location: { type: String, default: "" },
     githubUsername: { type: String, default: "" },
     leetcodeUsername: { type: String, default: "" },
+    collegeEmail: { type: String, default: "" },
+    otherEmail: { type: String, default: "" },
     experience: {
       type: [
         {

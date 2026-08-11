@@ -28,6 +28,8 @@ interface ProfileForm {
   location: string;
   githubUsername: string;
   leetcodeUsername: string;
+  collegeEmail: string;
+  otherEmail: string;
   experience: ExperienceItem[];
   education: EducationItem[];
 }
@@ -39,6 +41,8 @@ const emptyForm: ProfileForm = {
   location: "",
   githubUsername: "",
   leetcodeUsername: "",
+  collegeEmail: "",
+  otherEmail: "",
   experience: [],
   education: []
 };
@@ -67,6 +71,8 @@ export default function ProfileManager() {
           location: payload.data.location || "",
           githubUsername: payload.data.githubUsername || "",
           leetcodeUsername: payload.data.leetcodeUsername || "",
+          collegeEmail: payload.data.collegeEmail || "",
+          otherEmail: payload.data.otherEmail || "",
           experience: payload.data.experience ?? [],
           education: payload.data.education ?? []
         });
@@ -106,6 +112,8 @@ export default function ProfileManager() {
       location: form.location,
       githubUsername: form.githubUsername,
       leetcodeUsername: form.leetcodeUsername,
+      collegeEmail: form.collegeEmail,
+      otherEmail: form.otherEmail,
       experience: form.experience
         .filter((item) => item.role.trim() && item.company.trim() && item.period.trim())
         .map((item) => ({
@@ -206,6 +214,26 @@ export default function ProfileManager() {
               value={form.leetcodeUsername}
               onChange={(event) => updateField("leetcodeUsername", event.target.value)}
               placeholder="e.g. octocat"
+            />
+          </div>
+          <div>
+            <Label htmlFor="collegeEmail">College email</Label>
+            <Input
+              id="collegeEmail"
+              type="email"
+              value={form.collegeEmail}
+              onChange={(event) => updateField("collegeEmail", event.target.value)}
+              placeholder="e.g. name@college.edu"
+            />
+          </div>
+          <div>
+            <Label htmlFor="otherEmail">Other email</Label>
+            <Input
+              id="otherEmail"
+              type="email"
+              value={form.otherEmail}
+              onChange={(event) => updateField("otherEmail", event.target.value)}
+              placeholder="e.g. name@example.com"
             />
           </div>
         </div>
