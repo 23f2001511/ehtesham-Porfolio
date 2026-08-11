@@ -115,7 +115,7 @@ export default function SocialLinksManager() {
                 onChange={(event) => updateLink(index, "icon", event.target.value)}
                 className="h-11 w-full rounded-md border border-border bg-input px-3 text-sm text-foreground outline-none focus:border-cyan-300 focus:ring-2 focus:ring-cyan-300/25"
               >
-                {["Github", "Linkedin", "Mail", "Twitter", "Globe"].map((icon) => (
+                {["Github", "Linkedin", "Mail", "Twitter", "Globe", "Code"].map((icon) => (
                   <option key={icon} value={icon}>
                     {icon}
                   </option>

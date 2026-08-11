@@ -1,16 +1,37 @@
 "use client";
 
 import Link from "next/link";
-import { Mail, Menu, X } from "lucide-react";
-import { useState } from "react";
+import { motion, useReducedMotion } from "framer-motion";
+import { Mail, Menu, Rocket, X } from "lucide-react";
+import { useEffect, useState } from "react";
 import { navItems, siteConfig } from "@/constants";
 import { Button } from "@/components/ui/button";
 
 export default function Navbar() {
   const [open, setOpen] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
+  const reducedMotion = useReducedMotion();
+
+  useEffect(() => {
+    function handleScroll() {
+      setScrolled(window.scrollY > 20);
+    }
+
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
 
   return (
-    <header className="sticky top-0 z-50 border-b border-white/10 bg-slate-950/65 backdrop-blur-xl">
+    <motion.header
+      initial={reducedMotion ? {} : { y: -60, opacity: 0 }}
+      animate={{ y: 0, opacity: 1 }}
+      transition={{ delay: 0.2, duration: 0.6, ease: "easeOut" }}
+      className={`sticky top-0 z-50 transition-all duration-500 ${
+        scrolled
+          ? "nebula-navbar-scrolled"
+          : "nebula-navbar"
+      }`}
+    >
       <nav className="section-shell flex h-16 items-center justify-between">
         <Link href="/" className="flex items-center gap-3 group" aria-label="Go to homepage">
           <span className="nav-logo grid h-9 w-9 place-items-center rounded-md border border-cyan-300/25 bg-cyan-300/10 text-sm font-black bg-gradient-to-br from-cyan-200 to-cyan-100 bg-clip-text text-transparent">
@@ -22,14 +43,20 @@ export default function Navbar() {
         </Link>
 
         <div className="hidden items-center gap-1 lg:flex">
-          {navItems.map((item) => (
-            <Link
+          {navItems.map((item, i) => (
+            <motion.div
               key={item.href}
-              href={item.href}
-              className="rounded-md px-3 py-2 text-sm font-medium text-slate-300 transition hover:bg-white/[0.08] hover:text-white"
+              initial={reducedMotion ? {} : { opacity: 0, y: -10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.3 + i * 0.06, duration: 0.4 }}
             >
-              {item.label}
-            </Link>
+              <Link
+                href={item.href}
+                className="nebula-nav-link rounded-md px-3 py-2 text-sm font-medium text-slate-300 transition-all hover:text-white"
+              >
+                {item.label}
+              </Link>
+            </motion.div>
           ))}
         </div>
 
@@ -43,8 +70,8 @@ export default function Navbar() {
           <Link
             href={`mailto:${siteConfig.email}?subject=Hiring%20Inquiry%20-%20${encodeURIComponent(siteConfig.name)}`}
           >
-            <Button size="sm">
-              <Mail className="h-3.5 w-3.5" aria-hidden="true" />
+            <Button size="sm" className="nebula-hire-btn">
+              <Rocket className="h-3.5 w-3.5" aria-hidden="true" />
               Hire Me
             </Button>
           </Link>
@@ -62,8 +89,17 @@ export default function Navbar() {
         </Button>
       </nav>
 
+      {/* Glowing bottom border */}
+      <div className="nebula-border-glow" />
+
       {open ? (
-        <div className="border-t border-white/10 bg-slate-950/95 lg:hidden">
+        <motion.div
+          initial={reducedMotion ? {} : { opacity: 0, height: 0 }}
+          animate={{ opacity: 1, height: "auto" }}
+          exit={{ opacity: 0, height: 0 }}
+          transition={{ duration: 0.3 }}
+          className="border-t border-white/10 bg-black/80 backdrop-blur-2xl lg:hidden"
+        >
           <div className="section-shell grid gap-1 py-4">
             {navItems.map((item) => (
               <Link
@@ -91,8 +127,8 @@ export default function Navbar() {
               Hire Me
             </Link>
           </div>
-        </div>
+        </motion.div>
       ) : null}
-    </header>
+    </motion.header>
   );
 }

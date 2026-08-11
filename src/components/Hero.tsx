@@ -17,7 +17,7 @@ const typingTexts = [
 ];
 
 export default function Hero() {
-  const profile = usePublicProfile();
+  const { profile } = usePublicProfile();
 
   return (
     <section className="relative isolate min-h-[calc(100vh-4rem)] overflow-hidden">

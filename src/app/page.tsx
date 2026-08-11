@@ -1,35 +1,21 @@
 "use client";
 
-import { useCallback, useState } from "react";
-import Hero from "@/components/Hero";
-import SunLoader from "@/components/SunLoader";
-import HeroWelcome from "@/components/HeroWelcome";
-import PublicLayout from "@/components/shared/PublicLayout";
-import AboutSection from "@/sections/about/AboutSection";
-import SkillsSection from "@/sections/skills/SkillsSection";
-import ExperienceSection from "@/sections/experience/ExperienceSection";
-import ProjectsSection from "@/sections/projects/ProjectsSection";
-import CertificatesSection from "@/sections/certificates/CertificatesSection";
-import ContactSection from "@/sections/contact/ContactSection";
+import dynamic from "next/dynamic";
+
+const PortfolioOS = dynamic(() => import("@/components/os/PortfolioOS"), {
+  loading: () => (
+    <div className="os-boot" aria-busy="true" aria-label="Loading developer OS">
+      <div className="os-boot__panel">
+        <div className="os-boot__mark" aria-hidden="true">
+          <span className="os-boot__mark-glyph">ea</span>
+        </div>
+        <p className="os-boot__title">Developer OS</p>
+        <p className="os-boot__subtitle">starting session…</p>
+      </div>
+    </div>
+  )
+});
 
 export default function Home() {
-  const [loaderDone, setLoaderDone] = useState(false);
-
-  const handleLoaderComplete = useCallback(() => {
-    setLoaderDone(true);
-  }, []);
-
-  return (
-    <PublicLayout>
-      <SunLoader onComplete={handleLoaderComplete} />
-      <HeroWelcome visible={loaderDone} />
-      <Hero />
-      <AboutSection />
-      <SkillsSection />
-      <ExperienceSection />
-      <ProjectsSection />
-      <CertificatesSection />
-      <ContactSection />
-    </PublicLayout>
-  );
+  return <PortfolioOS />;
 }

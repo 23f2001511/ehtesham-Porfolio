@@ -29,6 +29,13 @@ export const loginSchema = z.object({
   password: z.string().min(6, "Password must be at least 6 characters.")
 });
 
+const optionalLong = z
+  .string()
+  .trim()
+  .max(4000)
+  .optional()
+  .transform((value) => value || "");
+
 export const projectSchema = z.object({
   title: z.string().trim().min(2, "Title is required."),
   slug: z.string().trim().optional().default(""),
@@ -40,7 +47,14 @@ export const projectSchema = z.object({
   tags: stringArray,
   featured: z.coerce.boolean().default(false),
   status: z.enum(["Planning", "In Progress", "Live", "Archived"]).default("Planning"),
-  sortOrder: z.coerce.number().int().min(0).default(0)
+  sortOrder: z.coerce.number().int().min(0).default(0),
+  category: z.string().trim().max(60).optional().default("Other"),
+  problem: optionalLong,
+  solution: optionalLong,
+  features: stringArray,
+  challenges: optionalLong,
+  learnings: optionalLong,
+  architecture: stringArray
 });
 
 export const updateProjectSchema = projectSchema.partial().extend({
@@ -87,6 +101,41 @@ export const updateMessageSchema = z.object({
   status: z.enum(["new", "read", "archived"])
 });
 
+const optionalShort = z
+  .string()
+  .trim()
+  .max(120)
+  .optional()
+  .transform((value) => value || "");
+
+const optionalMedium = z
+  .string()
+  .trim()
+  .max(500)
+  .optional()
+  .transform((value) => value || "");
+
+const optionalProfileLong = z
+  .string()
+  .trim()
+  .max(3000)
+  .optional()
+  .transform((value) => value || "");
+
+const experienceItemSchema = z.object({
+  role: z.string().trim().min(2).max(120),
+  company: z.string().trim().min(2).max(120),
+  period: z.string().trim().min(4).max(60),
+  summary: z.string().trim().max(1000).default(""),
+  impact: z.array(z.string().trim().min(1).max(120)).max(12).default([])
+});
+
+const educationItemSchema = z.object({
+  title: z.string().trim().min(2).max(160),
+  institution: z.string().trim().min(2).max(160),
+  period: z.string().trim().min(4).max(60)
+});
+
 export const profileSchema = z.object({
   resumeUrl: z.string().trim().optional(),
   socials: z
@@ -94,8 +143,16 @@ export const profileSchema = z.object({
       z.object({
         label: z.string().trim().min(2),
         href: z.string().trim().min(3),
-        icon: z.enum(["Github", "Linkedin", "Mail", "Twitter", "Globe"]).default("Globe")
+        icon: z.enum(["Github", "Linkedin", "Mail", "Twitter", "Globe", "Code"]).default("Globe")
       })
     )
-    .optional()
+    .optional(),
+  tagline: optionalMedium,
+  aboutBio: optionalProfileLong,
+  phone: optionalShort,
+  location: optionalShort,
+  githubUsername: optionalShort,
+  leetcodeUsername: optionalShort,
+  experience: z.array(experienceItemSchema).max(30).optional(),
+  education: z.array(educationItemSchema).max(30).optional()
 });

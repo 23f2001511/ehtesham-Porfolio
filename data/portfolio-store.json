@@ -21,6 +21,40 @@
         "href": "mailto:hello@ehtesham-aalam.dev",
         "icon": "Mail"
       }
+    ],
+    "tagline": "Full-stack developer building data-driven products and polished web experiences.",
+    "githubUsername": "",
+    "leetcodeUsername": "",
+    "experience": [
+      {
+        "role": "Full Stack Developer",
+        "company": "Independent Projects",
+        "period": "2024 - Present",
+        "summary": "Building production-style portfolio, dashboard, and data-backed web applications using the Next.js ecosystem.",
+        "impact": [
+          "App Router architecture",
+          "MongoDB data modeling",
+          "Motion-rich interfaces"
+        ]
+      },
+      {
+        "role": "Data Science Student",
+        "company": "IIT Madras BS Degree",
+        "period": "2023 - Present",
+        "summary": "Strengthening fundamentals in programming, statistics, databases, and analytical thinking.",
+        "impact": [
+          "Python and SQL foundations",
+          "Data storytelling",
+          "Problem decomposition"
+        ]
+      }
+    ],
+    "education": [
+      {
+        "title": "BS in Data Science and Applications",
+        "institution": "IIT Madras",
+        "period": "2023 - Present"
+      }
     ]
   },
   "projects": [
@@ -43,7 +77,16 @@
       "sortOrder": 1,
       "id": "b25d9f32-36e4-4679-80df-29401c1fa6e7",
       "createdAt": "2026-06-14T04:32:58.714Z",
-      "updatedAt": "2026-06-30T09:33:02.773Z"
+      "updatedAt": "2026-06-30T09:33:02.773Z",
+      "category": "Web",
+      "architecture": [
+        "Next.js frontend",
+        "API routes",
+        "Auth layer (HMAC sessions)",
+        "Mongoose models",
+        "MongoDB / JSON store",
+        "File storage (public/uploads)"
+      ]
     }
   ],
   "skills": [

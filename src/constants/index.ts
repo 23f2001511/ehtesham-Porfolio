@@ -1,4 +1,4 @@
-import type { Certificate, Project, Skill, SocialLink } from "@/types";
+import type { Certificate, EducationItem, ExperienceItem, Project, Skill, SocialLink } from "@/types";
 
 export const siteConfig = {
   name: "Ehtesham Aalam",
@@ -7,7 +7,10 @@ export const siteConfig = {
   location: "India",
   resumeUrl: "/resume/ehtesham-aalam-resume.pdf",
   description:
-    "I build polished, scalable web applications with Next.js, TypeScript, MongoDB, and thoughtful product design."
+    "I build polished, scalable web applications with Next.js, TypeScript, MongoDB, and thoughtful product design.",
+  tagline: "Full-stack developer building data-driven products and polished web experiences.",
+  githubUsername: "",
+  leetcodeUsername: ""
 };
 
 export const navItems = [
@@ -21,6 +24,7 @@ export const navItems = [
 
 export const adminNavItems = [
   { label: "Dashboard", href: "/admin/dashboard" },
+  { label: "Profile", href: "/admin/profile" },
   { label: "Projects", href: "/admin/projects" },
   { label: "Skills", href: "/admin/skills" },
   { label: "Certificates", href: "/admin/certificates" },
@@ -58,7 +62,7 @@ export const aboutHighlights = [
   "Learning continuously through IITM BS Data Science and hands-on full-stack projects."
 ];
 
-export const experienceTimeline = [
+export const experienceTimeline: ExperienceItem[] = [
   {
     role: "Full Stack Developer",
     company: "Independent Projects",
@@ -77,61 +81,95 @@ export const experienceTimeline = [
   }
 ];
 
+export const educationTimeline: EducationItem[] = [
+  {
+    title: "BS in Data Science and Applications",
+    institution: "IIT Madras",
+    period: "2023 - Present"
+  }
+];
+
 export const fallbackProjects: Project[] = [
+  {
+    title: "Hospital Management System",
+    slug: "hospital-management-system",
+    category: "Web",
+    summary: "A comprehensive hospital management platform with patient records, appointment scheduling, and staff management.",
+    description:
+      "Built with Flask, PostgreSQL, and SQLAlchemy for robust data handling and relational integrity across hospital workflows.",
+    imageUrl: "",
+    liveUrl: "",
+    repoUrl: "",
+    tags: ["Flask", "PostgreSQL", "SQLAlchemy", "Python"],
+    featured: true,
+    status: "Live",
+    sortOrder: 1
+  },
+  {
+    title: "Plastic-to-Fuel Pyrolysis System",
+    slug: "plastic-to-fuel-pyrolysis",
+    category: "Engineering",
+    summary: "A core engineering project converting plastic waste into usable fuel through thermal decomposition.",
+    description:
+      "Designed and prototyped a pyrolysis reactor system with temperature control, safety mechanisms, and fuel output analysis.",
+    imageUrl: "",
+    liveUrl: "",
+    repoUrl: "",
+    tags: ["Engineering", "Thermodynamics", "Sustainability", "Design"],
+    featured: true,
+    status: "Live",
+    sortOrder: 2
+  },
+  {
+    title: "Clap-Activated Switch",
+    slug: "clap-activated-switch",
+    category: "Engineering",
+    summary: "An analog electronics project that detects sound patterns to toggle electrical switches.",
+    description:
+      "Built with op-amps, filters, and flip-flop circuits for reliable clap-pattern detection and debouncing.",
+    imageUrl: "",
+    liveUrl: "",
+    repoUrl: "",
+    tags: ["Analog Electronics", "Circuit Design", "Op-Amps"],
+    featured: true,
+    status: "Live",
+    sortOrder: 3
+  },
   {
     title: "Portfolio Admin System",
     slug: "portfolio-admin-system",
+    category: "Web",
     summary: "A full-stack portfolio with CRUD dashboards, auth, uploads, and MongoDB persistence.",
     description:
       "Built with Next.js App Router, TypeScript, Mongoose, API routes, and a polished glassmorphism UI.",
+    architecture: ["Next.js frontend", "API routes", "Auth layer (HMAC sessions)", "Mongoose models", "MongoDB / JSON store", "File storage (public/uploads)"],
     imageUrl: "/images/portfolio-hero.png",
     liveUrl: "",
     repoUrl: "",
     tags: ["Next.js", "TypeScript", "MongoDB", "Tailwind"],
     featured: true,
     status: "Live",
-    sortOrder: 1
-  },
-  {
-    title: "Project Intelligence Board",
-    slug: "project-intelligence-board",
-    summary: "A dashboard concept for tracking product work, blockers, milestones, and analytics.",
-    description:
-      "Designed around fast scanning, clean data hierarchy, reusable components, and admin workflows.",
-    imageUrl: "",
-    liveUrl: "",
-    repoUrl: "",
-    tags: ["Dashboard", "UX", "APIs", "Analytics"],
-    featured: true,
-    status: "In Progress",
-    sortOrder: 2
-  },
-  {
-    title: "Developer Learning System",
-    slug: "developer-learning-system",
-    summary: "A learning tracker that turns courses, certificates, and practice into visible progress.",
-    description:
-      "Focused on progress modeling, state management, and a clean responsive experience for learners.",
-    imageUrl: "",
-    liveUrl: "",
-    repoUrl: "",
-    tags: ["React", "Data", "Product Design"],
-    featured: false,
-    status: "Planning",
-    sortOrder: 3
+    sortOrder: 4
   }
 ];
 
 export const fallbackSkills: Skill[] = [
-  { name: "Next.js", category: "Frontend", level: 88, icon: "Layers", years: 2, featured: true, sortOrder: 1 },
-  { name: "TypeScript", category: "Frontend", level: 84, icon: "Code2", years: 2, featured: true, sortOrder: 2 },
-  { name: "React", category: "Frontend", level: 86, icon: "Atom", years: 2, featured: true, sortOrder: 3 },
-  { name: "Tailwind CSS", category: "Design", level: 90, icon: "Palette", years: 2, featured: true, sortOrder: 4 },
-  { name: "MongoDB", category: "Backend", level: 80, icon: "Database", years: 1, featured: true, sortOrder: 5 },
-  { name: "Mongoose", category: "Backend", level: 78, icon: "Workflow", years: 1, featured: false, sortOrder: 6 },
-  { name: "API Routes", category: "Backend", level: 82, icon: "Server", years: 2, featured: true, sortOrder: 7 },
-  { name: "Framer Motion", category: "Design", level: 76, icon: "Sparkles", years: 1, featured: false, sortOrder: 8 },
-  { name: "UI/UX", category: "Product", level: 83, icon: "MousePointer2", years: 2, featured: true, sortOrder: 9 }
+  // Data Science & Software
+  { name: "Python", category: "Data Science & Software", level: 85, icon: "Code2", years: 2, featured: true, sortOrder: 1 },
+  { name: "Java", category: "Data Science & Software", level: 75, icon: "Code2", years: 1, featured: true, sortOrder: 2 },
+  { name: "JavaScript", category: "Data Science & Software", level: 88, icon: "Code2", years: 2, featured: true, sortOrder: 3 },
+  { name: "SQL", category: "Data Science & Software", level: 82, icon: "Database", years: 2, featured: true, sortOrder: 4 },
+  // Web Development
+  { name: "React", category: "Web Development", level: 86, icon: "Atom", years: 2, featured: true, sortOrder: 5 },
+  { name: "Next.js", category: "Web Development", level: 88, icon: "Layers", years: 2, featured: true, sortOrder: 6 },
+  { name: "Flask", category: "Web Development", level: 78, icon: "Server", years: 1, featured: true, sortOrder: 7 },
+  { name: "Supabase", category: "Web Development", level: 72, icon: "Database", years: 1, featured: false, sortOrder: 8 },
+  { name: "Tailwind CSS", category: "Web Development", level: 90, icon: "Palette", years: 2, featured: true, sortOrder: 9 },
+  { name: "TypeScript", category: "Web Development", level: 84, icon: "Code2", years: 2, featured: true, sortOrder: 10 },
+  // Core Engineering
+  { name: "MATLAB", category: "Core Engineering", level: 76, icon: "Workflow", years: 1, featured: true, sortOrder: 11 },
+  { name: "Control Systems", category: "Core Engineering", level: 74, icon: "Workflow", years: 1, featured: true, sortOrder: 12 },
+  { name: "Power Electronics", category: "Core Engineering", level: 70, icon: "Sparkles", years: 1, featured: false, sortOrder: 13 },
 ];
 
 export const fallbackCertificates: Certificate[] = [

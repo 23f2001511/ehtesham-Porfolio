@@ -1,7 +1,8 @@
 "use client";
 
 import Link from "next/link";
-import { Github, Globe, Linkedin, Mail, Twitter } from "lucide-react";
+import { Code, Github, Globe, Linkedin, Mail, Twitter } from "lucide-react";
+// import {FaGithub , FaLinkedin , FaTwitter} from "react-icon/fa";
 import { navItems, siteConfig } from "@/constants";
 import { usePublicProfile } from "@/hooks/usePublicProfile";
 
@@ -10,11 +11,12 @@ const iconMap = {
   Linkedin,
   Mail,
   Twitter,
-  Globe
+  Globe,
+  Code
 };
 
 export default function Footer() {
-  const profile = usePublicProfile();
+  const { profile } = usePublicProfile();
 
   return (
     <footer className="border-t border-white/10 bg-black/30">

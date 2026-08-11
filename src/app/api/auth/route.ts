@@ -30,7 +30,15 @@ function sanitizeUser(user: unknown): UserProfile {
     email: data.email || siteConfig.email,
     role: "admin",
     resumeUrl: data.resumeUrl || siteConfig.resumeUrl,
-    socials: data.socials?.length ? data.socials : socialLinks
+    socials: data.socials?.length ? data.socials : socialLinks,
+    tagline: data.tagline || "",
+    aboutBio: data.aboutBio || "",
+    phone: data.phone || "",
+    location: data.location || "",
+    githubUsername: data.githubUsername || "",
+    leetcodeUsername: data.leetcodeUsername || "",
+    experience: Array.isArray(data.experience) ? data.experience : [],
+    education: Array.isArray(data.education) ? data.education : []
   };
 }
 
@@ -167,7 +175,15 @@ export async function PATCH(request: Request) {
     if (!process.env.MONGODB_URI) {
       const profile = await localStore.updateProfile({
         resumeUrl: body.resumeUrl,
-        socials: body.socials
+        socials: body.socials,
+        tagline: body.tagline,
+        aboutBio: body.aboutBio,
+        phone: body.phone,
+        location: body.location,
+        githubUsername: body.githubUsername,
+        leetcodeUsername: body.leetcodeUsername,
+        experience: body.experience,
+        education: body.education
       });
 
       return ok(profile, "Profile updated successfully");
@@ -183,6 +199,29 @@ export async function PATCH(request: Request) {
 
     if (Array.isArray(body.socials)) {
       updates.socials = body.socials;
+    }
+
+    const scalarKeys = [
+      "tagline",
+      "aboutBio",
+      "phone",
+      "location",
+      "githubUsername",
+      "leetcodeUsername"
+    ] as const;
+
+    for (const key of scalarKeys) {
+      if (typeof body[key] === "string") {
+        updates[key] = body[key];
+      }
+    }
+
+    if (Array.isArray(body.experience)) {
+      updates.experience = body.experience;
+    }
+
+    if (Array.isArray(body.education)) {
+      updates.education = body.education;
     }
 
     const user = await User.findByIdAndUpdate(session.id, updates, {

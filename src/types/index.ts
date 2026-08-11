@@ -1,5 +1,7 @@
 export type ProjectStatus = "Planning" | "In Progress" | "Live" | "Archived";
 
+export type ProjectCategory = "Web" | "AI/ML" | "Software" | "Engineering" | "Other";
+
 export type Project = {
   id?: string;
   title: string;
@@ -13,6 +15,14 @@ export type Project = {
   featured: boolean;
   status: ProjectStatus;
   sortOrder: number;
+  // OS-portfolio additions (all optional — only rendered when populated)
+  category?: ProjectCategory | string;
+  problem?: string;
+  solution?: string;
+  features?: string[];
+  challenges?: string;
+  learnings?: string;
+  architecture?: string[];
   createdAt?: string;
   updatedAt?: string;
 };
@@ -43,6 +53,19 @@ export type Certificate = {
   updatedAt?: string;
 };
 
+export type ExperienceItem = {
+  role: string;
+  company: string;
+  period: string;
+  summary: string;
+  impact: string[];
+};
+
+export type EducationItem = {
+  title: string;
+  institution: string;
+  period: string;
+};
 export type MessageStatus = "new" | "read" | "archived";
 
 export type Message = {
@@ -59,7 +82,7 @@ export type Message = {
 export type SocialLink = {
   label: string;
   href: string;
-  icon: "Github" | "Linkedin" | "Mail" | "Twitter" | "Globe";
+  icon: "Github" | "Linkedin" | "Mail" | "Twitter" | "Globe" | "Code";
 };
 
 export type UserProfile = {
@@ -69,6 +92,14 @@ export type UserProfile = {
   role: "admin";
   resumeUrl?: string;
   socials: SocialLink[];
+  tagline?: string;
+  aboutBio?: string;
+  phone?: string;
+  location?: string;
+  githubUsername?: string;
+  leetcodeUsername?: string;
+  experience?: ExperienceItem[];
+  education?: EducationItem[];
 };
 
 export type ApiSuccess<T> = {

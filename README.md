@@ -9,7 +9,8 @@ A modern, production-grade portfolio built with **Next.js 15**, **TypeScript**, 
 ## ✨ Features
 
 ### Public Portfolio
-- **Landing Intro** — Premium animated splash screen with orbiting particles, pulsing glow logo, and staggered text reveal
+- **Developer OS** — The homepage (/) boots into a desktop-style OS: draggable/resizable windows, taskbar with live clock, application launcher, ⌘/Ctrl+K command palette, boot animation, wallpaper & accent settings (persisted), and a working terminal (`help`, `neofetch`, `open <app>`, `theme`, …)
+- **Classic pages** — /about, /skills, /experience, /projects, /certificates, /contact remain available as standalone routes
 - **Hero Section** — Full-viewport hero with background image, gradient text, stats, and call-to-action buttons
 - **About** — Developer bio with highlights and animated cards
 - **Skills** — Dynamic skill grid with proficiency bars, fetched from API
@@ -25,6 +26,11 @@ A modern, production-grade portfolio built with **Next.js 15**, **TypeScript**, 
 - **Social Links** — Manage GitHub, LinkedIn, Email, Twitter links
 - **Messages** — View, mark as read, archive, or delete contact form submissions
 - **File Uploads** — Upload images for projects/certificates and PDFs for resume
+
+### Live Integrations
+- **GitHub app** — `/api/github` aggregates profile, repos, language split, recent activity, and the contribution heatmap (1h cache). Shows honest empty/error states when unconfigured or rate-limited. Optional `GITHUB_TOKEN` raises the API rate limit.
+- **LeetCode app** — `/api/leetcode` queries the official GraphQL API for solved counts, contest rating, badges, and the submission calendar (1h cache), with honest empty/error states.
+- Both usernames are configured from **Admin → Profile** (`githubUsername`, `leetcodeUsername`).
 
 ### Technical Highlights
 - **Dual-mode backend** — Works with MongoDB (production) or local JSON file (development)
@@ -69,6 +75,7 @@ A modern, production-grade portfolio built with **Next.js 15**, **TypeScript**, 
 │   │   │   ├── certificates/     # Manage certificates
 │   │   │   ├── dashboard/        # Dashboard overview
 │   │   │   ├── login/            # Admin login
+│   │   │   ├── profile/          # Profile, GitHub/LeetCode usernames, experience, education
 │   │   │   ├── projects/         # Manage projects
 │   │   │   ├── resume/           # Manage resume
 │   │   │   ├── skills/           # Manage skills
@@ -77,6 +84,8 @@ A modern, production-grade portfolio built with **Next.js 15**, **TypeScript**, 
 │   │   │   ├── auth/             # Auth (login/logout/profile)
 │   │   │   ├── certificates/     # Certificates CRUD
 │   │   │   ├── contact/          # Contact messages
+│   │   │   ├── github/           # Live GitHub profile/repos/contributions
+│   │   │   ├── leetcode/         # Live LeetCode stats via GraphQL
 │   │   │   ├── projects/         # Projects CRUD
 │   │   │   ├── skills/           # Skills CRUD
 │   │   │   └── upload/           # File upload
@@ -90,6 +99,7 @@ A modern, production-grade portfolio built with **Next.js 15**, **TypeScript**, 
 │   │   └── page.tsx              # Homepage
 │   ├── components/
 │   │   ├── admin/                # Admin panel components
+│   │   ├── os/                   # Developer OS shell (windows, taskbar, launcher, palette, apps)
 │   │   ├── shared/               # Layout, Reveal, SectionHeading
 │   │   ├── ui/                   # Reusable UI primitives
 │   │   ├── AnimatedBackground.tsx
@@ -155,6 +165,7 @@ ADMIN_PASSWORD="your-secure-password"
 | `SESSION_SECRET` | Yes | Secret key for signing session tokens (use a random 32+ char string) |
 | `ADMIN_EMAIL` | Yes | Email address for admin login |
 | `ADMIN_PASSWORD` | Yes | Password for admin login |
+| `GITHUB_TOKEN` | No | Personal access token — raises GitHub API rate limits for `/api/github` |
 
 ### Run Development Server
 
@@ -187,6 +198,7 @@ Access the admin panel at `/admin/login`.
 | Page | Description |
 |------|-------------|
 | **Dashboard** | Overview metrics (projects, skills, certificates, messages count) + message management |
+| **Profile** | Identity (tagline, bio, location, phone), GitHub/LeetCode usernames, experience, education |
 | **Projects** | Create/edit/delete projects with title, slug, description, tags, images, status |
 | **Skills** | Manage skills with categories, proficiency levels, icons |
 | **Certificates** | Manage certificates with issuers, dates, credential links, images |
@@ -223,6 +235,8 @@ All API routes are under `/api/`.
 | `PATCH` | `/api/contact` | Yes | Update message status |
 | `DELETE` | `/api/contact?id=<id>` | Yes | Delete a message |
 | `POST` | `/api/upload` | Yes | Upload file (resume/project/certificate) |
+| `GET` | `/api/github?username=<user>` | No | Live GitHub profile, repos, languages, contribution heatmap (1h cache) |
+| `GET` | `/api/leetcode?username=<user>` | No | Live LeetCode stats, contest rating, submission calendar (1h cache) |
 
 ---
 
@@ -254,6 +268,6 @@ This project is private and built by **Ehtesham Aalam**. All rights reserved.
 
 ## 🤝 Contact
 
-- **Email:** hello@ehtesham-aalam.dev
-- **GitHub:** [github.com/ehteshamaalam](https://github.com/ehteshamaalam)
+- **Email:** alamehtesham88@gmail.com
+- **GitHub:** [github.com/23f2001511](https://github.com/23f2001511)
 - **LinkedIn:** [linkedin.com/in/ehtesham-aalam](https://www.linkedin.com/in/ehtesham-aalam)

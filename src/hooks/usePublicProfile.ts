@@ -9,7 +9,15 @@ const fallbackProfile: UserProfile = {
   email: siteConfig.email,
   role: "admin",
   resumeUrl: siteConfig.resumeUrl,
-  socials: socialLinks
+  socials: socialLinks,
+  tagline: "",
+  aboutBio: "",
+  phone: "",
+  location: "",
+  githubUsername: "",
+  leetcodeUsername: "",
+  experience: [],
+  education: []
 };
 
 let profileRequest: Promise<UserProfile> | null = null;
@@ -41,24 +49,22 @@ async function fetchPublicProfile() {
 
 export function usePublicProfile() {
   const [profile, setProfile] = useState<UserProfile>(fallbackProfile);
+  const [resolved, setResolved] = useState(false);
 
   useEffect(() => {
     let active = true;
 
-    async function loadProfile() {
-      const nextProfile = await fetchPublicProfile();
-
+    fetchPublicProfile().then((nextProfile) => {
       if (active) {
         setProfile(nextProfile);
+        setResolved(true);
       }
-    }
-
-    loadProfile();
+    });
 
     return () => {
       active = false;
     };
   }, []);
 
-  return profile;
+  return { profile, resolved };
 }

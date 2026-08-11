@@ -14,7 +14,7 @@ const SocialLinkSchema = new Schema(
     },
     icon: {
       type: String,
-      enum: ["Github", "Linkedin", "Mail", "Twitter", "Globe"],
+      enum: ["Github", "Linkedin", "Mail", "Twitter", "Globe", "Code"],
       default: "Globe"
     }
   },
@@ -53,6 +53,36 @@ const UserSchema = new Schema(
     },
     socials: {
       type: [SocialLinkSchema],
+      default: []
+    },
+    tagline: { type: String, default: "" },
+    aboutBio: { type: String, default: "" },
+    phone: { type: String, default: "" },
+    location: { type: String, default: "" },
+    githubUsername: { type: String, default: "" },
+    leetcodeUsername: { type: String, default: "" },
+    experience: {
+      type: [
+        {
+          _id: false,
+          role: { type: String, default: "" },
+          company: { type: String, default: "" },
+          period: { type: String, default: "" },
+          summary: { type: String, default: "" },
+          impact: { type: [String], default: [] }
+        }
+      ],
+      default: []
+    },
+    education: {
+      type: [
+        {
+          _id: false,
+          title: { type: String, default: "" },
+          institution: { type: String, default: "" },
+          period: { type: String, default: "" }
+        }
+      ],
       default: []
     }
   },

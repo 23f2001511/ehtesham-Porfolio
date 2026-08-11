@@ -52,7 +52,18 @@ const ProjectSchema = new Schema(
     sortOrder: {
       type: Number,
       default: 0
-    }
+    },
+    category: {
+      type: String,
+      default: "Other",
+      trim: true
+    },
+    problem: { type: String, default: "" },
+    solution: { type: String, default: "" },
+    features: { type: [String], default: [] },
+    challenges: { type: String, default: "" },
+    learnings: { type: String, default: "" },
+    architecture: { type: [String], default: [] }
   },
   {
     timestamps: true

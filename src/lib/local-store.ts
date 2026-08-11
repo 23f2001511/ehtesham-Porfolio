@@ -157,7 +157,23 @@ export const localStore = {
     return store.profile;
   },
 
-  async updateProfile(updates: Partial<Pick<UserProfile, "resumeUrl" | "socials">>) {
+  async updateProfile(
+    updates: Partial<
+      Pick<
+        UserProfile,
+        | "resumeUrl"
+        | "socials"
+        | "tagline"
+        | "aboutBio"
+        | "phone"
+        | "location"
+        | "githubUsername"
+        | "leetcodeUsername"
+        | "experience"
+        | "education"
+      >
+    >
+  ) {
     const store = await readStore();
     store.profile = {
       ...store.profile,
