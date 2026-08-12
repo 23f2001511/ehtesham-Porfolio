@@ -4,140 +4,137 @@ import Image from "next/image";
 import Link from "next/link";
 import { motion, useReducedMotion } from "framer-motion";
 import { ArrowUpRight, Github, Rocket } from "lucide-react";
+import { useState } from "react";
+import Reveal from "@/components/shared/Reveal";
 import SectionHeading from "@/components/shared/SectionHeading";
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
 import { EmptyState } from "@/components/ui/empty-state";
 import { Skeleton } from "@/components/ui/skeleton";
 import { fallbackProjects } from "@/constants";
 import { useCollection } from "@/hooks/useCollection";
+import { cn } from "@/lib/utils";
 import type { Project } from "@/types";
+import ProjectDetailDialog from "./ProjectDetailDialog";
 
-const cardColors = [
-  { glow: "rgba(34, 211, 238, 0.2)", border: "rgba(34, 211, 238, 0.35)", accent: "#22d3ee" },
-  { glow: "rgba(168, 85, 247, 0.2)", border: "rgba(168, 85, 247, 0.35)", accent: "#a855f7" },
-  { glow: "rgba(16, 185, 129, 0.2)", border: "rgba(16, 185, 129, 0.35)", accent: "#10b981" },
-  { glow: "rgba(251, 191, 36, 0.18)", border: "rgba(251, 191, 36, 0.3)", accent: "#fbbf24" },
-];
+function statusTone(status: string) {
+  if (status === "Live") return "bg-secondary/90 text-secondary-foreground backdrop-blur";
+  if (status === "In Progress") return "bg-primary/90 text-primary-foreground backdrop-blur";
+  return "border border-[var(--glass-border)] bg-[var(--glass-bg)] text-foreground backdrop-blur";
+}
 
-function CosmicProjectCard({ project, index }: { project: Project; index: number }) {
+function ProjectCard({
+  project,
+  onOpen
+}: {
+  project: Project;
+  onOpen: (project: Project) => void;
+}) {
   const reducedMotion = useReducedMotion();
-  const colors = cardColors[index % cardColors.length];
 
   return (
     <motion.article
-      initial={reducedMotion ? {} : { opacity: 0, y: 40, scale: 0.95 }}
-      whileInView={{ opacity: 1, y: 0, scale: 1 }}
-      viewport={{ once: true, margin: "-60px" }}
-      transition={{ delay: index * 0.1, duration: 0.6, ease: "easeOut" }}
-      whileHover={
-        reducedMotion
-          ? undefined
-          : {
-              y: -10,
-              transition: { duration: 0.3, ease: "easeOut" },
-            }
-      }
-      className="cosmic-card group relative flex h-full flex-col overflow-hidden rounded-xl"
-      style={{
-        "--card-glow": colors.glow,
-        "--card-border": colors.border,
-        "--card-accent": colors.accent,
-      } as React.CSSProperties}
+      whileHover={reducedMotion ? undefined : { y: -6 }}
+      transition={{ duration: 0.3, ease: "easeOut" }}
+      className="glass glass-hover group relative flex h-full cursor-pointer flex-col overflow-hidden"
+      onClick={() => onOpen(project)}
+      onKeyDown={(event) => {
+        if (event.key === "Enter") onOpen(project);
+      }}
+      role="button"
+      tabIndex={0}
+      aria-label={`Open details for ${project.title}`}
     >
-      {/* Animated border glow */}
-      <div className="cosmic-card-border absolute inset-0 rounded-xl pointer-events-none" />
-
-      {/* Card body */}
-      <div className="relative flex h-full flex-col border border-white/8 rounded-xl bg-black/40 backdrop-blur-md overflow-hidden">
-        {/* Top accent line */}
-        <div
-          className="h-[2px] w-full"
-          style={{
-            background: `linear-gradient(90deg, transparent, ${colors.accent}, transparent)`,
-            opacity: 0.5,
-          }}
-        />
-
-        {/* Image / placeholder */}
-        <div className="relative aspect-[16/10] overflow-hidden bg-black/60">
-          {project.imageUrl ? (
-            <Image
-              src={project.imageUrl}
-              alt={`${project.title} preview`}
-              fill
-              sizes="(min-width: 1024px) 33vw, 100vw"
-              className="object-cover transition duration-500 group-hover:scale-110"
-            />
-          ) : (
-            <div
-              className="grid h-full place-items-center p-6 text-center"
-              style={{
-                background: `radial-gradient(ellipse at 50% 50%, ${colors.glow}, transparent 70%)`,
-              }}
-            >
-              <div>
-                <Rocket
-                  className="mx-auto h-8 w-8 mb-3 opacity-40"
-                  style={{ color: colors.accent }}
-                  aria-hidden="true"
-                />
-                <span className="text-sm font-semibold text-white/70">{project.title}</span>
-              </div>
+      {/* Image */}
+      <div className="relative aspect-[16/9] overflow-hidden bg-muted">
+        {project.imageUrl ? (
+          <Image
+            src={project.imageUrl}
+            alt={`${project.title} preview`}
+            fill
+            sizes="(min-width: 1024px) 50vw, 100vw"
+            className="object-cover transition duration-500 group-hover:scale-[1.04]"
+          />
+        ) : (
+          <div className="grid h-full place-items-center bg-[radial-gradient(ellipse_at_30%_30%,rgba(79,156,255,0.14),transparent_70%)] p-6 text-center">
+            <div>
+              <Rocket className="mx-auto mb-3 h-8 w-8 text-primary/40" aria-hidden="true" />
+              <span className="text-sm font-semibold text-muted-foreground">{project.title}</span>
             </div>
+          </div>
+        )}
+
+        <span
+          className={cn(
+            "absolute left-3 top-3 rounded-md px-2.5 py-1 text-[11px] font-semibold",
+            statusTone(project.status)
           )}
+        >
+          {project.status}
+        </span>
 
-          {/* Status badge */}
-          <div className="absolute left-3 top-3">
-            <Badge tone={project.status === "Live" ? "emerald" : "cyan"}>{project.status}</Badge>
-          </div>
+        {/* subtle dark gradient at the bottom of the media for legibility */}
+        <div className="pointer-events-none absolute inset-x-0 bottom-0 h-16 bg-gradient-to-t from-black/40 to-transparent" aria-hidden="true" />
+      </div>
 
-          {/* Scanline overlay */}
-          <div className="absolute inset-0 bg-[linear-gradient(transparent_50%,rgba(0,0,0,0.03)_50%)] bg-[length:100%_4px] pointer-events-none opacity-30" />
-        </div>
-
-        {/* Content */}
-        <div className="flex flex-1 flex-col p-5">
-          <h3 className="text-xl font-black text-white">{project.title}</h3>
-          <p className="mt-3 leading-7 text-slate-300/90">{project.summary}</p>
-
-          {/* Tags */}
-          <div className="mt-5 flex flex-wrap gap-2">
-            {project.tags.map((tag) => (
-              <span
-                key={tag}
-                className="rounded-full px-2.5 py-1 text-[10px] font-bold uppercase tracking-wider border"
-                style={{
-                  color: colors.accent,
-                  borderColor: `${colors.accent}33`,
-                  backgroundColor: `${colors.accent}0d`,
-                }}
-              >
-                {tag}
-              </span>
-            ))}
-          </div>
-
-          {/* Action buttons */}
-          <div className="mt-auto flex gap-2 pt-6">
-            {project.liveUrl ? (
-              <Button size="sm" onClick={() => window.open(project.liveUrl, "_blank", "noreferrer")}>
-                Live
-                <ArrowUpRight className="h-4 w-4" aria-hidden="true" />
-              </Button>
+      {/* Body */}
+      <div className="flex flex-1 flex-col p-5 sm:p-6">
+        <div className="flex items-start justify-between gap-3">
+          <div className="min-w-0">
+            <h3 className="truncate text-xl font-bold tracking-tight text-foreground">
+              {project.title}
+            </h3>
+            {project.category ? (
+              <p className="mt-0.5 text-xs font-medium uppercase tracking-wider text-muted-foreground">
+                {project.category}
+              </p>
             ) : null}
+          </div>
+
+          <div className="flex shrink-0 items-center gap-1.5">
             {project.repoUrl ? (
               <Link
                 href={project.repoUrl}
                 target="_blank"
                 rel="noreferrer"
-                className="inline-flex h-9 items-center justify-center gap-2 rounded-md border border-border bg-white/5 px-3 text-xs font-semibold text-white transition hover:border-cyan-300/60 hover:bg-white/10"
+                aria-label={`${project.title} source code`}
+                onClick={(event) => event.stopPropagation()}
+                className="grid h-9 w-9 place-items-center rounded-md border border-[var(--glass-border)] bg-[var(--glass-bg)] text-muted-foreground backdrop-blur-md transition-colors hover:border-border-strong hover:text-foreground"
               >
                 <Github className="h-4 w-4" aria-hidden="true" />
-                Code
+              </Link>
+            ) : null}
+            {project.liveUrl ? (
+              <Link
+                href={project.liveUrl}
+                target="_blank"
+                rel="noreferrer"
+                aria-label={`${project.title} live demo`}
+                onClick={(event) => event.stopPropagation()}
+                className="grid h-9 w-9 place-items-center rounded-md border border-[var(--glass-border)] bg-[var(--glass-bg)] text-muted-foreground backdrop-blur-md transition-colors hover:border-border-strong hover:text-foreground"
+              >
+                <ArrowUpRight className="h-4 w-4" aria-hidden="true" />
               </Link>
             ) : null}
           </div>
+        </div>
+
+        <p className="mt-3 line-clamp-2 text-sm leading-6 text-muted-foreground">
+          {project.summary}
+        </p>
+
+        <div className="mt-4 flex flex-wrap gap-1.5">
+          {project.tags.slice(0, 5).map((tag) => (
+            <span
+              key={tag}
+              className="rounded-md border border-border bg-surface px-2 py-0.5 text-[11px] font-medium text-muted-foreground"
+            >
+              {tag}
+            </span>
+          ))}
+        </div>
+
+        <div className="mt-5 flex items-center gap-1.5 border-t border-border pt-4 text-sm font-semibold text-primary opacity-80 transition-opacity group-hover:opacity-100">
+          View details
+          <ArrowUpRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" aria-hidden="true" />
         </div>
       </div>
     </motion.article>
@@ -146,41 +143,52 @@ function CosmicProjectCard({ project, index }: { project: Project; index: number
 
 export default function ProjectsSection() {
   const { data: projects, isLoading, error } = useCollection<Project>("/api/projects", fallbackProjects);
+  const [selected, setSelected] = useState<Project | null>(null);
+
+  const featured = projects.filter((p) => p.featured);
+  const rest = projects.filter((p) => !p.featured);
+  const ordered = [...featured, ...rest];
 
   return (
-    <section id="projects" className="py-24">
+    <section id="projects" className="section-pad">
       <div className="section-shell">
         <SectionHeading
           eyebrow="Projects"
-          title="Engineered solutions from code to circuitry."
-          description="From hospital management systems to analog electronics — each project reflects hands-on engineering and clean design thinking."
+          title="Selected work, engineered end-to-end"
+          description="Full-stack applications, systems projects, and hardware experiments — each one built to work, not just to demo."
         />
 
         {error ? (
-          <p className="mb-5 rounded-md border border-amber-300/25 bg-amber-300/10 px-4 py-3 text-sm text-amber-100">
+          <p className="mb-5 mt-8 rounded-md border border-amber-300/25 bg-amber-300/10 px-4 py-3 text-sm text-amber-100">
             Live projects could not be loaded. Showing curated starter content.
           </p>
         ) : null}
 
         {isLoading ? (
-          <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-2">
+          <div className="mt-12 grid gap-6 md:grid-cols-2">
             {Array.from({ length: 4 }).map((_, index) => (
               <Skeleton key={index} className="h-96" />
             ))}
           </div>
-        ) : projects.length ? (
-          <div className="grid gap-6 md:grid-cols-2">
-            {projects.map((project, index) => (
-              <CosmicProjectCard key={project.slug || project.title} project={project} index={index} />
+        ) : ordered.length ? (
+          <div className="mt-12 grid gap-6 md:grid-cols-2">
+            {ordered.map((project, index) => (
+              <Reveal key={project.slug || project.title} delay={(index % 2) * 0.08}>
+                <ProjectCard project={project} onOpen={setSelected} />
+              </Reveal>
             ))}
           </div>
         ) : (
-          <EmptyState
-            title="No projects published yet"
-            description="Create your first project from the admin dashboard and it will appear here."
-          />
+          <div className="mt-12">
+            <EmptyState
+              title="No projects published yet"
+              description="Create your first project from the admin dashboard and it will appear here."
+            />
+          </div>
         )}
       </div>
+
+      <ProjectDetailDialog project={selected} onClose={() => setSelected(null)} />
     </section>
   );
 }

@@ -17,7 +17,7 @@ export function Badge({ className, tone = "slate", ...props }: BadgeProps) {
   return (
     <span
       className={cn(
-        "inline-flex items-center rounded-md border px-2.5 py-1 text-xs font-medium",
+        "inline-flex items-center rounded-md border px-2.5 py-1 text-xs font-medium backdrop-blur-sm",
         toneClasses[tone],
         className
       )}

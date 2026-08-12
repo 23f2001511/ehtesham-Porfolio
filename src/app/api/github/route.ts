@@ -25,6 +25,12 @@ type GithubEventNode = {
   type: string;
   created_at: string;
   repo: { name: string };
+  payload?: {
+    commits?: Array<{ message: string; sha: string }>;
+    size?: number;
+    ref_type?: string;
+    action?: string;
+  };
 };
 
 function githubHeaders() {
@@ -48,13 +54,15 @@ function parseContributionCalendar(html: string) {
   const seen = new Set<string>();
 
   // Newer markup: <td ... data-date="2025-01-01" ... data-level="2" ...>
-  const cellPattern = /data-date="(\d{4}-\d{2}-\d{2})"[^>]*data-level="(\d)"/g;
+  // GitHub may emit the attributes in either order, so capture both.
+  const cellPattern = /<td[^>]*?(?:data-date="(\d{4}-\d{2}-\d{2})"[^>]*?data-level="(\d)"|data-level="(\d)"[^>]*?data-date="(\d{4}-\d{2}-\d{2})")[^>]*>/g;
   let match: RegExpExecArray | null;
 
   while ((match = cellPattern.exec(html)) !== null) {
-    const [, date, level] = match;
+    const date = match[1] || match[4];
+    const level = match[2] || match[3] || "0";
 
-    if (seen.has(date)) {
+    if (!date || seen.has(date)) {
       continue;
     }
 
@@ -171,6 +179,14 @@ export async function GET(request: Request) {
       contributions = null;
     }
 
+    // GitHub only exposes exact per-day counts in the cell tooltip markup when
+    // it is present; otherwise we only have a 0-4 intensity level. Surface a
+    // total only when every parsed day carries a real count.
+    const contributionsLastYear =
+      contributions && contributions.every((day) => day.count >= 0)
+        ? contributions.reduce((sum, day) => sum + day.count, 0)
+        : null;
+
     return ok({
       profile: {
         login: user.login,
@@ -186,14 +202,14 @@ export async function GET(request: Request) {
         createdAt: user.created_at,
         htmlUrl: user.html_url
       },
-      totals: { stars: totalStars, forks: totalForks },
+      totals: { stars: totalStars, forks: totalForks, contributionsLastYear },
       languages: [...languages.entries()]
         .map(([name, count]) => ({ name, count }))
         .sort((a, b) => b.count - a.count)
         .slice(0, 8),
       repos: repos
         .filter((repo) => !repo.fork)
-        .slice(0, 12)
+        .slice(0, 20)
         .map((repo) => ({
           name: repo.name,
           description: repo.description || "",
@@ -205,10 +221,15 @@ export async function GET(request: Request) {
           topics: repo.topics || [],
           updatedAt: repo.pushed_at || repo.updated_at
         })),
-      activity: events.slice(0, 12).map((event) => ({
+      activity: events.slice(0, 14).map((event) => ({
         type: event.type,
         repo: event.repo?.name || "",
-        createdAt: event.created_at
+        repoUrl: event.repo?.name ? `https://github.com/${event.repo.name}` : "",
+        createdAt: event.created_at,
+        commits:
+          event.type === "PushEvent"
+            ? event.payload?.size ?? event.payload?.commits?.length ?? null
+            : null
       })),
       contributions
     });

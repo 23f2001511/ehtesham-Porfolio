@@ -117,3 +117,90 @@ export type ApiFailure = {
 };
 
 export type ApiResponse<T> = ApiSuccess<T> | ApiFailure;
+
+
+/* ── Live analytics payloads (GitHub / LeetCode) ───────────────────────── */
+
+export type GithubProfile = {
+  login: string;
+  name: string;
+  avatarUrl: string;
+  bio: string;
+  company: string;
+  location: string;
+  blog: string;
+  followers: number;
+  following: number;
+  publicRepos: number;
+  createdAt: string;
+  htmlUrl: string;
+};
+
+export type GithubRepo = {
+  name: string;
+  description: string;
+  url: string;
+  homepage: string;
+  stars: number;
+  forks: number;
+  language: string;
+  topics: string[];
+  updatedAt: string | null;
+};
+
+export type GithubLanguage = { name: string; count: number };
+
+export type GithubContributionDay = {
+  date: string;
+  /** -1 when GitHub exposes only an intensity level, not an exact count */
+  count: number;
+  level: number;
+};
+
+export type GithubActivity = {
+  type: string;
+  repo: string;
+  repoUrl: string;
+  createdAt: string;
+  commits: number | null;
+};
+
+export type GithubData = {
+  profile: GithubProfile;
+  totals: { stars: number; forks: number; contributionsLastYear: number | null };
+  languages: GithubLanguage[];
+  repos: GithubRepo[];
+  activity: GithubActivity[];
+  contributions: GithubContributionDay[] | null;
+};
+
+export type LeetcodeSolved = { all: number; easy: number; medium: number; hard: number };
+
+export type LeetcodeLanguage = { name: string; solved: number };
+
+export type LeetcodeBadge = { name: string; icon: string };
+
+export type LeetcodeContest = {
+  attended: number;
+  rating: number;
+  globalRanking: number | null;
+  topPercentage: number | null;
+};
+
+export type LeetcodeRecent = { title: string; slug: string; timestamp: number };
+
+export type LeetcodeData = {
+  username: string;
+  realName: string;
+  avatar: string;
+  ranking: number | null;
+  reputation: number | null;
+  solved: LeetcodeSolved;
+  submissions: LeetcodeSolved;
+  languages: LeetcodeLanguage[];
+  badges: LeetcodeBadge[];
+  /** unix-epoch-day -> submission count */
+  calendar: Record<string, number>;
+  contest: LeetcodeContest | null;
+  recent: LeetcodeRecent[];
+};

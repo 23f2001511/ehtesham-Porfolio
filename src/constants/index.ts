@@ -17,12 +17,17 @@ export const siteConfig = {
 };
 
 export const navItems = [
-  { label: "About", href: "/about" },
-  { label: "Skills", href: "/skills" },
-  { label: "Experience", href: "/experience" },
-  { label: "Projects", href: "/projects" },
-  { label: "Certificates", href: "/certificates" },
-  { label: "Contact", href: "/contact" }
+  { label: "Home", href: "/#home", id: "home" },
+  { label: "About", href: "/#about", id: "about" },
+  { label: "Projects", href: "/#projects", id: "projects" },
+  { label: "Skills", href: "/#skills", id: "skills" },
+  { label: "GitHub", href: "/#github", id: "github" },
+  { label: "LeetCode", href: "/#leetcode", id: "leetcode" },
+  { label: "Experience", href: "/#experience", id: "experience" },
+  { label: "Education", href: "/#education", id: "education" },
+  { label: "Certificates", href: "/#certificates", id: "certificates" },
+  { label: "Resume", href: "/#resume", id: "resume" },
+  { label: "Contact", href: "/#contact", id: "contact" }
 ];
 
 export const adminNavItems = [
