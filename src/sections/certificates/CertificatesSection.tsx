@@ -25,6 +25,7 @@ export default function CertificatesSection() {
           eyebrow="Certificates"
           title="Credentials that back the craft"
           description="Formal certifications and completed programs — the public record of structured learning."
+          gradient
         />
 
         {error ? (

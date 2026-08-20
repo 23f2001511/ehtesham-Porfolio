@@ -156,6 +156,7 @@ export default function ProjectsSection() {
           eyebrow="Projects"
           title="Selected work, engineered end-to-end"
           description="Full-stack applications, systems projects, and hardware experiments — each one built to work, not just to demo."
+          gradient
         />
 
         {error ? (

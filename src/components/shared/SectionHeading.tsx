@@ -6,6 +6,7 @@ type SectionHeadingProps = {
   description?: string;
   align?: "left" | "center";
   className?: string;
+  gradient?: boolean;
 };
 
 export default function SectionHeading({
@@ -13,12 +14,18 @@ export default function SectionHeading({
   title,
   description,
   align = "left",
-  className
+  className,
+  gradient = false
 }: SectionHeadingProps) {
   return (
     <div className={cn("max-w-2xl", align === "center" && "mx-auto text-center", className)}>
       <span className={cn("eyebrow", align === "center" && "justify-center")}>{eyebrow}</span>
-      <h2 className="mt-4 text-balance text-3xl font-bold leading-[1.08] tracking-tight text-foreground sm:text-4xl lg:text-[2.75rem]">
+      <h2
+        className={cn(
+          "mt-4 text-balance text-3xl font-bold leading-[1.08] tracking-tight sm:text-4xl lg:text-[2.75rem]",
+          gradient ? "text-gradient" : "text-foreground"
+        )}
+      >
         {title}
       </h2>
       {description ? (

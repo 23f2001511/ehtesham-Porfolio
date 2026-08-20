@@ -13,6 +13,7 @@ import {
 } from "lucide-react";
 import Reveal from "@/components/shared/Reveal";
 import SectionHeading from "@/components/shared/SectionHeading";
+import LazySkillBadge3D from "@/components/LazySkillBadge3D";
 import { EmptyState } from "@/components/ui/empty-state";
 import { Skeleton } from "@/components/ui/skeleton";
 import { fallbackSkills } from "@/constants";
@@ -31,6 +32,21 @@ const iconMap: Record<string, typeof Code2> = {
   Sparkles,
   Workflow
 };
+
+/** Only the top featured skills get a 3D badge; the rest keep the 2D icon. */
+const THREED_BADGE_LIMIT = 8;
+
+/** Category -> brand color for the 3D badge, mirroring resolveCategory keys. */
+function categoryColor(category: string) {
+  const key = category.toLowerCase();
+  if (key.includes("data") || key.includes("science") || key.includes("software")) return "#38bdf8";
+  if (key.includes("web") || key.includes("front")) return "#a78bfa";
+  if (key.includes("back") || key.includes("server")) return "#34d399";
+  if (key.includes("design") || key.includes("ui")) return "#e879f9";
+  if (key.includes("engineer") || key.includes("core")) return "#fbbf24";
+  if (key.includes("product")) return "#22d3ee";
+  return "#94a3b8";
+}
 
 /**
  * Accent config keyed by a *normalized* category name so both the fallback
@@ -55,7 +71,7 @@ function resolveCategory(category: string) {
   return { bar: "from-slate-400 to-slate-500", chip: "border-slate-300/30 bg-slate-300/10 text-slate-200", order: 9 };
 }
 
-function SkillChip({ skill }: { skill: Skill }) {
+function SkillChip({ skill, use3D }: { skill: Skill; use3D: boolean }) {
   const Icon = iconMap[skill.icon ?? ""] ?? Code2;
   const accent = resolveCategory(skill.category);
 
@@ -64,9 +80,13 @@ function SkillChip({ skill }: { skill: Skill }) {
       className="group flex items-center gap-3 rounded-lg border border-border bg-surface px-4 py-3 transition-colors hover:border-primary/40"
       title={skill.years ? `${skill.years} yrs` : undefined}
     >
-      <span className={cn("grid h-8 w-8 shrink-0 place-items-center rounded-md border", accent.chip)}>
-        <Icon className="h-4 w-4" aria-hidden="true" />
-      </span>
+      {use3D ? (
+        <LazySkillBadge3D color={categoryColor(skill.category)} size={40} />
+      ) : (
+        <span className={cn("grid h-8 w-8 shrink-0 place-items-center rounded-md border", accent.chip)}>
+          <Icon className="h-4 w-4" aria-hidden="true" />
+        </span>
+      )}
       <div className="min-w-0 flex-1">
         <div className="flex items-baseline justify-between gap-2">
           <p className="truncate text-sm font-semibold text-foreground">{skill.name}</p>
@@ -85,6 +105,18 @@ function SkillChip({ skill }: { skill: Skill }) {
 export default function SkillsSection() {
   const { data: skills, isLoading, error } = useCollection<Skill>("/api/skills", fallbackSkills);
 
+  const topSkills = new Set(
+    skills
+      .slice()
+      .sort(
+        (a, b) =>
+          Number(b.featured) - Number(a.featured) ||
+          (a.sortOrder ?? 0) - (b.sortOrder ?? 0)
+      )
+      .slice(0, THREED_BADGE_LIMIT)
+      .map((skill) => skill.id ?? skill.name)
+  );
+
   const grouped = skills.reduce<Record<string, Skill[]>>((acc, skill) => {
     (acc[skill.category] ||= []).push(skill);
     return acc;
@@ -101,6 +133,7 @@ export default function SkillsSection() {
           eyebrow="Skills"
           title="A technical toolbox, grouped by discipline"
           description="Languages, frameworks, databases, and core engineering tools — each with an honest self-assessed proficiency."
+          gradient
         />
 
         {error ? (
@@ -136,7 +169,11 @@ export default function SkillsSection() {
                         .slice()
                         .sort((a, b) => (a.sortOrder ?? 0) - (b.sortOrder ?? 0))
                         .map((skill) => (
-                          <SkillChip key={skill.id ?? skill.name} skill={skill} />
+                          <SkillChip
+                            key={skill.id ?? skill.name}
+                            skill={skill}
+                            use3D={topSkills.has(skill.id ?? skill.name)}
+                          />
                         ))}
                     </div>
                   </div>

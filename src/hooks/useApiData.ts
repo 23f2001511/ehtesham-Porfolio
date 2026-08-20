@@ -64,6 +64,15 @@ function getOrCreateCache<T>(endpoint: string): CacheEntry<T> {
     return existing;
   }
 
+  // Node's fetch (used during SSR) cannot resolve relative URLs like
+  // "/api/...", so never fetch server-side. This module instance is separate
+  // from the browser bundle — the client creates its own real entry below.
+  if (typeof window === "undefined") {
+    const entry: CacheEntry<T> = { promise: new Promise<T>(() => {}), value: null };
+    caches.set(endpoint, entry as CacheEntry<never>);
+    return entry;
+  }
+
   const promise = new Promise<T>((resolve, reject) => {
     fetch(endpoint, { cache: "no-store" })
       .then(async (response) => {

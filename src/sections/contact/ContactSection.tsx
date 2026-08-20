@@ -101,6 +101,7 @@ export default function ContactSection() {
           eyebrow="Contact"
           title="Have a project, role, or collaboration in mind?"
           description="Drop a message through the form or reach out directly — I typically respond within 24 hours."
+          gradient
         />
 
         <div className="mt-12 grid gap-6 lg:grid-cols-[0.85fr_1.15fr]">

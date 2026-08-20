@@ -17,6 +17,7 @@ export default function ExperienceSection() {
           eyebrow="Experience"
           title="Where I've been putting the hours"
           description="Roles and responsibilities that shaped how I build software today."
+          gradient
         />
 
         {items.length ? (
