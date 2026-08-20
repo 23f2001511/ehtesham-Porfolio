@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import AdminShell from "@/components/admin/AdminShell";
 import ResourceManager, { type FieldConfig } from "@/components/admin/ResourceManager";
+import { requireAdminPage } from "@/lib/auth-page";
 
 export const metadata: Metadata = {
   title: "Manage Certificates",
@@ -17,7 +18,8 @@ const fields: FieldConfig[] = [
   { name: "featured", label: "Featured certificate", type: "checkbox" }
 ];
 
-export default function AdminCertificatesPage() {
+export default async function AdminCertificatesPage() {
+  await requireAdminPage();
   return (
     <AdminShell>
       <ResourceManager

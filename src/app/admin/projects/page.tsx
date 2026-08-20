@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import AdminShell from "@/components/admin/AdminShell";
 import ResourceManager, { type FieldConfig } from "@/components/admin/ResourceManager";
+import { requireAdminPage } from "@/lib/auth-page";
 
 export const metadata: Metadata = {
   title: "Manage Projects",
@@ -21,7 +22,8 @@ const fields: FieldConfig[] = [
   { name: "featured", label: "Featured project", type: "checkbox" }
 ];
 
-export default function AdminProjectsPage() {
+export default async function AdminProjectsPage() {
+  await requireAdminPage();
   return (
     <AdminShell>
       <ResourceManager

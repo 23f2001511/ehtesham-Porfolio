@@ -1,12 +1,14 @@
 import type { Metadata } from "next";
 import AdminShell from "@/components/admin/AdminShell";
 import ProfileManager from "@/components/admin/ProfileManager";
+import { requireAdminPage } from "@/lib/auth-page";
 
 export const metadata: Metadata = {
   title: "Profile | Admin"
 };
 
-export default function AdminProfilePage() {
+export default async function AdminProfilePage() {
+  await requireAdminPage();
   return (
     <AdminShell>
       <div className="mx-auto w-full max-w-3xl space-y-4 p-6">

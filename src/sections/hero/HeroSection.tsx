@@ -10,7 +10,7 @@ import { usePublicProfile } from "@/hooks/usePublicProfile";
 import { useApiData } from "@/hooks/useApiData";
 import type { GithubData, LeetcodeData } from "@/types";
 
-const HeroScene = dynamic(() => import("@/components/three/HeroScene"), {
+const Hero3D = dynamic(() => import("@/components/Hero3D"), {
   ssr: false,
   loading: () => <HeroScenePlaceholder />
 });
@@ -111,9 +111,9 @@ export default function HeroSection() {
 
   return (
     <section id="home" className="relative flex min-h-screen items-center overflow-hidden pt-20">
-      {/* 3D backdrop */}
+                  {/* 3D backdrop */}
       <div className="pointer-events-none absolute inset-0">
-        <HeroScene />
+        <Hero3D />
         {/*
           Readability scrim: stronger over the copy column, fading out over the
           right third where the 3D sits so the object is clearly visible.
