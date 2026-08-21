@@ -155,7 +155,7 @@ export default function GitHubSection() {
                       unoptimized
                     />
                     <div className="min-w-0 flex-1">
-                      <h3 className="text-xl font-bold tracking-tight text-foreground">
+                      <h3 className="font-display text-xl font-bold tracking-tight text-foreground">
                         {data.profile.name || data.profile.login}
                       </h3>
                       <Link

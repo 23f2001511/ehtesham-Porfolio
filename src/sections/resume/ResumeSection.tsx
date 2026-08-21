@@ -17,7 +17,7 @@ export default function ResumeSection() {
           <div className="grid items-center gap-8 lg:grid-cols-[1.15fr_0.85fr]">
             <div>
               <span className="eyebrow">Resume</span>
-              <h2 className="mt-4 text-balance text-3xl font-bold tracking-tight text-foreground sm:text-4xl">
+              <h2 className="font-display mt-4 text-balance text-3xl font-bold tracking-tight text-foreground sm:text-4xl">
                 The one-page version of everything you just scrolled
               </h2>
               <p className="mt-4 max-w-xl text-base leading-7 text-muted-foreground">

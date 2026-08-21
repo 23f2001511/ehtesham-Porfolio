@@ -1,0 +1,12 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "incremental": false,
+    "plugins": []
+  },
+  "include": [
+    "src/components/SpaceBackground.tsx",
+    "src/sections/hero/HeroSection.tsx",
+    "src/components/Navbar.tsx"
+  ]
+}

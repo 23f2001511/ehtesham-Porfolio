@@ -33,7 +33,7 @@ function ProjectCard({
     <motion.article
       whileHover={reducedMotion ? undefined : { y: -6 }}
       transition={{ duration: 0.3, ease: "easeOut" }}
-      className="glass glass-hover group relative flex h-full cursor-pointer flex-col overflow-hidden"
+      className="glass glass-hover gradient-border group relative flex h-full cursor-pointer flex-col overflow-hidden"
       onClick={() => onOpen(project)}
       onKeyDown={(event) => {
         if (event.key === "Enter") onOpen(project);
@@ -78,7 +78,7 @@ function ProjectCard({
       <div className="flex flex-1 flex-col p-5 sm:p-6">
         <div className="flex items-start justify-between gap-3">
           <div className="min-w-0">
-            <h3 className="truncate text-xl font-bold tracking-tight text-foreground">
+            <h3 className="font-display truncate text-xl font-bold tracking-tight text-foreground">
               {project.title}
             </h3>
             {project.category ? (

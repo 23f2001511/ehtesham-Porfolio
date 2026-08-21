@@ -61,7 +61,7 @@ export default function CertificatesSection() {
                   <div className="flex flex-1 flex-col p-5">
                     <div className="flex items-start justify-between gap-3">
                       <div className="min-w-0">
-                        <h3 className="text-base font-semibold tracking-tight text-foreground">
+                        <h3 className="font-display text-base font-semibold tracking-tight text-foreground">
                           {cert.title}
                         </h3>
                         <p className="mt-0.5 text-sm font-medium text-primary">{cert.issuer}</p>

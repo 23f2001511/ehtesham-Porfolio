@@ -5,6 +5,7 @@ import { Plus, Save, Trash2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import FileUploader from "@/components/admin/FileUploader";
 import type { ApiResponse, EducationItem, ExperienceItem, UserProfile } from "@/types";
 
 const emptyExperience: ExperienceItem = {
@@ -24,6 +25,7 @@ const emptyEducation: EducationItem = {
 interface ProfileForm {
   tagline: string;
   aboutBio: string;
+  avatarUrl: string;
   phone: string;
   location: string;
   githubUsername: string;
@@ -37,6 +39,7 @@ interface ProfileForm {
 const emptyForm: ProfileForm = {
   tagline: "",
   aboutBio: "",
+  avatarUrl: "",
   phone: "",
   location: "",
   githubUsername: "",
@@ -67,6 +70,7 @@ export default function ProfileManager() {
         setForm({
           tagline: payload.data.tagline || "",
           aboutBio: payload.data.aboutBio || "",
+          avatarUrl: payload.data.avatarUrl || "",
           phone: payload.data.phone || "",
           location: payload.data.location || "",
           githubUsername: payload.data.githubUsername || "",
@@ -108,6 +112,7 @@ export default function ProfileManager() {
     const payload = {
       tagline: form.tagline,
       aboutBio: form.aboutBio,
+      avatarUrl: form.avatarUrl,
       phone: form.phone,
       location: form.location,
       githubUsername: form.githubUsername,
@@ -192,6 +197,47 @@ export default function ProfileManager() {
             className="w-full rounded-md border border-border bg-input px-3 py-2 text-sm text-foreground"
             placeholder="A short professional bio for the About app"
           />
+        </div>
+        <div>
+          <Label>Profile photo</Label>
+          <p className="mb-3 text-xs text-muted-foreground">
+            Shown on the home hero. JPG, PNG, or WebP up to 5&nbsp;MB. If no photo is set, an animated
+            planet placeholder appears instead.
+          </p>
+          <div className="flex flex-col gap-4 sm:flex-row sm:items-start">
+            <div className="relative h-24 w-24 shrink-0 overflow-hidden rounded-2xl border border-border bg-surface">
+              {form.avatarUrl ? (
+                // eslint-disable-next-line @next/next/no-img-element
+                <img
+                  src={form.avatarUrl}
+                  alt="Current profile photo"
+                  className="h-full w-full object-cover"
+                />
+              ) : (
+                <span className="grid h-full w-full place-items-center bg-gradient-to-br from-primary/25 to-accent/15 text-xs text-muted-foreground">
+                  No photo
+                </span>
+              )}
+            </div>
+            <div className="flex-1 space-y-2">
+              <FileUploader
+                type="avatar"
+                accept="image/png,image/jpeg,image/webp"
+                onUploaded={(url) => setForm((prev) => ({ ...prev, avatarUrl: url }))}
+              />
+              {form.avatarUrl ? (
+                <Button
+                  type="button"
+                  variant="destructive"
+                  size="sm"
+                  onClick={() => setForm((prev) => ({ ...prev, avatarUrl: "" }))}
+                >
+                  <Trash2 className="h-4 w-4" aria-hidden="true" />
+                  Remove photo
+                </Button>
+              ) : null}
+            </div>
+          </div>
         </div>
       </section>
 

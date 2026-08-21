@@ -33,7 +33,7 @@ export default function ExperienceSection() {
                     <article className="panel-ghost card-lift p-5 sm:p-6">
                       <div className="flex flex-wrap items-start justify-between gap-3">
                         <div className="min-w-0">
-                          <h3 className="text-lg font-bold tracking-tight text-foreground">
+                          <h3 className="font-display text-lg font-bold tracking-tight text-foreground">
                             {item.role}
                           </h3>
                           <p className="mt-1 inline-flex items-center gap-1.5 text-sm font-semibold text-primary">

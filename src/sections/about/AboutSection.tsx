@@ -38,7 +38,7 @@ export default function AboutSection() {
           <ScrollReveal direction="left">
             <div className="panel card-lift h-full p-7 sm:p-8">
               <span className="eyebrow">Who I am</span>
-              <h3 className="mt-5 text-balance text-2xl font-bold leading-snug tracking-tight text-foreground sm:text-3xl">
+              <h3 className="font-display mt-5 text-balance text-2xl font-bold leading-snug tracking-tight text-foreground sm:text-3xl">
                 I build practical products with a sharp eye for the details users feel.
               </h3>
               <p className="mt-5 text-base leading-8 text-muted-foreground">{bio}</p>

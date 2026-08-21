@@ -62,7 +62,7 @@ export default function ProjectDetailDialog({
             onClick={(event) => event.stopPropagation()}
           >
             <div className="sticky top-0 z-10 flex items-center justify-between gap-4 border-b border-[var(--glass-border)] bg-transparent px-6 py-4 backdrop-blur-xl sm:px-8">
-              <h3 className="truncate text-lg font-semibold tracking-tight text-foreground">
+              <h3 className="font-display truncate text-lg font-semibold tracking-tight text-foreground">
                 {project.title}
               </h3>
               <button

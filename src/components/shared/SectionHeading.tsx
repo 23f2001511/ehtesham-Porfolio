@@ -22,8 +22,8 @@ export default function SectionHeading({
       <span className={cn("eyebrow", align === "center" && "justify-center")}>{eyebrow}</span>
       <h2
         className={cn(
-          "mt-4 text-balance text-3xl font-bold leading-[1.08] tracking-tight sm:text-4xl lg:text-[2.75rem]",
-          gradient ? "text-gradient" : "text-foreground"
+          "font-display mt-4 text-balance text-3xl font-bold leading-[1.08] tracking-tight sm:text-4xl lg:text-[2.75rem]",
+          gradient ? "text-gradient-flow" : "text-foreground"
         )}
       >
         {title}

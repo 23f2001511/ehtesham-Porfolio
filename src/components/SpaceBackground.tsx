@@ -207,6 +207,189 @@ function CameraDrift({ reduced }: { reduced: boolean }) {
   return null;
 }
 
+/**
+ * Instanced asteroid belt — a scattered ring of small rocks that slowly
+ * revolves as one body. Instancing keeps ~100+ rocks to a single draw call.
+ * Rendered inside the solar-system group so it inherits its tilt and scale.
+ */
+function AsteroidBelt({ count, reduced }: { count: number; reduced: boolean }) {
+  const mesh = useRef<THREE.InstancedMesh>(null);
+  const group = useRef<THREE.Group>(null);
+
+  const rocks = useMemo(
+    () =>
+      Array.from({ length: count }, () => ({
+        angle: Math.random() * Math.PI * 2,
+        radius: 3.55 + (Math.random() - 0.5) * 0.55,
+        y: (Math.random() - 0.5) * 0.22,
+        scale: 0.018 + Math.random() * 0.045,
+        tilt: Math.random() * Math.PI
+      })),
+    [count]
+  );
+
+  useEffect(() => {
+    if (!mesh.current) return;
+    const dummy = new THREE.Object3D();
+    rocks.forEach((rock, index) => {
+      dummy.position.set(Math.cos(rock.angle) * rock.radius, rock.y, Math.sin(rock.angle) * rock.radius);
+      dummy.rotation.set(rock.tilt, rock.tilt * 1.3, 0);
+      dummy.scale.setScalar(rock.scale);
+      dummy.updateMatrix();
+      mesh.current!.setMatrixAt(index, dummy.matrix);
+    });
+    mesh.current.instanceMatrix.needsUpdate = true;
+  }, [rocks]);
+
+  useFrame((_, delta) => {
+    if (reduced || !group.current) return;
+    group.current.rotation.y += delta * 0.08;
+  });
+
+  return (
+    <group ref={group}>
+      <instancedMesh ref={mesh} args={[undefined, undefined, count]}>
+        <dodecahedronGeometry args={[1, 0]} />
+        <meshStandardMaterial color="#8a7d70" emissive="#2a2118" emissiveIntensity={0.2} roughness={0.9} metalness={0.1} />
+      </instancedMesh>
+    </group>
+  );
+}
+
+/**
+ * A distant spiral galaxy built from a colored point cloud (violet core →
+ * cyan rim, three arms), flattened into a disc and slowly spinning. Sits far
+ * behind the scene, opposite the solar system, as the "galaxy" focal point.
+ */
+function SpiralGalaxy({ count, reduced }: { count: number; reduced: boolean }) {
+  const points = useRef<THREE.Points>(null);
+
+  const geometry = useMemo(() => {
+    const positions = new Float32Array(count * 3);
+    const colors = new Float32Array(count * 3);
+    const inner = new THREE.Color("#c4b5fd");
+    const outer = new THREE.Color("#22d3ee");
+    const color = new THREE.Color();
+    const arms = 3;
+    const maxRadius = 6;
+
+    for (let i = 0; i < count; i++) {
+      const radius = Math.pow(Math.random(), 0.65) * maxRadius;
+      const armAngle = ((i % arms) / arms) * Math.PI * 2;
+      const spin = radius * 0.55;
+      const scatter = (Math.random() - 0.5) * (0.3 + radius * 0.08);
+      const angle = armAngle + spin;
+
+      positions[i * 3] = Math.cos(angle) * radius + scatter;
+      positions[i * 3 + 1] = (Math.random() - 0.5) * 0.6 * (1 - radius / (maxRadius + 2));
+      positions[i * 3 + 2] = Math.sin(angle) * radius + scatter;
+
+      color.copy(inner).lerp(outer, radius / maxRadius);
+      colors[i * 3] = color.r;
+      colors[i * 3 + 1] = color.g;
+      colors[i * 3 + 2] = color.b;
+    }
+
+    const geo = new THREE.BufferGeometry();
+    geo.setAttribute("position", new THREE.BufferAttribute(positions, 3));
+    geo.setAttribute("color", new THREE.BufferAttribute(colors, 3));
+    return geo;
+  }, [count]);
+
+  useFrame((_, delta) => {
+    if (reduced || !points.current) return;
+    points.current.rotation.y += delta * 0.04;
+  });
+
+  return (
+    <group position={[-9, 3.4, -16]} rotation={[1.05, 0.35, 0.4]} scale={1.1}>
+      <points ref={points} geometry={geometry}>
+        <pointsMaterial
+          size={0.06}
+          vertexColors
+          transparent
+          opacity={0.8}
+          sizeAttenuation
+          depthWrite={false}
+          blending={THREE.AdditiveBlending}
+        />
+      </points>
+    </group>
+  );
+}
+
+/**
+ * Shooting stars — a small pool of additive streaks that periodically dart
+ * across on a fixed diagonal and fade in/out. Each has its own phase so they
+ * don't fire in unison. Positions are looped from absolute elapsed time.
+ */
+function ShootingStars({ count, reduced }: { count: number; reduced: boolean }) {
+  const DIR_X = -1;
+  const DIR_Y = -0.62;
+  const angle = Math.atan2(DIR_Y, DIR_X);
+
+  const groups = useRef<(THREE.Group | null)[]>([]);
+  const meteors = useMemo(
+    () =>
+      Array.from({ length: count }, () => ({
+        x0: 7 + Math.random() * 7,
+        y0: 3.5 + Math.random() * 5,
+        z: -3 - Math.random() * 7,
+        length: 16 + Math.random() * 10,
+        speed: 0.55 + Math.random() * 0.4,
+        phase: Math.random() * 9,
+        period: 7 + Math.random() * 7,
+        window: 1.1
+      })),
+    [count]
+  );
+
+  useFrame((state) => {
+    if (reduced) return;
+    const time = state.clock.elapsedTime;
+    meteors.forEach((meteor, index) => {
+      const node = groups.current[index];
+      if (!node) return;
+      const local = (time * meteor.speed + meteor.phase) % meteor.period;
+      const active = local < meteor.window;
+      node.visible = active;
+      if (!active) return;
+      const progress = local / meteor.window;
+      const travel = progress * meteor.length;
+      node.position.set(meteor.x0 + DIR_X * travel, meteor.y0 + DIR_Y * travel, meteor.z);
+      const streak = node.children[0] as THREE.Mesh;
+      const material = streak.material as THREE.MeshBasicMaterial;
+      material.opacity = Math.sin(progress * Math.PI) * 0.9;
+    });
+  });
+
+  return (
+    <group>
+      {meteors.map((_, index) => (
+        <group
+          key={index}
+          ref={(node) => {
+            groups.current[index] = node;
+          }}
+          rotation={[0, 0, angle]}
+          visible={false}
+        >
+          <mesh>
+            <boxGeometry args={[2.4, 0.025, 0.025]} />
+            <meshBasicMaterial
+              color="#dbeafe"
+              transparent
+              opacity={0}
+              depthWrite={false}
+              blending={THREE.AdditiveBlending}
+            />
+          </mesh>
+        </group>
+      ))}
+    </group>
+  );
+}
+
 const PHASE_OFFSET = 2.1;
 
 type PlanetConfig = {
@@ -269,6 +452,23 @@ function SolarSystem({ reduced, mobile }: { reduced: boolean; mobile: boolean })
       <Sparkles count={mobile ? 6 : 10} scale={2.2} size={1.5} speed={0.5} opacity={0.3} color={SUN_COLOR} />
       <pointLight color={SUN_EMISSIVE} intensity={2.2} distance={12} decay={2} />
 
+      {/* Faint orbit paths (static, in the orbital plane) */}
+      {planets.map((planet, index) => (
+        <mesh key={`orbit-${index}`} rotation={[Math.PI / 2, 0, 0]}>
+          <ringGeometry args={[planet.radius - 0.012, planet.radius + 0.012, 128]} />
+          <meshBasicMaterial
+            color="#7c6bd6"
+            transparent
+            opacity={0.16}
+            side={THREE.DoubleSide}
+            depthWrite={false}
+          />
+        </mesh>
+      ))}
+
+      {/* Asteroid belt between the inner planets and the ringed outer planet */}
+      {!mobile ? <AsteroidBelt count={110} reduced={reduced} /> : null}
+
       {/* Planets */}
       {planets.map((planet, index) => {
         const phase = index * PHASE_OFFSET;
@@ -297,16 +497,29 @@ function SolarSystem({ reduced, mobile }: { reduced: boolean; mobile: boolean })
               />
             </mesh>
             {planet.ring ? (
-              <mesh rotation={[Math.PI / 2.1, 0.4, 0]}>
-                <ringGeometry args={[1.3, 1.9, 32]} />
-                <meshBasicMaterial
-                  color="#d8d2e8"
-                  transparent
-                  opacity={0.55}
-                  side={THREE.DoubleSide}
-                  depthWrite={false}
-                />
-              </mesh>
+              <>
+                <mesh rotation={[Math.PI / 2.1, 0.4, 0]}>
+                  <ringGeometry args={[1.3, 1.9, 32]} />
+                  <meshBasicMaterial
+                    color="#d8d2e8"
+                    transparent
+                    opacity={0.55}
+                    side={THREE.DoubleSide}
+                    depthWrite={false}
+                  />
+                </mesh>
+                {/* moon — revolves with the planet's self-rotation */}
+                <mesh position={[2.5, 0, 0]} scale={0.24}>
+                  <icosahedronGeometry args={[1, 1]} />
+                  <meshStandardMaterial
+                    color="#cfc9dc"
+                    emissive="#39344f"
+                    emissiveIntensity={0.15}
+                    roughness={0.85}
+                    metalness={0.1}
+                  />
+                </mesh>
+              </>
             ) : null}
           </group>
         );
@@ -369,6 +582,8 @@ export default function SpaceBackground() {
         <FarStarLayer count={isMobile ? 350 : 1500} reduced={reduced} />
         <NearStarLayer count={isMobile ? 130 : 800} radius={12} reduced={reduced} />
         {!isMobile ? <MilkyWayBand /> : null}
+        {!isMobile ? <SpiralGalaxy count={2200} reduced={reduced} /> : null}
+        {!isMobile ? <ShootingStars count={3} reduced={reduced} /> : null}
         <SolarSystem reduced={reduced} mobile={isMobile} />
       </Canvas>
     </motion.div>

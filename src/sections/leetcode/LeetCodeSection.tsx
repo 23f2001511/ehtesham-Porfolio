@@ -185,7 +185,7 @@ export default function LeetCodeSection() {
                       </div>
                     )}
                     <div className="min-w-0 flex-1">
-                      <h3 className="text-xl font-bold tracking-tight text-foreground">
+                      <h3 className="font-display text-xl font-bold tracking-tight text-foreground">
                         {data.realName && data.realName !== data.username ? data.realName : siteConfig.name}
                       </h3>
                       <Link

@@ -108,7 +108,7 @@ export default function ContactSection() {
           {/* Info column */}
           <Reveal>
             <div className="panel h-full p-6 sm:p-7">
-              <h3 className="text-xl font-bold tracking-tight text-foreground">
+              <h3 className="font-display text-xl font-bold tracking-tight text-foreground">
                 Let&rsquo;s build something useful together.
               </h3>
               <p className="mt-3 text-sm leading-7 text-muted-foreground">

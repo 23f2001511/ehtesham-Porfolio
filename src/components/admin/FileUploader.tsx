@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 import type { ApiResponse } from "@/types";
 
 type FileUploaderProps = {
-  type: "resume" | "project" | "certificate";
+  type: "resume" | "project" | "certificate" | "avatar";
   accept: string;
   onUploaded: (url: string) => void;
 };

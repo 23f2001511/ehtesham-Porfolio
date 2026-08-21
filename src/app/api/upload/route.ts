@@ -62,7 +62,7 @@ export async function POST(request: Request) {
     const file = formData.get("file");
 
     if (!isUploadType(uploadTypeValue)) {
-      return fail("Upload type must be resume, project, or certificate.", 400);
+      return fail("Upload type must be resume, project, certificate, or avatar.", 400);
     }
 
     if (!(file instanceof File)) {
