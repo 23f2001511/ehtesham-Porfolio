@@ -7,15 +7,13 @@ import Reveal from "@/components/shared/Reveal";
 import SectionHeading from "@/components/shared/SectionHeading";
 import { EmptyState } from "@/components/ui/empty-state";
 import { Skeleton } from "@/components/ui/skeleton";
-import { fallbackCertificates } from "@/constants";
 import { useCollection } from "@/hooks/useCollection";
 import { formatDate } from "@/lib/utils";
 import type { Certificate } from "@/types";
 
 export default function CertificatesSection() {
   const { data: certificates, isLoading, error } = useCollection<Certificate>(
-    "/api/certificates",
-    fallbackCertificates
+    "/api/certificates"
   );
 
   return (
@@ -27,12 +25,6 @@ export default function CertificatesSection() {
           description="Formal certifications and completed programs — the public record of structured learning."
           gradient
         />
-
-        {error ? (
-          <p className="mb-5 mt-8 rounded-md border border-amber-300/25 bg-amber-300/10 px-4 py-3 text-sm text-amber-100">
-            Live certificates could not be loaded. Showing curated starter content.
-          </p>
-        ) : null}
 
         {isLoading ? (
           <div className="mt-12 grid gap-5 md:grid-cols-3">
@@ -97,8 +89,12 @@ export default function CertificatesSection() {
         ) : (
           <div className="mt-12">
             <EmptyState
-              title="No certificates published yet"
-              description="Add certificates from the admin dashboard to populate this section."
+              title={error ? "Couldn't load certificates" : "No certificates published yet"}
+              description={
+                error
+                  ? "The request failed. Check your connection and refresh the page."
+                  : "Add certificates from the admin dashboard to populate this section."
+              }
             />
           </div>
         )}

@@ -16,7 +16,6 @@ import SectionHeading from "@/components/shared/SectionHeading";
 import LazySkillBadge3D from "@/components/LazySkillBadge3D";
 import { EmptyState } from "@/components/ui/empty-state";
 import { Skeleton } from "@/components/ui/skeleton";
-import { fallbackSkills } from "@/constants";
 import { useCollection } from "@/hooks/useCollection";
 import { cn } from "@/lib/utils";
 import type { Skill } from "@/types";
@@ -103,7 +102,7 @@ function SkillChip({ skill, use3D }: { skill: Skill; use3D: boolean }) {
 }
 
 export default function SkillsSection() {
-  const { data: skills, isLoading, error } = useCollection<Skill>("/api/skills", fallbackSkills);
+  const { data: skills, isLoading, error } = useCollection<Skill>("/api/skills");
 
   const topSkills = new Set(
     skills
@@ -135,12 +134,6 @@ export default function SkillsSection() {
           description="Languages, frameworks, databases, and core engineering tools — each with an honest self-assessed proficiency."
           gradient
         />
-
-        {error ? (
-          <p className="mb-5 mt-8 rounded-md border border-amber-300/25 bg-amber-300/10 px-4 py-3 text-sm text-amber-100">
-            Live skills could not be loaded. Showing curated starter content.
-          </p>
-        ) : null}
 
         {isLoading ? (
           <div className="mt-12 grid gap-6 md:grid-cols-2 lg:grid-cols-3">
@@ -184,8 +177,12 @@ export default function SkillsSection() {
         ) : (
           <div className="mt-12">
             <EmptyState
-              title="No skills published yet"
-              description="Add skills from the admin dashboard to populate this section."
+              title={error ? "Couldn't load skills" : "No skills published yet"}
+              description={
+                error
+                  ? "The request failed. Check your connection and refresh the page."
+                  : "Add skills from the admin dashboard to populate this section."
+              }
             />
           </div>
         )}

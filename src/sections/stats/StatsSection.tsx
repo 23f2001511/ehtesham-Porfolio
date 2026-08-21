@@ -4,7 +4,7 @@ import AnimatedNumber from "@/components/shared/AnimatedNumber";
 import Reveal from "@/components/shared/Reveal";
 import SectionHeading from "@/components/shared/SectionHeading";
 import { Skeleton } from "@/components/ui/skeleton";
-import { fallbackSkills, siteConfig } from "@/constants";
+import { siteConfig } from "@/constants";
 import { useApiData } from "@/hooks/useApiData";
 import { useCollection } from "@/hooks/useCollection";
 import type { GithubData, LeetcodeData, Skill } from "@/types";
@@ -29,7 +29,7 @@ export default function StatsSection() {
   const { data: leetcode, isLoading: leetcodeLoading } = useApiData<LeetcodeData>(
     `/api/leetcode?username=${siteConfig.leetcodeUsername}`
   );
-  const { data: skills } = useCollection<Skill>("/api/skills", fallbackSkills);
+  const { data: skills } = useCollection<Skill>("/api/skills");
 
   const stats: Stat[] = [
     {

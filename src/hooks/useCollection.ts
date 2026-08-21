@@ -1,12 +1,11 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import type { ApiResponse } from "@/types";
 
-export function useCollection<T>(endpoint: string, fallback: T[] = []) {
-  const fallbackRef = useRef(fallback);
-  const [data, setData] = useState<T[]>(fallback);
-  const [isLoading, setIsLoading] = useState(false);
+export function useCollection<T>(endpoint: string) {
+  const [data, setData] = useState<T[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState("");
 
   useEffect(() => {
@@ -20,10 +19,14 @@ export function useCollection<T>(endpoint: string, fallback: T[] = []) {
         const response = await fetch(endpoint, {
           cache: "no-store"
         });
+        if (!response.ok) {
+          throw new Error("Unable to load data.");
+        }
+
         const payload = (await response.json()) as ApiResponse<T[]>;
 
         if (!payload.success) {
-          throw new Error(payload.error);
+          throw new Error(payload.error || "Unable to load data.");
         }
 
         if (active) {
@@ -31,7 +34,7 @@ export function useCollection<T>(endpoint: string, fallback: T[] = []) {
         }
       } catch (caughtError) {
         if (active) {
-          setData(fallbackRef.current);
+          setData([]);
           setError(caughtError instanceof Error ? caughtError.message : "Unable to load data.");
         }
       } finally {

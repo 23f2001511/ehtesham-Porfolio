@@ -9,7 +9,6 @@ import Reveal from "@/components/shared/Reveal";
 import SectionHeading from "@/components/shared/SectionHeading";
 import { EmptyState } from "@/components/ui/empty-state";
 import { Skeleton } from "@/components/ui/skeleton";
-import { fallbackProjects } from "@/constants";
 import { useCollection } from "@/hooks/useCollection";
 import { cn } from "@/lib/utils";
 import type { Project } from "@/types";
@@ -142,7 +141,7 @@ function ProjectCard({
 }
 
 export default function ProjectsSection() {
-  const { data: projects, isLoading, error } = useCollection<Project>("/api/projects", fallbackProjects);
+  const { data: projects, isLoading, error } = useCollection<Project>("/api/projects");
   const [selected, setSelected] = useState<Project | null>(null);
 
   const featured = projects.filter((p) => p.featured);
@@ -158,12 +157,6 @@ export default function ProjectsSection() {
           description="Full-stack applications, systems projects, and hardware experiments — each one built to work, not just to demo."
           gradient
         />
-
-        {error ? (
-          <p className="mb-5 mt-8 rounded-md border border-amber-300/25 bg-amber-300/10 px-4 py-3 text-sm text-amber-100">
-            Live projects could not be loaded. Showing curated starter content.
-          </p>
-        ) : null}
 
         {isLoading ? (
           <div className="mt-12 grid gap-6 md:grid-cols-2">
@@ -182,8 +175,12 @@ export default function ProjectsSection() {
         ) : (
           <div className="mt-12">
             <EmptyState
-              title="No projects published yet"
-              description="Create your first project from the admin dashboard and it will appear here."
+              title={error ? "Couldn't load projects" : "No projects published yet"}
+              description={
+                error
+                  ? "The request failed. Check your connection and refresh the page."
+                  : "Create your first project from the admin dashboard and it will appear here."
+              }
             />
           </div>
         )}

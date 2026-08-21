@@ -2,6 +2,7 @@ import "./globals.css";
 import type { Metadata } from "next";
 import { Inter, JetBrains_Mono } from "next/font/google";
 import PageBackground, { ScrollProgress } from "@/components/shared/PageBackground";
+import SpaceBackground from "@/components/SpaceBackground";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -63,6 +64,7 @@ export default function RootLayout({
       </head>
       <body className="noise antialiased">
         <PageBackground />
+        <SpaceBackground />
         <ScrollProgress />
         <a
           href="#content"

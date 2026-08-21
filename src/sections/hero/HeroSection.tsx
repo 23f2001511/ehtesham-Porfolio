@@ -1,6 +1,5 @@
 "use client";
 
-import dynamic from "next/dynamic";
 import Link from "next/link";
 import { motion, useReducedMotion } from "framer-motion";
 import { ArrowRight, Code2, FileText, Github, Linkedin, Mail } from "lucide-react";
@@ -9,25 +8,6 @@ import { siteConfig } from "@/constants";
 import { usePublicProfile } from "@/hooks/usePublicProfile";
 import { useApiData } from "@/hooks/useApiData";
 import type { GithubData, LeetcodeData } from "@/types";
-
-const Hero3D = dynamic(() => import("@/components/Hero3D"), {
-  ssr: false,
-  loading: () => <HeroScenePlaceholder />
-});
-
-/** Lightweight CSS-only placeholder shown while the 3D chunk loads. */
-function HeroScenePlaceholder() {
-  return (
-    <div
-      className="absolute inset-0"
-      aria-hidden="true"
-      style={{
-        background:
-          "radial-gradient(38rem 26rem at 62% 42%, rgba(79,156,255,0.12), transparent 66%), radial-gradient(22rem 16rem at 60% 40%, rgba(45,212,191,0.07), transparent 70%)"
-      }}
-    />
-  );
-}
 
 const ROLES = [
   "Full-Stack Developer",
@@ -111,18 +91,10 @@ export default function HeroSection() {
 
   return (
     <section id="home" className="relative flex min-h-screen items-center overflow-hidden pt-20">
-                  {/* 3D backdrop */}
+      {/* Dissolve into the next section — the full-page SpaceBackground
+          (mounted in the root layout) now provides the hero backdrop. */}
       <div className="pointer-events-none absolute inset-0">
-        <Hero3D />
-        {/*
-          Readability scrim: stronger over the copy column, fading out over the
-          right third where the 3D sits so the object is clearly visible.
-        */}
-        <div className="absolute inset-0 bg-[linear-gradient(90deg,var(--background)_0%,color-mix(in_oklab,var(--background)_72%,transparent)_38%,color-mix(in_oklab,var(--background)_15%,transparent)_66%,transparent_78%)]" />
-        {/* dissolve into the next section */}
         <div className="absolute inset-x-0 bottom-0 h-32 bg-gradient-to-t from-[var(--background)] to-transparent" aria-hidden="true" />
-        {/* extra floor scrim on small screens so copy stays readable over the scene */}
-        <div className="absolute inset-x-0 bottom-0 h-1/3 bg-gradient-to-t from-background/80 to-transparent lg:hidden" />
       </div>
 
       <div className="section-shell relative z-10 grid w-full items-center gap-12 py-24 lg:grid-cols-[1.05fr_0.95fr]">
