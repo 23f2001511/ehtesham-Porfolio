@@ -1,6 +1,6 @@
 import "./globals.css";
 import type { Metadata } from "next";
-import { Inter, JetBrains_Mono } from "next/font/google";
+import { Inter, JetBrains_Mono, Space_Grotesk } from "next/font/google";
 import PageBackground, { ScrollProgress } from "@/components/shared/PageBackground";
 import SpaceBackground from "@/components/SpaceBackground";
 
@@ -14,6 +14,15 @@ const jetbrains = JetBrains_Mono({
   subsets: ["latin"],
   display: "swap",
   variable: "--font-mono"
+});
+
+// Display face — used with restraint on the wordmark, hero name, section
+// headings, and large numerals for a distinct, engineered personality.
+const spaceGrotesk = Space_Grotesk({
+  subsets: ["latin"],
+  display: "swap",
+  weight: ["400", "500", "600", "700"],
+  variable: "--font-space"
 });
 
 export const metadata: Metadata = {
@@ -52,7 +61,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" suppressHydrationWarning className={`${inter.variable} ${jetbrains.variable}`}>
+    <html lang="en" suppressHydrationWarning className={`${inter.variable} ${jetbrains.variable} ${spaceGrotesk.variable}`}>
       <head>
         {/* anti-flicker: apply the stored/system theme class before first paint */}
         <script

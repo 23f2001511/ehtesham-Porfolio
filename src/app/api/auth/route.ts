@@ -34,6 +34,7 @@ function sanitizeUser(user: unknown): UserProfile {
     email: data.email || siteConfig.email,
     role: "admin",
     resumeUrl: data.resumeUrl || siteConfig.resumeUrl,
+    avatarUrl: data.avatarUrl || "",
     socials: data.socials?.length ? data.socials : socialLinks,
     tagline: data.tagline || "",
     aboutBio: data.aboutBio || "",
@@ -181,6 +182,7 @@ export async function PATCH(request: Request) {
     if (!process.env.MONGODB_URI) {
       const profile = await localStore.updateProfile({
         resumeUrl: body.resumeUrl,
+        avatarUrl: body.avatarUrl,
         socials: body.socials,
         tagline: body.tagline,
         aboutBio: body.aboutBio,
@@ -203,6 +205,10 @@ export async function PATCH(request: Request) {
 
     if (typeof body.resumeUrl === "string") {
       updates.resumeUrl = body.resumeUrl;
+    }
+
+    if (typeof body.avatarUrl === "string") {
+      updates.avatarUrl = body.avatarUrl;
     }
 
     if (Array.isArray(body.socials)) {

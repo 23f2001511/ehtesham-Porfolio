@@ -91,6 +91,7 @@ export type UserProfile = {
   email: string;
   role: "admin";
   resumeUrl?: string;
+  avatarUrl?: string;
   socials: SocialLink[];
   tagline?: string;
   aboutBio?: string;

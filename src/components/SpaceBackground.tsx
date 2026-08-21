@@ -1,6 +1,6 @@
 "use client";
 
-import { Canvas, useFrame } from "@react-three/fiber";
+import { Canvas, useFrame, useThree } from "@react-three/fiber";
 import { Sparkles, Stars } from "@react-three/drei";
 import { motion } from "framer-motion";
 import { usePathname } from "next/navigation";
@@ -22,7 +22,7 @@ function FarStarLayer({ count, reduced }: { count: number; reduced: boolean }) {
   useFrame((_, delta) => {
     if (reduced) return;
     if (!group.current) return;
-    group.current.rotation.y += delta * 0.004;
+    group.current.rotation.y += delta * 0.012;
   });
 
   return (
@@ -34,7 +34,7 @@ function FarStarLayer({ count, reduced }: { count: number; reduced: boolean }) {
         factor={3}
         saturation={0.4}
         fade
-        speed={0.4}
+        speed={0.8}
       />
     </group>
   );
@@ -54,6 +54,7 @@ function NearStarLayer({
   reduced: boolean;
 }) {
   const group = useRef<THREE.Group>(null);
+  const materialRef = useRef<THREE.PointsMaterial>(null);
 
   const geometry = useMemo(() => {
     const positions = new Float32Array(count * 3);
@@ -78,16 +79,24 @@ function NearStarLayer({
     return geo;
   }, [count, radius]);
 
-  useFrame((_, delta) => {
+  useFrame((state, delta) => {
     if (reduced) return;
-    if (!group.current) return;
-    group.current.rotation.y += delta * 0.014;
+    if (group.current) {
+      group.current.rotation.y += delta * 0.035;
+    }
+    // Group-level shimmer: gently pulse the whole field's opacity so it
+    // twinkles instead of sitting frozen.
+    const material = materialRef.current;
+    if (material) {
+      material.opacity = 0.6 + 0.3 * Math.sin(state.clock.elapsedTime * 1.8);
+    }
   });
 
   return (
     <group ref={group}>
       <points geometry={geometry}>
         <pointsMaterial
+          ref={materialRef}
           size={0.06}
           vertexColors
           transparent
@@ -178,6 +187,26 @@ function GlowSprite({ scale, opacity }: { scale: number; opacity: number }) {
   );
 }
 
+/**
+ * Very slow Lissajous camera sway (figure-8-ish). Small amplitude so the
+ * whole scene gets a subtle parallax depth without feeling like motion
+ * sickness. Freezes entirely under reduced motion.
+ */
+function CameraDrift({ reduced }: { reduced: boolean }) {
+  const { camera } = useThree();
+
+  useFrame((state) => {
+    if (reduced) return;
+    const time = state.clock.elapsedTime;
+    camera.position.x = Math.sin(time * 0.21) * 0.2;
+    camera.position.y = Math.sin(time * 0.42) * 0.12;
+    camera.position.z = 5;
+    camera.lookAt(0, 0, 0);
+  });
+
+  return null;
+}
+
 const PHASE_OFFSET = 2.1;
 
 type PlanetConfig = {
@@ -191,10 +220,10 @@ type PlanetConfig = {
 };
 
 const PLANETS: PlanetConfig[] = [
-  { radius: 1.9, size: 0.32, color: "#b06a4b", emissive: "#7c4326", orbitSpeed: 0.9, spinSpeed: 0.8 },
-  { radius: 2.5, size: 0.42, color: "#3f76a8", emissive: "#2a5f8a", orbitSpeed: 0.62, spinSpeed: 0.5 },
-  { radius: 3.2, size: 0.27, color: "#8b5cf6", emissive: "#7c5cff", orbitSpeed: 0.42, spinSpeed: 0.7 },
-  { radius: 4.0, size: 0.38, color: "#e6e2ee", emissive: "#c9c4d8", orbitSpeed: 0.28, spinSpeed: 0.35, ring: true }
+  { radius: 1.9, size: 0.32, color: "#b06a4b", emissive: "#7c4326", orbitSpeed: 1.6, spinSpeed: 1.6 },
+  { radius: 2.5, size: 0.42, color: "#3f76a8", emissive: "#2a5f8a", orbitSpeed: 1.1, spinSpeed: 1.0 },
+  { radius: 3.2, size: 0.27, color: "#8b5cf6", emissive: "#7c5cff", orbitSpeed: 0.75, spinSpeed: 1.4 },
+  { radius: 4.0, size: 0.38, color: "#e6e2ee", emissive: "#c9c4d8", orbitSpeed: 0.5, spinSpeed: 0.7, ring: true }
 ];
 
 /**
@@ -207,13 +236,12 @@ function SolarSystem({ reduced, mobile }: { reduced: boolean; mobile: boolean })
   const planetRefs = useRef<(THREE.Group | null)[]>([]);
   const planets = mobile ? PLANETS.slice(0, 2) : PLANETS;
 
-  useFrame((state) => {
+  useFrame((state, delta) => {
     if (reduced) return;
     if (!group.current) return;
-    const delta = state.clock.getDelta();
-    const time = state.clock.getElapsedTime();
+    const time = state.clock.elapsedTime;
 
-    group.current.rotation.y += delta * 0.015;
+    group.current.rotation.y += delta * 0.03;
 
     planetRefs.current.forEach((planet, index) => {
       const config = planets[index];
@@ -337,6 +365,7 @@ export default function SpaceBackground() {
       >
         <ambientLight intensity={0.15} />
         <directionalLight position={[-4, 3, 2]} intensity={1.1} color="#cfe0ff" />
+        <CameraDrift reduced={reduced} />
         <FarStarLayer count={isMobile ? 350 : 1500} reduced={reduced} />
         <NearStarLayer count={isMobile ? 130 : 800} radius={12} reduced={reduced} />
         {!isMobile ? <MilkyWayBand /> : null}

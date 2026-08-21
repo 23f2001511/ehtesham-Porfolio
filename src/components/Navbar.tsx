@@ -123,19 +123,40 @@ export default function Navbar() {
         )}
         aria-label="Primary"
       >
-        {/* Brand */}
+        {/* Brand — orbit mark + wordmark (replaces the old EA badge) */}
         <Link
           href="/#home"
           onClick={(event) => handleNav(event, "home")}
           className="group flex items-center gap-2.5"
           aria-label={`${siteConfig.name} — home`}
         >
-          <span className="btn-spring glass grid h-9 w-9 place-items-center text-[13px] font-bold tracking-tight text-foreground transition-colors group-hover:border-primary/50">
-            <span className="bg-gradient-to-br from-primary to-accent bg-clip-text text-transparent">EA</span>
+          <span className="relative grid h-9 w-9 shrink-0 place-items-center" aria-hidden="true">
+            <span className="absolute inset-0 rounded-full bg-gradient-to-br from-primary/30 to-accent/10 opacity-0 blur-[7px] transition-opacity duration-300 group-hover:opacity-100" />
+            <svg viewBox="0 0 36 36" className="relative h-9 w-9">
+              <defs>
+                <linearGradient id="nav-orbit" x1="0" y1="0" x2="1" y2="1">
+                  <stop offset="0%" stopColor="var(--primary)" />
+                  <stop offset="100%" stopColor="var(--accent)" />
+                </linearGradient>
+              </defs>
+              <ellipse
+                cx="18"
+                cy="18"
+                rx="13"
+                ry="6.2"
+                fill="none"
+                stroke="url(#nav-orbit)"
+                strokeWidth="1.4"
+                opacity="0.7"
+                transform="rotate(-26 18 18)"
+              />
+              <circle cx="18" cy="18" r="4.3" fill="url(#nav-orbit)" />
+              <circle cx="18" cy="18" r="4.3" fill="none" stroke="var(--accent)" strokeWidth="0.8" opacity="0.5" />
+              <circle cx="29.6" cy="12.6" r="1.7" fill="var(--accent)" />
+            </svg>
           </span>
-          <span className="hidden flex-col leading-tight sm:flex">
-            <span className="text-sm font-semibold text-foreground">{siteConfig.name}</span>
-            <span className="text-[11px] text-muted-foreground">{siteConfig.role}</span>
+          <span className="font-display text-gradient-flow text-[1.35rem] font-bold leading-none">
+            Ehtesham
           </span>
         </Link>
 

@@ -6,7 +6,7 @@ import { requireAdmin } from "@/lib/auth";
 
 export const runtime = "nodejs";
 
-type UploadType = "resume" | "project" | "certificate";
+type UploadType = "resume" | "project" | "certificate" | "avatar";
 
 const uploadConfig: Record<
   UploadType,
@@ -30,6 +30,11 @@ const uploadConfig: Record<
     folder: "certificates",
     maxSize: 5 * 1024 * 1024,
     mimeTypes: ["image/jpeg", "image/png", "image/webp"]
+  },
+  avatar: {
+    folder: "avatars",
+    maxSize: 5 * 1024 * 1024,
+    mimeTypes: ["image/jpeg", "image/png", "image/webp"]
   }
 };
 
@@ -41,7 +46,7 @@ const extensionByMime: Record<string, string> = {
 };
 
 function isUploadType(value: string): value is UploadType {
-  return value === "resume" || value === "project" || value === "certificate";
+  return value === "resume" || value === "project" || value === "certificate" || value === "avatar";
 }
 
 export async function POST(request: Request) {

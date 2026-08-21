@@ -138,6 +138,7 @@ const educationItemSchema = z.object({
 
 export const profileSchema = z.object({
   resumeUrl: z.string().trim().optional(),
+  avatarUrl: z.string().trim().optional(),
   socials: z
     .array(
       z.object({

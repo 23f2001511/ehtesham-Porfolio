@@ -166,6 +166,7 @@ export const localStore = {
       Pick<
         UserProfile,
         | "resumeUrl"
+        | "avatarUrl"
         | "socials"
         | "tagline"
         | "aboutBio"

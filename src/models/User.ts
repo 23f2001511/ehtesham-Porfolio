@@ -51,6 +51,10 @@ const UserSchema = new Schema(
       type: String,
       default: ""
     },
+    avatarUrl: {
+      type: String,
+      default: ""
+    },
     socials: {
       type: [SocialLinkSchema],
       default: []
