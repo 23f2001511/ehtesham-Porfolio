@@ -2,40 +2,51 @@
 
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
-import { AnimatePresence, motion } from "framer-motion";
+import { AnimatePresence, motion, useMotionValueEvent, useScroll } from "framer-motion";
 import { Code2, Github, Linkedin, Mail, Menu, X } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import ThemeToggle from "@/components/shared/ThemeToggle";
 import { navItems, siteConfig, socialLinks } from "@/constants";
 import { cn } from "@/lib/utils";
 
+/* ─── Icons for socials ─────────────────────────────────────────────── */
 const socialIcon: Record<string, typeof Github> = {
   Github,
   Linkedin,
   Code: Code2,
-  Mail
+  Mail,
 };
+
+/* ─── Numbered nav items for the top bar (subset) ───────────────────── */
+const numberedNavItems = [
+  { num: "01", label: "About", id: "about", href: "/#about" },
+  { num: "02", label: "Projects", id: "projects", href: "/#projects" },
+  { num: "03", label: "Experience", id: "experience", href: "/#experience" },
+  { num: "04", label: "Contact", id: "contact", href: "/#contact" },
+];
 
 export default function Navbar() {
   const [open, setOpen] = useState(false);
-  const [scrolled, setScrolled] = useState(false);
   const [active, setActive] = useState("home");
+  const [hidden, setHidden] = useState(false);
   const pathname = usePathname();
   const router = useRouter();
   const isHome = pathname === "/";
-  const desktopNavRef = useRef<HTMLDivElement>(null);
   const mobileNavRef = useRef<HTMLDivElement>(null);
   const menuButtonRef = useRef<HTMLButtonElement>(null);
 
-  // sticky + shrink on scroll
-  useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 24);
-    onScroll();
-    window.addEventListener("scroll", onScroll, { passive: true });
-    return () => window.removeEventListener("scroll", onScroll);
-  }, []);
+  /* ── Hide on scroll down, show on scroll up ─────────────────────── */
+  const { scrollY } = useScroll();
+  useMotionValueEvent(scrollY, "change", (latest) => {
+    const previous = scrollY.getPrevious() ?? 0;
+    if (latest > 80 && latest > previous) {
+      setHidden(true);
+    } else {
+      setHidden(false);
+    }
+  });
 
-  // active section via IntersectionObserver on the one-page home
+  /* ── Active section via IntersectionObserver ─────────────────────── */
   useEffect(() => {
     if (!isHome) return;
     const ids = navItems.map((item) => item.id);
@@ -58,7 +69,7 @@ export default function Navbar() {
     return () => observer.disconnect();
   }, [isHome]);
 
-  // lock body scroll when the mobile menu is open
+  /* ── Lock body scroll when mobile menu is open ──────────────────── */
   useEffect(() => {
     document.body.style.overflow = open ? "hidden" : "";
     return () => {
@@ -66,7 +77,7 @@ export default function Navbar() {
     };
   }, [open]);
 
-  // escape closes the mobile menu, and focus moves into it
+  /* ── Escape & focus trap for mobile menu ────────────────────────── */
   useEffect(() => {
     if (!open) return;
     const firstLink = mobileNavRef.current?.querySelector<HTMLElement>("a, button");
@@ -110,188 +121,203 @@ export default function Navbar() {
   const resumeHref = siteConfig.resumeUrl;
 
   return (
-    <header
-      className={cn(
-        "fixed inset-x-0 top-0 z-50 transition-all duration-300",
-        scrolled ? "glass-nav" : "border-b border-transparent bg-transparent"
-      )}
-    >
-      <nav
-        className={cn(
-          "section-shell flex items-center justify-between gap-4 transition-[height] duration-300",
-          scrolled ? "h-16" : "h-[76px]"
-        )}
-        aria-label="Primary"
+    <>
+      {/* ═══════════════ TOP NAVBAR ═══════════════ */}
+      <motion.header
+        initial={{ y: 0 }}
+        animate={{ y: hidden ? "-100%" : "0%" }}
+        transition={{ duration: 0.35, ease: "easeInOut" }}
+        className="fixed inset-x-0 top-0 z-50"
       >
-        {/* Brand — orbit mark + wordmark (replaces the old EA badge) */}
-        <Link
-          href="/#home"
-          onClick={(event) => handleNav(event, "home")}
-          className="group flex items-center gap-2.5"
-          aria-label={`${siteConfig.name} — home`}
+        <nav
+          className="mx-auto flex h-[70px] max-w-7xl items-center justify-between px-6 sm:px-10 lg:px-12"
+          aria-label="Primary"
+          style={{
+            backdropFilter: "blur(12px)",
+            WebkitBackdropFilter: "blur(12px)",
+            backgroundColor: "rgba(var(--background-rgb, 10,25,47), 0.85)",
+            boxShadow: "0 1px 0 rgba(255,255,255,0.05)",
+          }}
         >
-          <span className="relative grid h-9 w-9 shrink-0 place-items-center" aria-hidden="true">
-            <span className="absolute inset-0 rounded-full bg-gradient-to-br from-primary/30 to-accent/10 opacity-0 blur-[7px] transition-opacity duration-300 group-hover:opacity-100" />
-            <svg viewBox="0 0 36 36" className="relative h-9 w-9">
-              <defs>
-                <linearGradient id="nav-orbit" x1="0" y1="0" x2="1" y2="1">
-                  <stop offset="0%" stopColor="var(--primary)" />
-                  <stop offset="100%" stopColor="var(--accent)" />
-                </linearGradient>
-              </defs>
-              <ellipse
-                cx="18"
-                cy="18"
-                rx="13"
-                ry="6.2"
-                fill="none"
-                stroke="url(#nav-orbit)"
-                strokeWidth="1.4"
-                opacity="0.7"
-                transform="rotate(-26 18 18)"
-              />
-              <circle cx="18" cy="18" r="4.3" fill="url(#nav-orbit)" />
-              <circle cx="18" cy="18" r="4.3" fill="none" stroke="var(--accent)" strokeWidth="0.8" opacity="0.5" />
-              <circle cx="29.6" cy="12.6" r="1.7" fill="var(--accent)" />
-            </svg>
-          </span>
-          <span className="font-display text-gradient-flow text-[1.35rem] font-bold leading-none">
-            Ehtesham
-          </span>
-        </Link>
-
-        {/* Desktop nav */}
-        <div ref={desktopNavRef} className="hidden items-center gap-0.5 lg:flex">
-          {navItems.map((item) => (
-            <Link
-              key={item.id}
-              href={item.href}
-              onClick={(event) => handleNav(event, item.id)}
-              aria-current={isHome && active === item.id ? "true" : undefined}
-              className={cn(
-                "relative rounded-md px-3 py-2 text-[13px] font-medium transition-colors",
-                isHome && active === item.id
-                  ? "text-foreground"
-                  : "text-muted-foreground hover:text-foreground"
-              )}
+          {/* Logo: EA with gradient */}
+          <Link
+            href="/#home"
+            onClick={(event) => handleNav(event, "home")}
+            className="group relative z-10"
+            aria-label={`${siteConfig.name} — home`}
+          >
+            <motion.div
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+              className="flex h-10 w-10 items-center justify-center rounded-md border border-primary/40 bg-transparent"
             >
-              {item.label}
-              <span
-                className={cn(
-                  "absolute inset-x-3 -bottom-px h-px origin-center bg-gradient-to-r from-primary to-accent transition-transform duration-300",
-                  isHome && active === item.id ? "scale-x-100" : "scale-x-0"
-                )}
-                aria-hidden="true"
-              />
-            </Link>
-          ))}
-        </div>
+              <span className="bg-gradient-to-br from-primary to-accent bg-clip-text font-mono text-lg font-bold text-transparent">
+                EA
+              </span>
+            </motion.div>
+          </Link>
 
-        {/* Desktop actions */}
-        <div className="hidden items-center gap-2 lg:flex">
-          {["Github", "Linkedin", "LeetCode"].map((label) => {
-            const link = socialLinks.find((s) => s.label === label);
-            if (!link) return null;
-            const Icon = socialIcon[link.icon] ?? Code2;
-            return (
+          {/* Desktop nav links — numbered */}
+          <div className="hidden items-center gap-1 lg:flex">
+            {numberedNavItems.map((item) => (
               <Link
-                key={label}
-                href={link.href}
-                target="_blank"
-                rel="noreferrer"
-                aria-label={label}
-                className="btn-spring grid h-9 w-9 place-items-center rounded-md border border-transparent text-muted-foreground hover:-translate-y-px hover:border-[var(--glass-border)] hover:bg-[var(--glass-bg)] hover:text-foreground hover:backdrop-blur-md"
+                key={item.id}
+                href={item.href}
+                onClick={(event) => handleNav(event, item.id)}
+                aria-current={isHome && active === item.id ? "true" : undefined}
+                className={cn(
+                  "group relative rounded-md px-4 py-2 text-[13px] font-medium transition-colors duration-200",
+                  isHome && active === item.id
+                    ? "text-primary"
+                    : "text-muted-foreground hover:text-primary"
+                )}
               >
-                <Icon className="h-4 w-4" aria-hidden="true" />
+                <span className="font-mono text-primary">{item.num}.</span>{" "}
+                {item.label}
               </Link>
-            );
-          })}
-          <ThemeToggle />
-          <a
-            href={resumeHref}
-            target="_blank"
-            rel="noreferrer"
-            className="btn-spring ml-1 inline-flex h-9 items-center rounded-md bg-gradient-to-r from-primary to-accent px-4 text-[13px] font-semibold text-primary-foreground shadow-[var(--glow-primary)] hover:scale-[1.04] hover:brightness-110 active:scale-[0.97]"
-          >
-            Resume
-          </a>
-        </div>
+            ))}
+          </div>
 
-        {/* Mobile menu button */}
-        <div className="flex items-center gap-2 lg:hidden">
-          <ThemeToggle />
-          <button
-            ref={menuButtonRef}
-            type="button"
-            onClick={() => setOpen((value) => !value)}
-            aria-expanded={open}
-            aria-label={open ? "Close menu" : "Open menu"}
-            className="glass grid h-10 w-10 place-items-center text-foreground"
-          >
-            {open ? <X className="h-5 w-5" aria-hidden="true" /> : <Menu className="h-5 w-5" aria-hidden="true" />}
-          </button>
-        </div>
-      </nav>
+          {/* Desktop actions */}
+          <div className="hidden items-center gap-3 lg:flex">
+            <ThemeToggle />
+            <a
+              href={resumeHref}
+              target="_blank"
+              rel="noreferrer"
+              className="btn-spring inline-flex h-9 items-center rounded border border-primary px-4 font-mono text-[13px] font-medium text-primary transition-all duration-200 hover:bg-primary/10"
+            >
+              Resume
+            </a>
+          </div>
 
-      {/* Mobile menu */}
-      <AnimatePresence>
-        {open ? (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 0.18 }}
-            className="glass-panel fixed inset-x-0 bottom-0 top-16 z-40 overflow-hidden lg:hidden"
-          >
-            <div ref={mobileNavRef} className="section-shell flex h-full flex-col gap-1 overflow-y-auto py-6 pb-24">
-              {navItems.map((item, index) => (
-                <motion.div
-                  key={item.id}
-                  initial={{ opacity: 0, x: -12 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  transition={{ delay: 0.03 * index, duration: 0.25 }}
-                >
-                  <Link
-                    href={item.href}
-                    onClick={(event) => handleNav(event, item.id)}
-                    className="flex items-center justify-between rounded-lg px-4 py-3 text-base font-medium text-foreground transition-colors hover:bg-[var(--glass-bg)]"
+          {/* Mobile menu button */}
+          <div className="flex items-center gap-2 lg:hidden">
+            <ThemeToggle />
+            <button
+              ref={menuButtonRef}
+              type="button"
+              onClick={() => setOpen((value) => !value)}
+              aria-expanded={open}
+              aria-label={open ? "Close menu" : "Open menu"}
+              className="grid h-10 w-10 place-items-center rounded-md border border-primary/30 text-primary"
+            >
+              {open ? (
+                <X className="h-5 w-5" aria-hidden="true" />
+              ) : (
+                <Menu className="h-5 w-5" aria-hidden="true" />
+              )}
+            </button>
+          </div>
+        </nav>
+
+        {/* ═══════════════ MOBILE MENU ═══════════════ */}
+        <AnimatePresence>
+          {open ? (
+            <motion.div
+              initial={{ opacity: 0, x: 50 }}
+              animate={{ opacity: 1, x: 0 }}
+              exit={{ opacity: 0, x: 50 }}
+              transition={{ duration: 0.25, ease: "easeInOut" }}
+              className="fixed inset-0 z-40 flex items-center justify-center lg:hidden"
+              style={{
+                backdropFilter: "blur(16px)",
+                WebkitBackdropFilter: "blur(16px)",
+                backgroundColor: "rgba(var(--background-rgb, 10,25,47), 0.95)",
+              }}
+            >
+              <div
+                ref={mobileNavRef}
+                className="flex flex-col items-center gap-6"
+              >
+                {numberedNavItems.map((item, index) => (
+                  <motion.div
+                    key={item.id}
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 0.05 * index, duration: 0.3 }}
                   >
-                    {item.label}
-                    <span className="text-xs text-muted-foreground">0{index + 1}</span>
-                  </Link>
-                </motion.div>
-              ))}
-
-              <div className="mt-6 flex items-center gap-3 border-t border-border px-4 pt-6">
-                {socialLinks.map((link) => {
-                  const Icon = socialIcon[link.icon] ?? Code2;
-                  return (
                     <Link
-                      key={link.label}
-                      href={link.href}
-                      target={link.href.startsWith("http") ? "_blank" : undefined}
-                      rel={link.href.startsWith("http") ? "noreferrer" : undefined}
-                      aria-label={link.label}
-                      className="grid h-10 w-10 place-items-center rounded-md border border-border bg-surface text-muted-foreground transition-colors hover:text-foreground"
+                      href={item.href}
+                      onClick={(event) => handleNav(event, item.id)}
+                      className="flex flex-col items-center gap-1 text-lg font-medium text-foreground transition-colors hover:text-primary"
                     >
-                      <Icon className="h-4 w-4" aria-hidden="true" />
+                      <span className="font-mono text-sm text-primary">
+                        {item.num}.
+                      </span>
+                      {item.label}
                     </Link>
-                  );
-                })}
-                <a
-                  href={resumeHref}
-                  target="_blank"
-                  rel="noreferrer"
-                  className="btn-spring ml-auto inline-flex h-10 items-center rounded-md bg-gradient-to-r from-primary to-accent px-5 text-sm font-semibold text-primary-foreground shadow-[var(--glow-primary)]"
-                  onClick={() => setOpen(false)}
+                  </motion.div>
+                ))}
+
+                <motion.div
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.25, duration: 0.3 }}
+                  className="mt-4"
                 >
-                  Resume
-                </a>
+                  <a
+                    href={resumeHref}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="btn-spring inline-flex h-12 items-center rounded border border-primary px-8 font-mono text-sm font-medium text-primary transition-all duration-200 hover:bg-primary/10"
+                    onClick={() => setOpen(false)}
+                  >
+                    Resume
+                  </a>
+                </motion.div>
               </div>
-            </div>
-          </motion.div>
-        ) : null}
-      </AnimatePresence>
-    </header>
+            </motion.div>
+          ) : null}
+        </AnimatePresence>
+      </motion.header>
+
+      {/* ═══════════════ FIXED LEFT SIDEBAR — Social Icons ═══════════════ */}
+      <div
+        className="fixed bottom-0 left-6 z-40 hidden flex-col items-center gap-5 lg:flex xl:left-10"
+        aria-label="Social links"
+      >
+        {socialLinks.map((link) => {
+          const Icon = socialIcon[link.icon] ?? Code2;
+          return (
+            <motion.div
+              key={link.label}
+              whileHover={{ y: -3 }}
+              transition={{ duration: 0.2 }}
+            >
+              <Link
+                href={link.href}
+                target={link.href.startsWith("http") ? "_blank" : undefined}
+                rel={link.href.startsWith("http") ? "noreferrer" : undefined}
+                aria-label={link.label}
+                className="block text-muted-foreground transition-colors duration-200 hover:text-primary"
+              >
+                <Icon className="h-5 w-5" aria-hidden="true" />
+              </Link>
+            </motion.div>
+          );
+        })}
+        {/* Vertical line */}
+        <div className="h-24 w-px bg-muted-foreground/40" aria-hidden="true" />
+      </div>
+
+      {/* ═══════════════ FIXED RIGHT SIDEBAR — Email ═══════════════ */}
+      <div
+        className="fixed bottom-0 right-6 z-40 hidden flex-col items-center gap-5 lg:flex xl:right-10"
+        aria-label="Email"
+      >
+        <motion.a
+          href={`mailto:${siteConfig.email}`}
+          whileHover={{ y: -3 }}
+          transition={{ duration: 0.2 }}
+          className="font-mono text-xs tracking-widest text-muted-foreground transition-colors duration-200 hover:text-primary"
+          style={{ writingMode: "vertical-rl" }}
+        >
+          {siteConfig.email}
+        </motion.a>
+        {/* Vertical line */}
+        <div className="h-24 w-px bg-muted-foreground/40" aria-hidden="true" />
+      </div>
+    </>
   );
 }

@@ -1,85 +1,79 @@
 "use client";
 
 import Link from "next/link";
-import { ArrowUpRight, Download, FileText } from "lucide-react";
+import { motion, useReducedMotion } from "framer-motion";
+import { Download, FileText } from "lucide-react";
 import Reveal from "@/components/shared/Reveal";
 import { siteConfig } from "@/constants";
 import { usePublicProfile } from "@/hooks/usePublicProfile";
 
 export default function ResumeSection() {
   const { profile, resolved } = usePublicProfile();
+  const reducedMotion = useReducedMotion();
   const hasResume = Boolean(profile.resumeUrl && profile.resumeUrl.trim().length > 0);
 
   return (
-    <section id="resume" className="border-y border-border bg-surface/40 section-pad !py-20">
+    <section id="resume" className="border-y border-border bg-surface/40 section-pad !py-24">
       <div className="section-shell">
         <Reveal>
-          <div className="grid items-center gap-8 lg:grid-cols-[1.15fr_0.85fr]">
-            <div>
-              <span className="eyebrow">Resume</span>
-              <h2 className="font-display mt-4 text-balance text-3xl font-bold tracking-tight text-foreground sm:text-4xl">
-                The one-page version of everything you just scrolled
-              </h2>
-              <p className="mt-4 max-w-xl text-base leading-7 text-muted-foreground">
-                A compact summary of the projects, skills, experience, and education listed here —
-                ready for recruiters, collaborators, or anyone who likes to review on paper.
-              </p>
-            </div>
-
-            <div className="panel p-6 sm:p-8">
-              <div className="flex items-center gap-4">
-                <div className="grid h-12 w-12 place-items-center rounded-lg border border-border bg-surface text-primary">
-                  <FileText className="h-5 w-5" aria-hidden="true" />
-                </div>
-                <div>
-                  <p className="text-sm font-semibold text-foreground">Ehtesham_Aalam_Resume.pdf</p>
-                  <p className="mt-0.5 text-xs text-muted-foreground">
-                    {hasResume ? "PDF · 1 page · link verified" : "Awaiting upload"}
-                  </p>
-                </div>
+          <div className="mx-auto flex max-w-lg flex-col items-center text-center">
+            {/* Glass card */}
+            <motion.div
+              whileHover={reducedMotion ? undefined : { scale: 1.02 }}
+              transition={{ duration: 0.3, ease: "easeOut" }}
+              className="group relative w-full overflow-hidden rounded-2xl border border-border/60 bg-[var(--glass-bg)] p-8 backdrop-blur-xl transition-all duration-500 sm:p-10"
+            >
+              {/* Gradient border glow on hover */}
+              <div className="pointer-events-none absolute inset-0 rounded-2xl opacity-0 transition-opacity duration-500 group-hover:opacity-100" aria-hidden="true">
+                <div className="absolute inset-[-1px] rounded-2xl bg-gradient-to-br from-primary/30 via-transparent to-accent/30" />
+                <div className="absolute inset-[1px] rounded-[calc(1rem-1px)] bg-background" />
               </div>
 
-              {hasResume ? (
-                <div className="mt-6 flex flex-wrap gap-3">
-                  <Link
-                    href={profile.resumeUrl!}
-                    target="_blank"
-                    rel="noreferrer"
-                    className="inline-flex h-11 flex-1 items-center justify-center gap-2 rounded-lg bg-primary px-5 text-sm font-semibold text-primary-foreground transition-transform hover:scale-[1.03] active:scale-[0.98]"
-                  >
-                    Preview
-                    <ArrowUpRight className="h-4 w-4" aria-hidden="true" />
-                  </Link>
-                  <Link
-                    href={profile.resumeUrl!}
-                    download
-                    className="inline-flex h-11 flex-1 items-center justify-center gap-2 rounded-lg border border-border bg-surface px-5 text-sm font-semibold text-foreground transition-colors hover:border-primary/50"
-                  >
-                    Download
-                    <Download className="h-4 w-4" aria-hidden="true" />
-                  </Link>
+              <div className="relative">
+                {/* Icon */}
+                <div className="mx-auto mb-6 grid h-16 w-16 place-items-center rounded-2xl border border-border bg-surface text-primary transition-colors group-hover:border-primary/40 group-hover:bg-primary/10">
+                  <FileText className="h-7 w-7" aria-hidden="true" />
                 </div>
-              ) : (
-                <div className="mt-6 rounded-lg border border-dashed border-border bg-surface/50 px-4 py-6 text-center">
-                  <p className="text-sm font-medium text-foreground">Resume not uploaded yet</p>
-                  <p className="mt-1.5 text-xs leading-5 text-muted-foreground">
-                    The resume file is managed from the admin dashboard. In the meantime, you can reach
-                    me at{" "}
-                    <a
-                      href={`mailto:${siteConfig.email}`}
-                      className="font-medium text-primary hover:underline"
-                    >
-                      {siteConfig.email}
-                    </a>
-                    .
-                  </p>
-                </div>
-              )}
 
-              <p className="mt-4 text-center text-xs text-muted-foreground">
-                {resolved ? "Managed securely from the admin dashboard." : "Checking for an uploaded resume…"}
-              </p>
-            </div>
+                <h2 className="font-display text-2xl font-bold tracking-tight text-foreground sm:text-3xl">
+                  Download my resume
+                </h2>
+                <p className="mx-auto mt-3 max-w-sm text-sm leading-6 text-muted-foreground">
+                  A compact summary of projects, skills, experience, and education — ready for recruiters and collaborators.
+                </p>
+
+                {hasResume ? (
+                  <div className="mt-8 flex flex-col items-center gap-3 sm:flex-row sm:justify-center">
+                    <Link
+                      href={profile.resumeUrl!}
+                      download
+                      className="inline-flex h-12 w-full items-center justify-center gap-2.5 rounded-xl bg-primary px-6 text-sm font-semibold text-primary-foreground transition-all duration-300 hover:scale-[1.03] hover:shadow-[0_0_30px_rgba(79,156,255,0.25)] active:scale-[0.98] sm:w-auto"
+                    >
+                      <Download className="h-4 w-4" aria-hidden="true" />
+                      Download PDF
+                    </Link>
+                  </div>
+                ) : (
+                  <div className="mt-8 rounded-xl border border-dashed border-border bg-surface/50 px-4 py-6">
+                    <p className="text-sm font-medium text-foreground">Resume not uploaded yet</p>
+                    <p className="mt-1.5 text-xs leading-5 text-muted-foreground">
+                      In the meantime, reach me at{" "}
+                      <a
+                        href={`mailto:${siteConfig.email}`}
+                        className="font-medium text-primary hover:underline"
+                      >
+                        {siteConfig.email}
+                      </a>
+                      .
+                    </p>
+                  </div>
+                )}
+
+                <p className="mt-5 text-xs text-muted-foreground">
+                  {resolved ? "Ehtesham_Aalam_Resume.pdf · 1 page" : "Checking for an uploaded resume…"}
+                </p>
+              </div>
+            </motion.div>
           </div>
         </Reveal>
       </div>

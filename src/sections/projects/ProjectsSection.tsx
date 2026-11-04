@@ -3,10 +3,9 @@
 import Image from "next/image";
 import Link from "next/link";
 import { motion, useReducedMotion } from "framer-motion";
-import { ArrowUpRight, Github, Rocket } from "lucide-react";
-import { useState } from "react";
+import { ExternalLink, Folder, Github, Rocket } from "lucide-react";
+import { useMemo, useState } from "react";
 import Reveal from "@/components/shared/Reveal";
-import SectionHeading from "@/components/shared/SectionHeading";
 import { EmptyState } from "@/components/ui/empty-state";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useCollection } from "@/hooks/useCollection";
@@ -14,91 +13,101 @@ import { cn } from "@/lib/utils";
 import type { Project } from "@/types";
 import ProjectDetailDialog from "./ProjectDetailDialog";
 
-function statusTone(status: string) {
-  if (status === "Live") return "bg-secondary/90 text-secondary-foreground backdrop-blur";
-  if (status === "In Progress") return "bg-primary/90 text-primary-foreground backdrop-blur";
-  return "border border-[var(--glass-border)] bg-[var(--glass-bg)] text-foreground backdrop-blur";
-}
+/* ── Featured project (alternating layout) ──────────────────────────── */
 
-function ProjectCard({
+function FeaturedProject({
   project,
-  onOpen
+  index,
+  onOpen,
 }: {
   project: Project;
+  index: number;
   onOpen: (project: Project) => void;
 }) {
-  const reducedMotion = useReducedMotion();
+  const isOdd = index % 2 !== 0;
 
   return (
-    <motion.article
-      whileHover={reducedMotion ? undefined : { y: -6 }}
-      transition={{ duration: 0.3, ease: "easeOut" }}
-      className="glass glass-hover gradient-border group relative flex h-full cursor-pointer flex-col overflow-hidden"
-      onClick={() => onOpen(project)}
-      onKeyDown={(event) => {
-        if (event.key === "Enter") onOpen(project);
-      }}
-      role="button"
-      tabIndex={0}
-      aria-label={`Open details for ${project.title}`}
-    >
-      {/* Image */}
-      <div className="relative aspect-[16/9] overflow-hidden bg-muted">
-        {project.imageUrl ? (
-          <Image
-            src={project.imageUrl}
-            alt={`${project.title} preview`}
-            fill
-            sizes="(min-width: 1024px) 50vw, 100vw"
-            className="object-cover transition duration-500 group-hover:scale-[1.04]"
-          />
-        ) : (
-          <div className="grid h-full place-items-center bg-[radial-gradient(ellipse_at_30%_30%,rgba(79,156,255,0.14),transparent_70%)] p-6 text-center">
-            <div>
-              <Rocket className="mx-auto mb-3 h-8 w-8 text-primary/40" aria-hidden="true" />
-              <span className="text-sm font-semibold text-muted-foreground">{project.title}</span>
-            </div>
-          </div>
-        )}
-
-        <span
+    <Reveal delay={0.05}>
+      <div className={cn("group relative grid items-center gap-0 lg:grid-cols-12", isOdd && "lg:text-right")}>
+        {/* Image side */}
+        <div
           className={cn(
-            "absolute left-3 top-3 rounded-md px-2.5 py-1 text-[11px] font-semibold",
-            statusTone(project.status)
+            "relative col-span-full row-start-1 aspect-[16/10] overflow-hidden rounded-lg lg:col-span-7",
+            isOdd ? "lg:col-start-6" : "lg:col-start-1"
           )}
         >
-          {project.status}
-        </span>
+          <div
+            className="relative h-full w-full cursor-pointer overflow-hidden rounded-lg"
+            onClick={() => onOpen(project)}
+            role="button"
+            tabIndex={0}
+            onKeyDown={(e) => e.key === "Enter" && onOpen(project)}
+            aria-label={`Open details for ${project.title}`}
+          >
+            {project.imageUrl ? (
+              <>
+                <Image
+                  src={project.imageUrl}
+                  alt={`${project.title} preview`}
+                  fill
+                  sizes="(min-width: 1024px) 58vw, 100vw"
+                  className="object-cover transition-all duration-700 group-hover:scale-105 group-hover:opacity-40"
+                />
+                <div className="absolute inset-0 bg-primary/20 mix-blend-multiply transition-opacity duration-500 group-hover:opacity-0" />
+              </>
+            ) : (
+              <div className="grid h-full place-items-center bg-[radial-gradient(ellipse_at_30%_30%,rgba(79,156,255,0.14),transparent_70%)] transition-opacity duration-500 group-hover:opacity-50">
+                <Rocket className="h-12 w-12 text-primary/30" aria-hidden="true" />
+              </div>
+            )}
+          </div>
+        </div>
 
-        {/* subtle dark gradient at the bottom of the media for legibility */}
-        <div className="pointer-events-none absolute inset-x-0 bottom-0 h-16 bg-gradient-to-t from-black/40 to-transparent" aria-hidden="true" />
-      </div>
+        {/* Content side */}
+        <div
+          className={cn(
+            "relative z-10 col-span-full row-start-1 flex flex-col py-8 lg:col-span-7",
+            isOdd ? "lg:col-start-1 lg:items-start lg:text-left" : "lg:col-start-6 lg:items-end lg:text-right"
+          )}
+        >
+          <p className="font-mono text-xs font-medium text-primary">Featured Project</p>
+          <h3
+            className="font-display mt-2 cursor-pointer text-2xl font-bold tracking-tight text-foreground transition-colors hover:text-primary sm:text-3xl"
+            onClick={() => onOpen(project)}
+            role="button"
+            tabIndex={0}
+            onKeyDown={(e) => e.key === "Enter" && onOpen(project)}
+          >
+            {project.title}
+          </h3>
 
-      {/* Body */}
-      <div className="flex flex-1 flex-col p-5 sm:p-6">
-        <div className="flex items-start justify-between gap-3">
-          <div className="min-w-0">
-            <h3 className="font-display truncate text-xl font-bold tracking-tight text-foreground">
-              {project.title}
-            </h3>
-            {project.category ? (
-              <p className="mt-0.5 text-xs font-medium uppercase tracking-wider text-muted-foreground">
-                {project.category}
-              </p>
-            ) : null}
+          <div className="mt-5 rounded-lg border border-border/60 bg-[var(--glass-bg)] p-5 shadow-xl backdrop-blur-xl sm:p-6">
+            <p className="text-sm leading-7 text-muted-foreground">
+              {project.description || project.summary}
+            </p>
           </div>
 
-          <div className="flex shrink-0 items-center gap-1.5">
+          <div className={cn("mt-4 flex flex-wrap gap-2", isOdd ? "lg:justify-start" : "lg:justify-end")}>
+            {project.tags.slice(0, 6).map((tag) => (
+              <span
+                key={tag}
+                className="font-mono text-xs text-muted-foreground"
+              >
+                {tag}
+              </span>
+            ))}
+          </div>
+
+          <div className={cn("mt-4 flex items-center gap-3", isOdd ? "lg:justify-start" : "lg:justify-end")}>
             {project.repoUrl ? (
               <Link
                 href={project.repoUrl}
                 target="_blank"
                 rel="noreferrer"
                 aria-label={`${project.title} source code`}
-                onClick={(event) => event.stopPropagation()}
-                className="grid h-9 w-9 place-items-center rounded-md border border-[var(--glass-border)] bg-[var(--glass-bg)] text-muted-foreground backdrop-blur-md transition-colors hover:border-border-strong hover:text-foreground"
+                className="text-muted-foreground transition-colors hover:text-primary"
               >
-                <Github className="h-4 w-4" aria-hidden="true" />
+                <Github className="h-5 w-5" aria-hidden="true" />
               </Link>
             ) : null}
             {project.liveUrl ? (
@@ -107,71 +116,241 @@ function ProjectCard({
                 target="_blank"
                 rel="noreferrer"
                 aria-label={`${project.title} live demo`}
-                onClick={(event) => event.stopPropagation()}
-                className="grid h-9 w-9 place-items-center rounded-md border border-[var(--glass-border)] bg-[var(--glass-bg)] text-muted-foreground backdrop-blur-md transition-colors hover:border-border-strong hover:text-foreground"
+                className="text-muted-foreground transition-colors hover:text-primary"
               >
-                <ArrowUpRight className="h-4 w-4" aria-hidden="true" />
+                <ExternalLink className="h-5 w-5" aria-hidden="true" />
               </Link>
             ) : null}
           </div>
         </div>
+      </div>
+    </Reveal>
+  );
+}
 
-        <p className="mt-3 line-clamp-2 text-sm leading-6 text-muted-foreground">
-          {project.summary}
-        </p>
+/* ── Other noteworthy project card ──────────────────────────────────── */
 
-        <div className="mt-4 flex flex-wrap gap-1.5">
-          {project.tags.slice(0, 5).map((tag) => (
-            <span
-              key={tag}
-              className="rounded-md border border-border bg-surface px-2 py-0.5 text-[11px] font-medium text-muted-foreground"
+function OtherProjectCard({
+  project,
+  onOpen,
+}: {
+  project: Project;
+  onOpen: (project: Project) => void;
+}) {
+  const reducedMotion = useReducedMotion();
+
+  return (
+    <motion.article
+      whileHover={reducedMotion ? undefined : { y: -8 }}
+      transition={{ duration: 0.3, ease: "easeOut" }}
+      className="glass glass-hover group relative flex h-full cursor-pointer flex-col rounded-lg p-6 transition-all duration-300 sm:p-7"
+      onClick={() => onOpen(project)}
+      onKeyDown={(e) => e.key === "Enter" && onOpen(project)}
+      role="button"
+      tabIndex={0}
+      aria-label={`Open details for ${project.title}`}
+    >
+      {/* Top row: folder icon + links */}
+      <div className="flex items-center justify-between">
+        <Folder className="h-10 w-10 text-primary" aria-hidden="true" />
+        <div className="flex items-center gap-3">
+          {project.repoUrl ? (
+            <Link
+              href={project.repoUrl}
+              target="_blank"
+              rel="noreferrer"
+              aria-label={`${project.title} source code`}
+              onClick={(e) => e.stopPropagation()}
+              className="text-muted-foreground transition-colors hover:text-primary"
             >
-              {tag}
-            </span>
-          ))}
+              <Github className="h-5 w-5" aria-hidden="true" />
+            </Link>
+          ) : null}
+          {project.liveUrl ? (
+            <Link
+              href={project.liveUrl}
+              target="_blank"
+              rel="noreferrer"
+              aria-label={`${project.title} live demo`}
+              onClick={(e) => e.stopPropagation()}
+              className="text-muted-foreground transition-colors hover:text-primary"
+            >
+              <ExternalLink className="h-5 w-5" aria-hidden="true" />
+            </Link>
+          ) : null}
         </div>
+      </div>
 
-        <div className="mt-5 flex items-center gap-1.5 border-t border-border pt-4 text-sm font-semibold text-primary opacity-80 transition-opacity group-hover:opacity-100">
-          View details
-          <ArrowUpRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" aria-hidden="true" />
-        </div>
+      {/* Title + description */}
+      <h3 className="font-display mt-6 text-lg font-bold tracking-tight text-foreground transition-colors group-hover:text-primary">
+        {project.title}
+      </h3>
+      <p className="mt-2 line-clamp-3 flex-1 text-sm leading-6 text-muted-foreground">
+        {project.summary}
+      </p>
+
+      {/* Tags */}
+      <div className="mt-5 flex flex-wrap gap-x-3 gap-y-1.5">
+        {project.tags.slice(0, 4).map((tag) => (
+          <span
+            key={tag}
+            className="font-mono text-[11px] text-muted-foreground"
+          >
+            {tag}
+          </span>
+        ))}
       </div>
     </motion.article>
   );
 }
 
+/* ── Category filter pill ───────────────────────────────────────────── */
+
+function FilterPill({
+  active,
+  onClick,
+  children,
+}: {
+  active: boolean;
+  onClick: () => void;
+  children: React.ReactNode;
+}) {
+  return (
+    <button
+      type="button"
+      onClick={onClick}
+      aria-pressed={active}
+      className={cn(
+        "rounded-full border px-4 py-2 font-mono text-xs font-medium transition-all duration-300",
+        active
+          ? "border-primary/60 bg-primary/15 text-primary shadow-[0_0_12px_rgba(79,156,255,0.15)]"
+          : "border-border bg-transparent text-muted-foreground hover:border-primary/40 hover:text-foreground"
+      )}
+    >
+      {children}
+    </button>
+  );
+}
+
+/* ── Main section ───────────────────────────────────────────────────── */
+
 export default function ProjectsSection() {
   const { data: projects, isLoading, error } = useCollection<Project>("/api/projects");
   const [selected, setSelected] = useState<Project | null>(null);
+  const [activeCategory, setActiveCategory] = useState<string | null>(null);
+  const [showAll, setShowAll] = useState(false);
 
-  const featured = projects.filter((p) => p.featured);
-  const rest = projects.filter((p) => !p.featured);
-  const ordered = [...featured, ...rest];
+  const categories = useMemo(() => {
+    const cats = new Set<string>();
+    projects.forEach((p) => {
+      if (p.category) cats.add(p.category);
+    });
+    return Array.from(cats).sort();
+  }, [projects]);
+
+  const filtered = useMemo(() => {
+    if (!activeCategory) return projects;
+    return projects.filter((p) => p.category === activeCategory);
+  }, [projects, activeCategory]);
+
+  const featured = filtered.filter((p) => p.featured);
+  const other = filtered.filter((p) => !p.featured);
+  const visibleOther = showAll ? other : other.slice(0, 6);
 
   return (
     <section id="projects" className="section-pad">
       <div className="section-shell">
-        <SectionHeading
-          eyebrow="Projects"
-          title="Selected work, engineered end-to-end"
-          description="Full-stack applications, systems projects, and hardware experiments — each one built to work, not just to demo."
-          gradient
-        />
+        {/* Numbered heading */}
+        <Reveal>
+          <div className="max-w-2xl">
+            <h2 className="font-display flex items-center gap-2 text-balance text-2xl font-bold tracking-tight text-foreground sm:text-3xl">
+              <span className="font-mono text-lg font-normal text-primary sm:text-xl">02.</span>
+              Some Things I&rsquo;ve Built
+            </h2>
+          </div>
+        </Reveal>
+
+        {/* Category filter pills */}
+        {categories.length > 1 && (
+          <Reveal delay={0.05}>
+            <div className="mt-8 flex flex-wrap gap-2">
+              <FilterPill
+                active={activeCategory === null}
+                onClick={() => setActiveCategory(null)}
+              >
+                All
+              </FilterPill>
+              {categories.map((cat) => (
+                <FilterPill
+                  key={cat}
+                  active={activeCategory === cat}
+                  onClick={() => setActiveCategory((c) => (c === cat ? null : cat))}
+                >
+                  {cat}
+                </FilterPill>
+              ))}
+            </div>
+          </Reveal>
+        )}
 
         {isLoading ? (
           <div className="mt-12 grid gap-6 md:grid-cols-2">
-            {Array.from({ length: 4 }).map((_, index) => (
-              <Skeleton key={index} className="h-96" />
+            {Array.from({ length: 4 }).map((_, i) => (
+              <Skeleton key={i} className="h-96" />
             ))}
           </div>
-        ) : ordered.length ? (
-          <div className="mt-12 grid gap-6 md:grid-cols-2">
-            {ordered.map((project, index) => (
-              <Reveal key={project.slug || project.title} delay={(index % 2) * 0.08}>
-                <ProjectCard project={project} onOpen={setSelected} />
-              </Reveal>
-            ))}
-          </div>
+        ) : featured.length || other.length ? (
+          <>
+            {/* Featured projects — alternating layout */}
+            {featured.length > 0 && (
+              <div className="mt-14 space-y-24">
+                {featured.map((project, index) => (
+                  <FeaturedProject
+                    key={project.slug || project.title}
+                    project={project}
+                    index={index}
+                    onOpen={setSelected}
+                  />
+                ))}
+              </div>
+            )}
+
+            {/* Other Noteworthy Projects */}
+            {other.length > 0 && (
+              <div className="mt-24">
+                <Reveal>
+                  <h3 className="text-center font-display text-2xl font-bold tracking-tight text-foreground">
+                    Other Noteworthy Projects
+                  </h3>
+                  <p className="mt-2 text-center text-sm text-muted-foreground">
+                    view the archive
+                  </p>
+                </Reveal>
+
+                <div className="mt-12 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+                  {visibleOther.map((project, index) => (
+                    <Reveal key={project.slug || project.title} delay={(index % 3) * 0.06}>
+                      <OtherProjectCard project={project} onOpen={setSelected} />
+                    </Reveal>
+                  ))}
+                </div>
+
+                {other.length > 6 && !showAll && (
+                  <Reveal delay={0.1}>
+                    <div className="mt-10 text-center">
+                      <button
+                        type="button"
+                        onClick={() => setShowAll(true)}
+                        className="inline-flex h-12 items-center gap-2 rounded-lg border border-primary/60 bg-transparent px-8 font-mono text-sm font-medium text-primary transition-all duration-300 hover:bg-primary/10"
+                      >
+                        Show More
+                      </button>
+                    </div>
+                  </Reveal>
+                )}
+              </div>
+            )}
+          </>
         ) : (
           <div className="mt-12">
             <EmptyState
