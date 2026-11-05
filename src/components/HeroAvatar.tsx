@@ -3,7 +3,7 @@
 import Image from "next/image";
 import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
-import { Sparkles, Award, Atom, Layers, Code2, Database, UserCheck } from "lucide-react";
+import { Sparkles, Award, Atom, Layers, Code2, Database } from "lucide-react";
 
 interface HeroAvatarProps {
   imageSrc?: string;
@@ -123,11 +123,6 @@ export default function HeroAvatar({
               <span className="text-[11px] font-mono text-[#00f0ff] mt-0.5 tracking-wider">
                 Full-Stack Space Developer
               </span>
-
-              <div className="mt-2.5 flex items-center gap-1.5 px-3 py-1 rounded-full border border-[#7042f8]/50 bg-[#0d042a]/90 text-[10px] font-mono text-purple-200 shadow-[0_0_12px_rgba(112,66,248,0.3)]">
-                <UserCheck className="w-3 h-3 text-[#00f0ff]" />
-                <span>Drop profile.png to load photo</span>
-              </div>
             </div>
           )}
         </div>
