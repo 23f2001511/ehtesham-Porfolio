@@ -1,8 +1,8 @@
 import "./globals.css";
 import type { Metadata } from "next";
 import { Inter, JetBrains_Mono, Space_Grotesk } from "next/font/google";
-import PageBackground, { ScrollProgress } from "@/components/shared/PageBackground";
-import SpaceBackground from "@/components/SpaceBackground";
+import { ScrollProgress } from "@/components/shared/PageBackground";
+import ClientSpaceBackground from "@/components/ClientSpaceBackground";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -16,8 +16,6 @@ const jetbrains = JetBrains_Mono({
   variable: "--font-mono"
 });
 
-// Display face — used with restraint on the wordmark, hero name, section
-// headings, and large numerals for a distinct, engineered personality.
 const spaceGrotesk = Space_Grotesk({
   subsets: ["latin"],
   display: "swap",
@@ -28,7 +26,7 @@ const spaceGrotesk = Space_Grotesk({
 export const metadata: Metadata = {
   metadataBase: new URL("https://ehtesham-aalam.dev"),
   title: {
-    default: "Ehtesham Aalam | Full-Stack Developer",
+    default: "Ehtesham Aalam | Full-Stack Space Developer",
     template: "%s | Ehtesham Aalam"
   },
   description:
@@ -43,7 +41,7 @@ export const metadata: Metadata = {
   ],
   authors: [{ name: "Ehtesham Aalam" }],
   openGraph: {
-    title: "Ehtesham Aalam | Full-Stack Developer",
+    title: "Ehtesham Aalam | Full-Stack Space Developer",
     description:
       "Modern developer portfolio with projects, real GitHub activity, and LeetCode analytics.",
     type: "website",
@@ -63,7 +61,6 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning className={`${inter.variable} ${jetbrains.variable} ${spaceGrotesk.variable}`}>
       <head>
-        {/* anti-flicker: apply the stored/system theme class before first paint */}
         <script
           dangerouslySetInnerHTML={{
             __html:
@@ -71,9 +68,8 @@ export default function RootLayout({
           }}
         />
       </head>
-      <body className="noise antialiased">
-        <PageBackground />
-        <SpaceBackground />
+      <body className="bg-[#030014] text-white overflow-y-scroll overflow-x-hidden antialiased selection:bg-[#7042f8]/40 selection:text-[#00f0ff]">
+        <ClientSpaceBackground />
         <ScrollProgress />
         <a
           href="#content"

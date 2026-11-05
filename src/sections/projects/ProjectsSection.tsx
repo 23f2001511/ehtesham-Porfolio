@@ -260,13 +260,22 @@ export default function ProjectsSection() {
   return (
     <section id="projects" className="section-pad">
       <div className="section-shell">
-        {/* Numbered heading */}
+        {/* Numbered heading & Space Title */}
         <Reveal>
-          <div className="max-w-2xl">
-            <h2 className="font-display flex items-center gap-2 text-balance text-2xl font-bold tracking-tight text-foreground sm:text-3xl">
-              <span className="font-mono text-lg font-normal text-primary sm:text-xl">02.</span>
-              Some Things I&rsquo;ve Built
+          <div className="text-center mb-14">
+            <div className="welcome-box mb-4">
+              <Rocket className="w-4 h-4 text-[#00f0ff]" />
+              <span className="welcome-text font-bold">Featured Portfolio</span>
+            </div>
+            <h2 className="text-3xl sm:text-5xl font-extrabold text-white tracking-tight">
+              My{" "}
+              <span className="text-transparent bg-clip-text bg-gradient-to-r from-purple-500 via-violet-400 to-cyan-400">
+                Projects
+              </span>
             </h2>
+            <p className="cursive mt-3 text-lg font-medium text-gray-300">
+              Interactive Web Applications &amp; Production Systems
+            </p>
           </div>
         </Reveal>
 

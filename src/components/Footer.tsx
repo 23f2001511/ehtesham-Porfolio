@@ -56,9 +56,9 @@ export default function Footer() {
           <ul className="mt-4 space-y-2.5">
             {navItems.map((item) => (
               <li key={item.id}>
-                <a href={item.href} className="text-sm text-muted-foreground transition-colors hover:text-foreground">
+                <Link href={item.href} className="text-sm text-muted-foreground transition-colors hover:text-foreground">
                   {item.label}
-                </a>
+                </Link>
               </li>
             ))}
           </ul>

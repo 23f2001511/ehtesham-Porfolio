@@ -1,30 +1,31 @@
 "use client";
 
 import Link from "next/link";
-import dynamic from "next/dynamic";
 import { motion, useReducedMotion } from "framer-motion";
-import { ArrowRight, Code2, FileText, Github, Linkedin, Mail, Sparkles, Award } from "lucide-react";
+import {
+  Code2,
+  Download,
+  Github,
+  Linkedin,
+  Mail,
+  Sparkles,
+  ChevronDown
+} from "lucide-react";
 import { useEffect, useState } from "react";
 import { siteConfig } from "@/constants";
 import { usePublicProfile } from "@/hooks/usePublicProfile";
 import { useApiData } from "@/hooks/useApiData";
 import type { GithubData, LeetcodeData } from "@/types";
-
-// Dynamic load of the 3D WebGL scene (client-only)
-const HeroScene = dynamic(() => import("@/components/three/HeroScene"), {
-  ssr: false,
-  loading: () => (
-    <div className="flex h-full w-full items-center justify-center">
-      <div className="h-40 w-40 animate-pulse rounded-full border border-primary/20 bg-primary/5" />
-    </div>
-  ),
-});
+import ProjectsBtn from "@/components/ProjectsBtn";
+import BlackHoleVortex from "@/components/three/BlackHoleVortex";
+import HeroAvatar from "@/components/HeroAvatar";
+import { slideInFromLeft, slideInFromTop } from "@/lib/motion";
 
 const ROLES = [
   "Full-Stack Developer",
   "IIT Madras • BS Data Science",
-  "Problem Solver & Architect",
-  "Next.js & TypeScript Specialist"
+  "Next.js 15 & TypeScript Specialist",
+  "Scalable Systems Architect"
 ];
 
 function useTypewriter(words: string[]) {
@@ -39,13 +40,13 @@ function useTypewriter(words: string[]) {
       return;
     }
     const word = words[index % words.length];
-    const speed = deleting ? 40 : 85;
+    const speed = deleting ? 30 : 65;
     const timer = setTimeout(() => {
       if (!deleting) {
         const next = word.slice(0, text.length + 1);
         setText(next);
         if (next === word) {
-          setTimeout(() => setDeleting(true), 1500);
+          setTimeout(() => setDeleting(true), 1800);
         }
       } else {
         const next = word.slice(0, text.length - 1);
@@ -68,7 +69,6 @@ function scrollTo(id: string) {
 
 export default function HeroSection() {
   const { profile } = usePublicProfile();
-  const reduced = useReducedMotion();
   const typed = useTypewriter(ROLES);
   const { data: github } = useApiData<GithubData>(`/api/github?username=${siteConfig.githubUsername}`);
   const { data: leetcode } = useApiData<LeetcodeData>(`/api/leetcode?username=${siteConfig.leetcodeUsername}`);
@@ -76,171 +76,183 @@ export default function HeroSection() {
   const stats = [
     {
       label: "Repositories",
-      value: github ? github.profile.publicRepos : null
+      value: github ? github.profile.publicRepos : "12+"
     },
     {
-      label: "Problems solved",
-      value: leetcode ? leetcode.solved.all : null
+      label: "LeetCode Solved",
+      value: leetcode ? leetcode.solved.all : "150+"
     },
     {
-      label: "Stars earned",
-      value: github ? github.totals.stars : null
+      label: "GitHub Stars",
+      value: github ? github.totals.stars : "5+"
     }
   ];
 
-  const displayName = profile.name || siteConfig.name;
-  const nameParts = displayName.trim().split(/\s+/);
-  const firstName = nameParts[0] ?? displayName;
-  const restName = nameParts.slice(1).join(" ");
-
-  const fade = (delay: number) => ({
-    initial: reduced ? undefined : { opacity: 0, y: 22 },
-    animate: reduced ? undefined : { opacity: 1, y: 0 },
-    transition: { duration: 0.6, delay, ease: "easeOut" as const }
-  });
-
   return (
-    <section id="home" className="relative flex min-h-screen items-center overflow-hidden pt-20">
-      {/* Background radial glow */}
-      <div className="pointer-events-none absolute inset-0">
-        <div className="absolute top-1/4 left-1/2 -translate-x-1/2 h-96 w-96 rounded-full bg-primary/10 blur-[120px]" aria-hidden="true" />
-        <div className="absolute inset-x-0 bottom-0 h-32 bg-gradient-to-t from-[var(--background)] to-transparent" aria-hidden="true" />
+    <section
+      id="home"
+      className="relative flex min-h-[95vh] items-center justify-center overflow-hidden pt-24 pb-14"
+    >
+      {/* ── Top Celestial Accretion Black Hole Video (Sanidhyy Space Signature) ── */}
+      <video
+        autoPlay
+        muted
+        loop
+        playsInline
+        className="rotate-180 absolute -top-[340px] left-0 w-full h-full object-cover -z-20 pointer-events-none opacity-80"
+      >
+        <source src="/videos/blackhole.webm" type="video/webm" />
+      </video>
+      <BlackHoleVortex />
+
+      {/* ── Ambient Radial Cosmic Aura ── */}
+      <div className="pointer-events-none absolute inset-0 -z-10">
+        <div className="absolute top-1/4 left-1/2 -translate-x-1/2 h-[500px] w-[500px] rounded-full bg-[#7042f8]/12 blur-[140px]" />
+        <div className="absolute bottom-0 inset-x-0 h-32 bg-gradient-to-t from-[#030014] to-transparent" />
       </div>
 
-      <div className="section-shell relative z-10 grid w-full items-center gap-10 py-16 lg:grid-cols-[1.1fr_0.9fr] lg:py-24">
-        {/* Left Column: Text & CTAs */}
-        <div className="max-w-2xl">
-          <motion.div {...fade(0.05)} className="glass inline-flex items-center gap-2 rounded-full px-4 py-1.5 text-xs text-muted-foreground border border-primary/20">
-            <span className="relative flex h-2 w-2">
-              <span className="absolute inline-flex h-full w-full rounded-full bg-primary opacity-75 pulse-dot" aria-hidden="true" />
-              <span className="relative inline-flex h-2 w-2 rounded-full bg-primary" aria-hidden="true" />
-            </span>
-            <span className="font-mono text-primary">status:</span> Available for opportunities
+      <div className="section-shell relative z-10 grid w-full items-center gap-12 lg:grid-cols-[1.15fr_0.85fr]">
+        {/* ── Left Column: Space & Modern Merged Typography ── */}
+        <div className="flex flex-col items-start max-w-2xl">
+          {/* Sanidhyy Space Signature Welcome Badge */}
+          <motion.div
+            variants={slideInFromTop(0.1)}
+            initial="hidden"
+            animate="visible"
+            className="welcome-box mb-6 bg-[#030014]/90 border border-[#7042f8]/60 shadow-[0_0_20px_rgba(112,66,248,0.35)]"
+          >
+            <Sparkles className="w-4 h-4 text-[#00f0ff]" />
+            <span className="welcome-text font-bold">Fullstack Developer Portfolio</span>
           </motion.div>
 
-          <motion.h1 {...fade(0.12)} className="font-display mt-6 text-balance text-5xl font-bold leading-[1.04] tracking-tight text-foreground sm:text-6xl md:text-7xl">
-            {restName ? (
-              <>
-                {firstName} <span className="text-gradient-flow">{restName}</span>
-              </>
-            ) : (
-              <span className="text-gradient-flow">{displayName}</span>
-            )}
+          {/* Sanidhyy Space Signature Hero Headline */}
+          <motion.h1
+            variants={slideInFromLeft(0.25)}
+            initial="hidden"
+            animate="visible"
+            className="text-4xl sm:text-6xl lg:text-7xl font-extrabold tracking-tight text-white leading-[1.12]"
+          >
+            Providing{" "}
+            <span className="inline-block text-transparent bg-clip-text bg-gradient-to-r from-purple-500 via-violet-400 to-cyan-400 font-extrabold">
+              the best project experience
+            </span>
           </motion.h1>
 
-          <motion.p {...fade(0.2)} className="mt-4 h-8 font-mono text-xl font-medium text-primary sm:text-2xl">
-            <span className="caret">{typed}</span>
+          {/* Dynamic Typewriter Role Pill */}
+          <motion.div
+            variants={slideInFromLeft(0.4)}
+            initial="hidden"
+            animate="visible"
+            className="mt-5 flex items-center gap-2.5 px-4 py-2 rounded-xl border border-[#7042f8]/40 bg-[#07011d]/90 backdrop-blur-md shadow-[0_0_15px_rgba(42,14,97,0.4)]"
+          >
+            <span className="text-sm font-mono font-bold text-[#00f0ff]">&gt;</span>
+            <span className="font-mono text-sm sm:text-lg font-semibold text-purple-200">
+              {typed}
+            </span>
+            <span className="inline-block w-2 h-4 bg-[#00f0ff] animate-pulse" />
+          </motion.div>
+
+          {/* Descriptive Intro Bio */}
+          <motion.p
+            variants={slideInFromLeft(0.55)}
+            initial="hidden"
+            animate="visible"
+            className="mt-6 text-sm sm:text-base leading-relaxed text-gray-200 max-w-xl"
+          >
+            I&apos;m <span className="text-white font-bold">{siteConfig.name}</span>, a Full Stack Developer &amp; Data Science scholar at{" "}
+            <span className="text-[#00f0ff] font-semibold">IIT Madras</span>. I engineer scalable web platforms, high-throughput APIs, and motion-rich interactive experiences with Next.js 15, TypeScript, and MongoDB.
           </motion.p>
 
-          <motion.p {...fade(0.28)} className="mt-6 max-w-xl text-base leading-relaxed text-muted-foreground sm:text-lg">
-            {profile.tagline ||
-              "I build scalable full-stack web applications, interactive 3D experiences, and data-driven systems with clean architecture."}
-          </motion.p>
+          {/* ── Signature Action Row: Rotating ProjectsBtn + Secondary CTAs ── */}
+          <motion.div
+            variants={slideInFromLeft(0.7)}
+            initial="hidden"
+            animate="visible"
+            className="mt-8 flex flex-wrap items-center gap-6"
+          >
+            {/* Sanidhyy Modern Signature Rotating Projects Button */}
+            <ProjectsBtn href="#projects" />
 
-          <motion.div {...fade(0.36)} className="mt-8 flex flex-wrap items-center gap-3">
-            <button
-              type="button"
-              onClick={() => scrollTo("projects")}
-              className="group btn-spring inline-flex h-12 items-center gap-2 rounded-xl bg-gradient-to-r from-primary to-[#2dd4bf] px-6 text-sm font-semibold text-primary-foreground shadow-[var(--glow-primary)] hover:scale-[1.03] hover:brightness-110 active:scale-[0.98]"
-            >
-              View My Work
-              <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" aria-hidden="true" />
-            </button>
-            <button
-              type="button"
-              onClick={() => scrollTo("contact")}
-              className="btn-spring inline-flex h-12 items-center rounded-xl border border-[var(--glass-border)] bg-[var(--glass-bg)] px-6 text-sm font-semibold text-foreground backdrop-blur-md hover:-translate-y-px hover:border-primary/50 hover:shadow-[var(--elevation-1)]"
-            >
-              Say Hello
-            </button>
-            <div className="ml-1 flex items-center gap-1.5">
-              <SocialButton href={`https://github.com/${siteConfig.githubUsername}`} label="GitHub" Icon={Github} />
-              <SocialButton href={siteConfig.linkedinUrl} label="LinkedIn" Icon={Linkedin} />
-              <SocialButton href={`https://leetcode.com/u/${siteConfig.leetcodeUsername}/`} label="LeetCode" Icon={Code2} />
-              <SocialButton href={siteConfig.resumeUrl} label="Resume" Icon={FileText} />
-              <SocialButton href={`mailto:${siteConfig.email}`} label="Email" Icon={Mail} />
+            <div className="flex flex-col gap-3">
+              <a
+                href={siteConfig.resumeUrl}
+                target="_blank"
+                rel="noreferrer"
+                className="button-secondary flex items-center gap-2"
+              >
+                <Download className="w-4 h-4 text-[#00f0ff]" />
+                <span>Resume / CV</span>
+              </a>
+
+              {/* Social Matrix */}
+              <div className="flex items-center gap-2">
+                <SocialLink href={`https://github.com/${siteConfig.githubUsername}`} label="GitHub" Icon={Github} />
+                <SocialLink href={siteConfig.linkedinUrl} label="LinkedIn" Icon={Linkedin} />
+                <SocialLink href={`https://leetcode.com/u/${siteConfig.leetcodeUsername}/`} label="LeetCode" Icon={Code2} />
+                <SocialLink href={`mailto:${siteConfig.email}`} label="Email" Icon={Mail} />
+              </div>
             </div>
           </motion.div>
 
-          <motion.dl {...fade(0.44)} className="mt-12 grid max-w-lg grid-cols-3 gap-3">
-            {stats.map((stat) => (
-              <div key={stat.label} className="glass rounded-xl px-4 py-3 border border-border/50">
-                <dd className="font-display text-2xl font-bold tracking-tight text-foreground tabular-nums sm:text-3xl text-gradient">
-                  {stat.value == null ? "—" : stat.value.toLocaleString()}
-                </dd>
-                <dt className="mt-1 text-[11px] font-mono uppercase tracking-wider text-muted-foreground">{stat.label}</dt>
+          {/* ── Metric Badges ── */}
+          <motion.div
+            variants={slideInFromLeft(0.85)}
+            initial="hidden"
+            animate="visible"
+            className="mt-10 grid grid-cols-3 gap-3 w-full max-w-lg"
+          >
+            {stats.map((item) => (
+              <div
+                key={item.label}
+                className="space-card px-4 py-3 text-center border-[#7042f8]/40 bg-[#07011d]/85"
+              >
+                <div className="text-xl sm:text-2xl font-bold font-mono text-transparent bg-clip-text bg-gradient-to-r from-purple-300 via-violet-200 to-cyan-300">
+                  {typeof item.value === "number" ? item.value.toLocaleString() : item.value}
+                </div>
+                <div className="text-[10px] sm:text-[11px] font-mono uppercase tracking-wider text-gray-300 mt-1">
+                  {item.label}
+                </div>
               </div>
             ))}
-          </motion.dl>
+          </motion.div>
         </div>
 
-        {/* Right Column: 3D Visual Centerpiece */}
+        {/* ── Right Column: Smart Avatar / 3D Hologram Fallback ── */}
         <motion.div
-          {...fade(0.25)}
-          className="relative mx-auto flex aspect-square w-full max-w-[32rem] items-center justify-center lg:max-w-none lg:h-[520px]"
+          variants={slideInFromTop(0.35)}
+          initial="hidden"
+          animate="visible"
+          className="relative w-full"
         >
-          {/* Subtle glowing backdrop halo */}
-          <div className="absolute inset-0 rounded-full bg-gradient-to-tr from-primary/15 via-accent/10 to-transparent blur-3xl" aria-hidden="true" />
-
-          {/* Floating Glass HUD Chip 1 (Top Right) */}
-          <motion.div
-            initial={{ opacity: 0, scale: 0.8, y: -10 }}
-            animate={{ opacity: 1, scale: 1, y: 0 }}
-            transition={{ delay: 0.6, duration: 0.5 }}
-            className="absolute -top-2 right-4 z-20 hidden sm:flex items-center gap-2 rounded-xl border border-primary/20 bg-surface/70 px-3.5 py-2 backdrop-blur-md shadow-lg"
-          >
-            <Sparkles className="h-4 w-4 text-primary" />
-            <div className="text-left">
-              <p className="text-[10px] font-mono uppercase text-muted-foreground">Specialization</p>
-              <p className="text-xs font-semibold text-foreground">Next.js • React • TypeScript</p>
-            </div>
-          </motion.div>
-
-          {/* Floating Glass HUD Chip 2 (Bottom Left) */}
-          <motion.div
-            initial={{ opacity: 0, scale: 0.8, y: 10 }}
-            animate={{ opacity: 1, scale: 1, y: 0 }}
-            transition={{ delay: 0.8, duration: 0.5 }}
-            className="absolute bottom-6 left-2 z-20 hidden sm:flex items-center gap-2 rounded-xl border border-primary/20 bg-surface/70 px-3.5 py-2 backdrop-blur-md shadow-lg"
-          >
-            <Award className="h-4 w-4 text-secondary" />
-            <div className="text-left">
-              <p className="text-[10px] font-mono uppercase text-muted-foreground">Academics</p>
-              <p className="text-xs font-semibold text-foreground">IIT Madras • BS Data Science</p>
-            </div>
-          </motion.div>
-
-          {/* 3D WebGL Canvas */}
-          <div className="relative h-full w-full overflow-hidden rounded-3xl border border-border/40 bg-surface/20 backdrop-blur-[2px]">
-            <HeroScene />
-          </div>
+          <HeroAvatar
+            imageSrc={profile.avatarUrl || "/profile.png"}
+            name={profile.name || siteConfig.name}
+          />
         </motion.div>
       </div>
 
-      {/* Scroll Down Cue */}
+      {/* Downward indicator */}
       <motion.button
         type="button"
         onClick={() => scrollTo("about")}
-        {...fade(0.6)}
-        className="absolute bottom-6 left-1/2 z-10 -translate-x-1/2 text-muted-foreground transition-colors hover:text-foreground"
-        aria-label="Scroll to about section"
+        className="absolute bottom-3 left-1/2 -translate-x-1/2 flex flex-col items-center gap-1 text-gray-300 hover:text-[#00f0ff] transition-colors cursor-pointer select-none"
+        aria-label="Scroll down"
       >
-        <div className="glass flex h-10 w-6 items-start justify-center rounded-full p-1.5 border border-primary/20">
-          <div className="h-2 w-1 animate-bounce rounded-full bg-primary" aria-hidden="true" />
-        </div>
+        <span className="text-[10px] font-mono uppercase tracking-widest text-purple-300">SCROLL</span>
+        <ChevronDown className="w-4 h-4 animate-bounce text-[#00f0ff]" />
       </motion.button>
     </section>
   );
 }
 
-function SocialButton({ href, label, Icon }: { href: string; label: string; Icon: typeof Github }) {
+function SocialLink({ href, label, Icon }: { href: string; label: string; Icon: typeof Github }) {
   return (
     <Link
       href={href}
       target={href.startsWith("http") ? "_blank" : undefined}
       rel={href.startsWith("http") ? "noreferrer" : undefined}
       aria-label={label}
-      className="btn-spring grid h-10 w-10 place-items-center rounded-xl border border-[var(--glass-border)] bg-[var(--glass-bg)] text-muted-foreground backdrop-blur-md hover:-translate-y-1 hover:border-primary/50 hover:text-primary hover:shadow-[var(--elevation-1)]"
+      className="grid h-10 w-10 place-items-center rounded-xl border border-[#7042f8]/40 bg-[#07011d]/80 text-gray-300 backdrop-blur-md transition-all duration-200 hover:-translate-y-0.5 hover:border-[#00f0ff] hover:text-[#00f0ff] hover:shadow-[0_0_15px_rgba(0,240,255,0.4)]"
     >
       <Icon className="h-4 w-4" aria-hidden="true" />
     </Link>

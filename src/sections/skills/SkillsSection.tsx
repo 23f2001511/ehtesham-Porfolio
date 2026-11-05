@@ -12,8 +12,6 @@ import {
   Workflow
 } from "lucide-react";
 import Reveal from "@/components/shared/Reveal";
-import SectionHeading from "@/components/shared/SectionHeading";
-import LazySkillBadge3D from "@/components/LazySkillBadge3D";
 import { EmptyState } from "@/components/ui/empty-state";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useCollection } from "@/hooks/useCollection";
@@ -32,69 +30,47 @@ const iconMap: Record<string, typeof Code2> = {
   Workflow
 };
 
-/** Only the top featured skills get a 3D badge; the rest keep the 2D icon. */
-const THREED_BADGE_LIMIT = 8;
-
-/** Category -> brand color for the 3D badge, mirroring resolveCategory keys. */
-function categoryColor(category: string) {
-  const key = category.toLowerCase();
-  if (key.includes("data") || key.includes("science") || key.includes("software")) return "#38bdf8";
-  if (key.includes("web") || key.includes("front")) return "#a78bfa";
-  if (key.includes("back") || key.includes("server")) return "#34d399";
-  if (key.includes("design") || key.includes("ui")) return "#e879f9";
-  if (key.includes("engineer") || key.includes("core")) return "#fbbf24";
-  if (key.includes("product")) return "#22d3ee";
-  return "#94a3b8";
-}
-
-/**
- * Accent config keyed by a *normalized* category name so both the fallback
- * constants ("Web Development", "Data Science & Software", "Core Engineering")
- * and the live store data ("Frontend", "Backend", "Design", "Product")
- * render with the intended color.
- */
 function resolveCategory(category: string) {
   const key = category.toLowerCase();
   if (key.includes("data") || key.includes("science") || key.includes("software"))
-    return { bar: "from-sky-400 to-blue-500", chip: "border-sky-300/30 bg-sky-300/10 text-sky-200", order: 1 };
+    return { bar: "from-[#00f0ff] to-[#38bdf8]", chip: "border-cyan-500/40 bg-cyan-950/40 text-cyan-300", order: 1 };
   if (key.includes("web") || key.includes("front"))
-    return { bar: "from-violet-400 to-purple-500", chip: "border-violet-300/30 bg-violet-300/10 text-violet-200", order: 2 };
+    return { bar: "from-[#7042f8] to-[#00f0ff]", chip: "border-purple-500/40 bg-purple-950/40 text-purple-300", order: 2 };
   if (key.includes("back") || key.includes("server"))
-    return { bar: "from-emerald-400 to-teal-500", chip: "border-emerald-300/30 bg-emerald-300/10 text-emerald-200", order: 3 };
+    return { bar: "from-[#3b82f6] to-[#00f0ff]", chip: "border-blue-500/40 bg-blue-950/40 text-blue-300", order: 3 };
   if (key.includes("design") || key.includes("ui"))
-    return { bar: "from-fuchsia-400 to-pink-500", chip: "border-fuchsia-300/30 bg-fuchsia-300/10 text-fuchsia-200", order: 4 };
+    return { bar: "from-[#ec4899] to-[#8b5cf6]", chip: "border-pink-500/40 bg-pink-950/40 text-pink-300", order: 4 };
   if (key.includes("engineer") || key.includes("core"))
-    return { bar: "from-amber-400 to-orange-500", chip: "border-amber-300/30 bg-amber-300/10 text-amber-200", order: 5 };
-  if (key.includes("product"))
-    return { bar: "from-cyan-400 to-teal-400", chip: "border-cyan-300/30 bg-cyan-300/10 text-cyan-200", order: 6 };
-  return { bar: "from-slate-400 to-slate-500", chip: "border-slate-300/30 bg-slate-300/10 text-slate-200", order: 9 };
+    return { bar: "from-[#f59e0b] to-[#ec4899]", chip: "border-amber-500/40 bg-amber-950/40 text-amber-300", order: 5 };
+  return { bar: "from-[#7042f8] to-[#6366f1]", chip: "border-indigo-500/40 bg-indigo-950/40 text-indigo-300", order: 9 };
 }
 
-function SkillChip({ skill, use3D }: { skill: Skill; use3D: boolean }) {
+function SkillChip({ skill }: { skill: Skill }) {
   const Icon = iconMap[skill.icon ?? ""] ?? Code2;
   const accent = resolveCategory(skill.category);
 
   return (
     <div
-      className="group flex items-center gap-3 rounded-lg border border-border bg-surface px-4 py-3 transition-colors hover:border-primary/40"
+      className="group flex items-center gap-3.5 rounded-xl border border-[#7042f8]/25 bg-[#07011d]/70 px-4 py-3.5 transition-all duration-300 hover:border-[#00f0ff]/50 hover:bg-[#100632]/85 hover:shadow-[0_0_20px_rgba(112,66,248,0.35)] hover:-translate-y-0.5"
       title={skill.years ? `${skill.years} yrs` : undefined}
     >
-      {use3D ? (
-        <LazySkillBadge3D color={categoryColor(skill.category)} size={40} />
-      ) : (
-        <span className={cn("grid h-8 w-8 shrink-0 place-items-center rounded-md border", accent.chip)}>
-          <Icon className="h-4 w-4" aria-hidden="true" />
-        </span>
-      )}
+      <span className={cn("grid h-9 w-9 shrink-0 place-items-center rounded-lg border", accent.chip)}>
+        <Icon className="h-4 w-4" aria-hidden="true" />
+      </span>
       <div className="min-w-0 flex-1">
         <div className="flex items-baseline justify-between gap-2">
-          <p className="truncate text-sm font-semibold text-foreground">{skill.name}</p>
-          <span className="text-[11px] tabular-nums text-muted-foreground">
+          <p className="truncate text-sm font-semibold text-gray-200 group-hover:text-white transition-colors">
+            {skill.name}
+          </p>
+          <span className="text-[11px] font-mono tabular-nums text-gray-400">
             {typeof skill.years === "number" ? `${skill.years}y` : ""}
           </span>
         </div>
-        <div className="mt-1.5 h-1.5 overflow-hidden rounded-full bg-muted">
-          <div className={cn("h-full rounded-full bg-gradient-to-r", accent.bar)} style={{ width: `${Math.max(4, Math.min(100, skill.level))}%` }} />
+        <div className="mt-2 h-1.5 overflow-hidden rounded-full bg-[#1b0a42]">
+          <div
+            className={cn("h-full rounded-full bg-gradient-to-r transition-all duration-700", accent.bar)}
+            style={{ width: `${Math.max(8, Math.min(100, skill.level))}%` }}
+          />
         </div>
       </div>
     </div>
@@ -103,18 +79,6 @@ function SkillChip({ skill, use3D }: { skill: Skill; use3D: boolean }) {
 
 export default function SkillsSection() {
   const { data: skills, isLoading, error } = useCollection<Skill>("/api/skills");
-
-  const topSkills = new Set(
-    skills
-      .slice()
-      .sort(
-        (a, b) =>
-          Number(b.featured) - Number(a.featured) ||
-          (a.sortOrder ?? 0) - (b.sortOrder ?? 0)
-      )
-      .slice(0, THREED_BADGE_LIMIT)
-      .map((skill) => skill.id ?? skill.name)
-  );
 
   const grouped = skills.reduce<Record<string, Skill[]>>((acc, skill) => {
     (acc[skill.category] ||= []).push(skill);
@@ -126,48 +90,75 @@ export default function SkillsSection() {
   );
 
   return (
-    <section id="skills" className="section-pad">
+    <section id="skills" className="relative z-10 py-24 overflow-hidden">
+      {/* ── Ambient Skills Background Video (Sanidhyy Space Signature) ── */}
+      <div className="absolute inset-0 pointer-events-none -z-10 flex items-center justify-center opacity-30">
+        <video
+          className="w-full h-full object-cover"
+          playsInline
+          loop
+          muted
+          autoPlay
+        >
+          <source src="/videos/skills-bg.webm" type="video/webm" />
+        </video>
+      </div>
+
       <div className="section-shell">
-        <SectionHeading
-          eyebrow="Skills"
-          title="A technical toolbox, grouped by discipline"
-          description="Languages, frameworks, databases, and core engineering tools — each with an honest self-assessed proficiency."
-          gradient
-        />
+        {/* Sanidhyy Space Signature Title */}
+        <div className="text-center mb-16">
+          <div className="welcome-box mb-4">
+            <Sparkles className="w-4 h-4 text-[#00f0ff]" />
+            <span className="welcome-text">Technical Superpowers</span>
+          </div>
+
+          <h2 className="text-3xl sm:text-5xl font-extrabold text-white tracking-tight">
+            Making apps with{" "}
+            <span className="text-transparent bg-clip-text bg-gradient-to-r from-purple-400 via-violet-300 to-cyan-400">
+              modern technologies
+            </span>
+          </h2>
+
+          <p className="cursive mt-3 text-lg sm:text-xl font-medium text-gray-300">
+            Never miss a task, deadline or idea
+          </p>
+        </div>
 
         {isLoading ? (
           <div className="mt-12 grid gap-6 md:grid-cols-2 lg:grid-cols-3">
             {Array.from({ length: 6 }).map((_, i) => (
-              <Skeleton key={i} className="h-48" />
+              <Skeleton key={i} className="h-52 rounded-2xl bg-purple-950/20" />
             ))}
           </div>
         ) : skills.length ? (
-          <div className="mt-12 grid gap-6 md:grid-cols-2 xl:grid-cols-3">
+          <div className="mt-12 grid gap-8 md:grid-cols-2 xl:grid-cols-3">
             {orderedCategories.map((category, index) => {
               const accent = resolveCategory(category);
               return (
-                <Reveal key={category} delay={index * 0.06} className="h-full">
-                  <div className="panel card-lift h-full p-6">
-                    <div className="flex items-center gap-3">
-                      <span className={cn("h-2.5 w-2.5 rounded-full bg-gradient-to-r", accent.bar)} />
-                      <h3 className="text-sm font-semibold tracking-tight text-foreground">
-                        {category}
-                      </h3>
-                      <span className="ml-auto text-xs tabular-nums text-muted-foreground">
-                        {grouped[category].length}
-                      </span>
-                    </div>
-                    <div className="mt-5 grid gap-2.5">
-                      {grouped[category]
-                        .slice()
-                        .sort((a, b) => (a.sortOrder ?? 0) - (b.sortOrder ?? 0))
-                        .map((skill) => (
-                          <SkillChip
-                            key={skill.id ?? skill.name}
-                            skill={skill}
-                            use3D={topSkills.has(skill.id ?? skill.name)}
-                          />
-                        ))}
+                <Reveal key={category} delay={index * 0.08} className="h-full">
+                  <div className="space-card h-full p-6 border-[#7042f8]/30 flex flex-col justify-between">
+                    <div>
+                      <div className="flex items-center gap-3 pb-4 border-b border-[#7042f8]/20">
+                        <span className={cn("h-3 w-3 rounded-full bg-gradient-to-r", accent.bar)} />
+                        <h3 className="text-base font-bold tracking-tight text-white">
+                          {category}
+                        </h3>
+                        <span className="ml-auto text-xs font-mono px-2.5 py-0.5 rounded-full bg-purple-950/80 border border-[#7042f8]/40 text-purple-300">
+                          {grouped[category].length} Skills
+                        </span>
+                      </div>
+
+                      <div className="mt-5 grid gap-3">
+                        {grouped[category]
+                          .slice()
+                          .sort((a, b) => (a.sortOrder ?? 0) - (b.sortOrder ?? 0))
+                          .map((skill) => (
+                            <SkillChip
+                              key={skill.id ?? skill.name}
+                              skill={skill}
+                            />
+                          ))}
+                      </div>
                     </div>
                   </div>
                 </Reveal>
