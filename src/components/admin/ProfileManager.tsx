@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState, type FormEvent } from "react";
-import { Plus, Save, Trash2 } from "lucide-react";
+import { Plus, Save, Trash2, KeyRound, CheckCircle2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -55,6 +55,59 @@ export default function ProfileManager() {
   const [feedback, setFeedback] = useState("");
   const [isSaving, setIsSaving] = useState(false);
   const [loaded, setLoaded] = useState(false);
+
+  // Security / Password change state
+  const [currentPassword, setCurrentPassword] = useState("");
+  const [newPassword, setNewPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [isChangingPassword, setIsChangingPassword] = useState(false);
+  const [passwordFeedback, setPasswordFeedback] = useState<{ type: "success" | "error"; text: string } | null>(null);
+
+  async function handlePasswordChange(e: FormEvent) {
+    e.preventDefault();
+    setPasswordFeedback(null);
+
+    if (newPassword.length < 6) {
+      setPasswordFeedback({ type: "error", text: "New password must be at least 6 characters." });
+      return;
+    }
+
+    if (newPassword !== confirmPassword) {
+      setPasswordFeedback({ type: "error", text: "New passwords do not match." });
+      return;
+    }
+
+    setIsChangingPassword(true);
+
+    try {
+      const res = await fetch("/api/auth/password", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          action: "change",
+          currentPassword,
+          newPassword
+        })
+      });
+
+      const data = await res.json();
+      if (!res.ok || !data.success) {
+        throw new Error(data.error || "Failed to update password.");
+      }
+
+      setPasswordFeedback({ type: "success", text: "Password changed successfully!" });
+      setCurrentPassword("");
+      setNewPassword("");
+      setConfirmPassword("");
+    } catch (err) {
+      setPasswordFeedback({
+        type: "error",
+        text: err instanceof Error ? err.message : "Failed to change password."
+      });
+    } finally {
+      setIsChangingPassword(false);
+    }
+  }
 
   useEffect(() => {
     async function loadProfile() {
@@ -155,7 +208,8 @@ export default function ProfileManager() {
   }
 
   return (
-    <form onSubmit={onSubmit} className="space-y-8">
+    <div className="space-y-12">
+      <form onSubmit={onSubmit} className="space-y-8">
       <section className="space-y-4">
         <h2 className="text-base font-semibold text-white">Identity</h2>
         <div className="grid gap-4 md:grid-cols-2">
@@ -423,5 +477,75 @@ export default function ProfileManager() {
         )}
       </div>
     </form>
+
+    {/* Security & Password Change */}
+    <section className="rounded-xl border border-white/10 bg-white/[0.03] p-6">
+      <div className="flex items-center gap-3">
+        <div className="grid h-10 w-10 place-items-center rounded-lg border border-amber-300/25 bg-amber-300/10 text-amber-200">
+          <KeyRound className="h-5 w-5" aria-hidden="true" />
+        </div>
+        <div>
+          <h2 className="text-lg font-semibold text-white">Security & Password</h2>
+          <p className="text-xs text-muted-foreground">Update your admin login password securely.</p>
+        </div>
+      </div>
+
+      <form onSubmit={handlePasswordChange} className="mt-6 space-y-4 max-w-md">
+        <div className="space-y-2">
+          <Label htmlFor="currentPassword">Current Password</Label>
+          <Input
+            id="currentPassword"
+            type="password"
+            value={currentPassword}
+            onChange={(e) => setCurrentPassword(e.target.value)}
+            placeholder="Enter current password"
+            required
+          />
+        </div>
+
+        <div className="space-y-2">
+          <Label htmlFor="newPassword">New Password</Label>
+          <Input
+            id="newPassword"
+            type="password"
+            value={newPassword}
+            onChange={(e) => setNewPassword(e.target.value)}
+            placeholder="At least 6 characters"
+            required
+          />
+        </div>
+
+        <div className="space-y-2">
+          <Label htmlFor="confirmPassword">Confirm New Password</Label>
+          <Input
+            id="confirmPassword"
+            type="password"
+            value={confirmPassword}
+            onChange={(e) => setConfirmPassword(e.target.value)}
+            placeholder="Repeat new password"
+            required
+          />
+        </div>
+
+        {passwordFeedback && (
+          <div
+            className={`flex items-center gap-2 rounded-md p-3 text-xs ${
+              passwordFeedback.type === "success"
+                ? "border border-emerald-300/25 bg-emerald-500/10 text-emerald-200"
+                : "border border-rose-300/25 bg-rose-300/10 text-rose-200"
+            }`}
+          >
+            {passwordFeedback.type === "success" && <CheckCircle2 className="h-4 w-4 shrink-0 text-emerald-400" />}
+            <span>{passwordFeedback.text}</span>
+          </div>
+        )}
+
+        <Button type="submit" disabled={isChangingPassword} className="w-full sm:w-auto">
+          <KeyRound className="h-4 w-4" aria-hidden="true" />
+          {isChangingPassword ? "Updating Password…" : "Update Password"}
+        </Button>
+      </form>
+    </section>
+  </div>
   );
 }

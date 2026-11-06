@@ -161,6 +161,17 @@ export const localStore = {
     return store.profile;
   },
 
+  async getPasswordHash(): Promise<string | undefined> {
+    const store = await readStore();
+    return (store.profile as StoredProfile & { passwordHash?: string }).passwordHash;
+  },
+
+  async updatePasswordHash(hash: string): Promise<void> {
+    const store = await readStore();
+    (store.profile as StoredProfile & { passwordHash?: string }).passwordHash = hash;
+    await writeStore(store);
+  },
+
   async updateProfile(
     updates: Partial<
       Pick<

@@ -2,6 +2,7 @@ import { created, fail, handleRouteError, ok, readJson } from "@/lib/api";
 import { requireAdmin } from "@/lib/auth";
 import { connectToDatabase } from "@/lib/db";
 import { localStore } from "@/lib/local-store";
+import { sendContactEmail } from "@/lib/mail";
 import { messageSchema, updateMessageSchema } from "@/lib/validators";
 import Message from "@/models/Message";
 import type { Message as MessageType } from "@/types";
@@ -35,16 +36,27 @@ export async function POST(request: Request) {
   try {
     const body = messageSchema.parse(await request.json());
 
+    let savedMessage: MessageType;
+
     if (!process.env.MONGODB_URI) {
-      const message = await localStore.createMessage(body);
-      return created(message, "Message sent successfully");
+      savedMessage = await localStore.createMessage(body);
+    } else {
+      await connectToDatabase();
+      const message = await Message.create(body);
+      savedMessage = serializeDocument<MessageType>(message);
     }
 
-    await connectToDatabase();
+    // Trigger email notification to alamehtesham88@gmail.com
+    await sendContactEmail({
+      name: body.name,
+      email: body.email,
+      subject: body.subject,
+      message: body.message
+    }).catch((err) => {
+      console.error("[Contact API] Failed to send email alert:", err);
+    });
 
-    const message = await Message.create(body);
-
-    return created(serializeDocument<MessageType>(message), "Message sent successfully");
+    return created(savedMessage, "Message sent successfully");
   } catch (error) {
     return handleRouteError(error);
   }

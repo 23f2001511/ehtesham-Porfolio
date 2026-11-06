@@ -101,14 +101,26 @@ export async function POST(request: Request) {
     const body = loginSchema.parse(await request.json());
 
     if (!process.env.MONGODB_URI) {
-      const adminEmail = process.env.ADMIN_EMAIL;
+      const adminEmail = process.env.ADMIN_EMAIL || siteConfig.email;
       const adminPassword = process.env.ADMIN_PASSWORD;
+      const storedHash = await localStore.getPasswordHash();
 
-      if (!adminEmail || !adminPassword) {
+      if (!storedHash && (!adminEmail || !adminPassword)) {
         return fail("ADMIN_EMAIL and ADMIN_PASSWORD must be set in environment variables.", 500);
       }
 
-      if (body.email !== adminEmail || body.password !== adminPassword) {
+      if (body.email.toLowerCase() !== adminEmail.toLowerCase()) {
+        return fail("Invalid email or password.", 401);
+      }
+
+      let isValid = false;
+      if (storedHash) {
+        isValid = await bcrypt.compare(body.password, storedHash);
+      } else if (adminPassword) {
+        isValid = body.password === adminPassword;
+      }
+
+      if (!isValid) {
         return fail("Invalid email or password.", 401);
       }
 
