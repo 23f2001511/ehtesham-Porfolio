@@ -104,65 +104,160 @@ export const educationTimeline: EducationItem[] = [
 
 export const fallbackProjects: Project[] = [
   {
-    title: "Hospital Management System",
-    slug: "hospital-management-system",
+    title: "Space-Themed Fullstack Portfolio",
+    slug: "space-themed-fullstack-portfolio",
     category: "Web",
-    summary: "A comprehensive hospital management platform with patient records, appointment scheduling, and staff management.",
-    description:
-      "Built with Flask, PostgreSQL, and SQLAlchemy for robust data handling and relational integrity across hospital workflows.",
-    imageUrl: "",
-    liveUrl: "",
-    repoUrl: "",
-    tags: ["Flask", "PostgreSQL", "SQLAlchemy", "Python"],
-    featured: true,
-    status: "Live",
-    sortOrder: 1
-  },
-  {
-    title: "Plastic-to-Fuel Pyrolysis System",
-    slug: "plastic-to-fuel-pyrolysis",
-    category: "Engineering",
-    summary: "A core engineering project converting plastic waste into usable fuel through thermal decomposition.",
-    description:
-      "Designed and prototyped a pyrolysis reactor system with temperature control, safety mechanisms, and fuel output analysis.",
-    imageUrl: "",
-    liveUrl: "",
-    repoUrl: "",
-    tags: ["Engineering", "Thermodynamics", "Sustainability", "Design"],
-    featured: true,
-    status: "Live",
-    sortOrder: 2
-  },
-  {
-    title: "Clap-Activated Switch",
-    slug: "clap-activated-switch",
-    category: "Engineering",
-    summary: "An analog electronics project that detects sound patterns to toggle electrical switches.",
-    description:
-      "Built with op-amps, filters, and flip-flop circuits for reliable clap-pattern detection and debouncing.",
-    imageUrl: "",
-    liveUrl: "",
-    repoUrl: "",
-    tags: ["Analog Electronics", "Circuit Design", "Op-Amps"],
-    featured: true,
-    status: "Live",
-    sortOrder: 3
-  },
-  {
-    title: "Portfolio Admin System",
-    slug: "portfolio-admin-system",
-    category: "Web",
-    summary: "A full-stack portfolio with CRUD dashboards, auth, uploads, and MongoDB persistence.",
-    description:
-      "Built with Next.js App Router, TypeScript, Mongoose, API routes, and a polished glassmorphism UI.",
-    architecture: ["Next.js frontend", "API routes", "Auth layer (HMAC sessions)", "Mongoose models", "MongoDB / JSON store", "File storage (public/uploads)"],
+    summary: "A futuristic space-themed developer portfolio with 3D celestial animations, dynamic holographic profile, and live stats.",
+    description: "Engineered with Next.js 15, React 19, TypeScript, and Three.js celestial background. Features interactive 3D mouse parallax tilt, live GitHub and LeetCode analytics integration, responsive glassmorphism UI, and custom CRUD management dashboard.",
     imageUrl: "/images/portfolio-hero.png",
-    liveUrl: "",
-    repoUrl: "",
-    tags: ["Next.js", "TypeScript", "MongoDB", "Tailwind"],
+    liveUrl: "https://ehtesham-porfolio.vercel.app",
+    repoUrl: "https://github.com/23f2001511/ehtesham-Porfolio",
+    tags: ["Next.js 15", "TypeScript", "Three.js", "Tailwind CSS", "Framer Motion", "MongoDB"],
     featured: true,
     status: "Live",
-    sortOrder: 4
+    sortOrder: 1,
+    architecture: [
+      "Next.js 15 App Router",
+      "Three.js Celestial Background",
+      "Framer Motion 3D Physics",
+      "API Analytics Route Integration"
+    ]
+  },
+  {
+    title: "Tesla Club NIT Patna Official Website",
+    slug: "tesla-club-nit-patna-website",
+    category: "Web",
+    summary: "Official web platform built for Tesla Club NIT Patna featuring technical workshop showcases, events, and member profiles.",
+    description: "Designed and developed for the Tesla Club at NIT Patna to showcase automotive innovations, technical projects, and campus initiatives. Features responsive layouts, modern interactive UI, and event management.",
+    imageUrl: "",
+    liveUrl: "https://tesla-website-black.vercel.app",
+    repoUrl: "https://github.com/23f2001511/tesla_website",
+    tags: ["TypeScript", "Next.js", "React", "Tailwind CSS", "NIT Patna"],
+    featured: true,
+    status: "Live",
+    sortOrder: 2,
+    architecture: [
+      "Next.js React Frontend",
+      "Tailwind CSS Design System",
+      "Vercel Edge Deployment"
+    ]
+  },
+  {
+    title: "SensorSentry - Fleet Failure & RUL Predictor",
+    slug: "sensorsentry-fleet-failure-predictor",
+    category: "AI/ML",
+    summary: "Industrial telemetry monitoring platform predicting machinery failures and Remaining Useful Life (RUL) before breakdowns occur.",
+    description: "An AI-powered predictive maintenance platform that detects anomalies in industrial machinery telemetry. Implements machine learning models for Remaining Useful Life (RUL) forecasting, real-time risk level scoring, and anomaly alerts to prevent critical fleet downtime.",
+    imageUrl: "",
+    liveUrl: "",
+    repoUrl: "https://github.com/23f2001511/SensorSentry",
+    tags: ["Python", "Machine Learning", "Data Science", "Anomaly Detection", "Predictive Maintenance", "RUL"],
+    featured: true,
+    status: "Live",
+    sortOrder: 3,
+    architecture: [
+      "Python ML Pipeline",
+      "Sensor Telemetry Ingestion",
+      "RUL Estimation Model",
+      "Real-time Anomaly Classification"
+    ]
+  },
+  {
+    title: "Examination Portal Management System (IIT Madras)",
+    slug: "examination-portal-management-iitm",
+    category: "Web",
+    summary: "Academic portal built for IIT Madras MAD-2 to conduct automated online examinations, timing control, and role-based student-faculty access.",
+    description: "An end-to-end academic examination management platform developed for the IIT Madras BS Degree program (Modern Application Development 2). Built with role-based access control (RBAC), multi-tier user dashboards (Admin, Examiner, Student), question paper generation, real-time exam timing, and automated grade compilation.",
+    imageUrl: "",
+    liveUrl: "",
+    repoUrl: "https://github.com/23f2001511/Examination_portal_management-IITM",
+    tags: ["Python", "Flask", "SQLite", "Vue.js", "IIT Madras", "REST API", "RBAC"],
+    featured: true,
+    status: "Live",
+    sortOrder: 4,
+    architecture: [
+      "Flask Backend REST API",
+      "Vue.js Frontend Architecture",
+      "SQLite / SQLAlchemy ORM",
+      "Role-Based Access Control (RBAC)"
+    ]
+  },
+  {
+    title: "Hospital Management System (IIT Madras MAD-1)",
+    slug: "hospital-management-system-iitm",
+    category: "Web",
+    summary: "Full-featured hospital operations system managing doctor-patient appointments, medical history logs, and administrative workflows.",
+    description: "Academic milestone project for IIT Madras Modern Application Development 1. Features patient appointment booking, doctor availability schedules, medical history logs, prescription tracking, and centralized administrator controls with relational integrity.",
+    imageUrl: "",
+    liveUrl: "",
+    repoUrl: "https://github.com/23f2001511/Hospital-management-system-sep2025-IITM-MAD-1",
+    tags: ["Python", "Flask", "SQLite", "HTML5", "Bootstrap", "IIT Madras"],
+    featured: false,
+    status: "Live",
+    sortOrder: 5,
+    architecture: [
+      "Flask MVC Architecture",
+      "Relational Database Schema",
+      "Jinja2 Templating Engine",
+      "Session-Based Authentication"
+    ]
+  },
+  {
+    title: "Debug Diary - Tech Learning & Roadmap Platform",
+    slug: "debug-diary-tech-roadmap",
+    category: "Web",
+    summary: "Developer guide portal providing structured IT roadmaps, curated guides, cheat sheets, and technical resources for aspiring programmers.",
+    description: "A comprehensive developer portal and tech learning roadmap platform where students and aspiring developers can find structured guides, curated roadmaps, cheat sheets, and best practices across modern IT fields.",
+    imageUrl: "",
+    liveUrl: "",
+    repoUrl: "https://github.com/23f2001511/Debug-Diary",
+    tags: ["HTML5", "CSS3", "JavaScript", "Web Development", "Education"],
+    featured: false,
+    status: "Live",
+    sortOrder: 6,
+    architecture: [
+      "Vanilla Web Tech Stack",
+      "Responsive UI Design",
+      "Structured Learning Catalog"
+    ]
+  },
+  {
+    title: "Sutradhaar - ET Hackathon Project",
+    slug: "sutradhaar-et-hackathon",
+    category: "Web",
+    summary: "Collaborative solution engineered for the Economic Times (ET) Hackathon addressing workflow coordination and digital accessibility.",
+    description: "A team hackathon solution built under rapid sprint conditions during the ET Hackathon. Focused on streamlined workflow management, digital accessibility, and automated coordination.",
+    imageUrl: "",
+    liveUrl: "",
+    repoUrl: "https://github.com/23f2001511/sutradhaar",
+    tags: ["Hackathon", "Full Stack", "Problem Solving", "Rapid Prototyping"],
+    featured: false,
+    status: "Live",
+    sortOrder: 7,
+    architecture: [
+      "Hackathon Sprint Architecture",
+      "Frontend Prototype",
+      "Collaborative Workflow"
+    ]
+  },
+  {
+    title: "Tools in Data Science (TDS) - IIT Madras",
+    slug: "tools-in-data-science-iitm",
+    category: "AI/ML",
+    summary: "Data science toolkit, ETL pipelines, automated scraping scripts, and statistical notebooks built for IIT Madras Diploma.",
+    description: "A collection of data analytics scripts, ETL pipelines, automated scraping tools, and statistical analysis notebooks developed as part of the IIT Madras BS Degree Tools in Data Science diploma curriculum.",
+    imageUrl: "",
+    liveUrl: "",
+    repoUrl: "https://github.com/23f2001511/TDS_iitm",
+    tags: ["Python", "Data Science", "Pandas", "NumPy", "Web Scraping", "IIT Madras"],
+    featured: false,
+    status: "Live",
+    sortOrder: 8,
+    architecture: [
+      "Data Processing Pipelines",
+      "Automated Scripting Workflows",
+      "Jupyter Data Science Notebooks"
+    ]
   }
 ];
 
