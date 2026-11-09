@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { AnimatePresence, motion, useMotionValueEvent, useScroll } from "framer-motion";
-import { Code2, Github, Linkedin, Menu, X, Orbit, FileText } from "lucide-react";
+import { Code2, Github, Linkedin, Menu, X, Orbit, FileText, Download } from "lucide-react";
 import { useEffect, useState } from "react";
 import { siteConfig } from "@/constants";
 import { usePublicProfile } from "@/hooks/usePublicProfile";
@@ -76,7 +76,7 @@ export default function Navbar() {
         initial={{ y: 0 }}
         animate={{ y: hidden ? "-100%" : "0%" }}
         transition={{ duration: 0.35, ease: "easeInOut" }}
-        className="fixed top-0 left-0 right-0 z-50 flex h-16 w-full items-center justify-between px-6 sm:px-12 backdrop-blur-md bg-[#030014]/50 border-b border-[#7042f8]/20 shadow-[0_10px_30px_rgba(42,14,97,0.3)] select-none"
+        className="fixed top-0 left-0 right-0 z-50 flex h-16 w-full items-center justify-between px-4 sm:px-8 lg:px-12 backdrop-blur-md bg-[#030014]/60 border-b border-[#7042f8]/20 shadow-[0_10px_30px_rgba(42,14,97,0.3)] select-none"
       >
         {/* Brand Logo Left */}
         <Link
@@ -92,7 +92,7 @@ export default function Navbar() {
           </span>
         </Link>
 
-        {/* Central Floating Glass Pill Navigation (Signature Sanidhyy Space Style) */}
+        {/* Central Floating Glass Pill Navigation (Desktop) */}
         <nav
           aria-label="Main navigation"
           className="hidden md:flex items-center gap-6 rounded-full border border-[#7042f8]/40 bg-[#07011d]/80 px-6 py-2 shadow-[0_0_20px_rgba(112,66,248,0.25)] backdrop-blur-xl"
@@ -116,7 +116,7 @@ export default function Navbar() {
           })}
         </nav>
 
-        {/* Right Side Socials & Resume */}
+        {/* Right Side Socials & Resume (Desktop) */}
         <div className="hidden md:flex items-center gap-3">
           <Link
             href={`https://github.com/${siteConfig.githubUsername}`}
@@ -157,14 +157,14 @@ export default function Navbar() {
           </a>
         </div>
 
-        {/* Mobile Hamburger Button */}
+        {/* Mobile Hamburger Button (Touch Optimized 44px) */}
         <button
           type="button"
           onClick={() => setOpen(!open)}
-          className="flex md:hidden h-9 w-9 items-center justify-center rounded-lg border border-[#7042f8]/50 text-white"
+          className="flex md:hidden min-h-[44px] min-w-[44px] items-center justify-center rounded-xl border border-[#7042f8]/60 bg-[#07011d]/90 text-white shadow-[0_0_15px_rgba(112,66,248,0.3)] active:scale-95 transition-all"
           aria-label={open ? "Close menu" : "Open menu"}
         >
-          {open ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
+          {open ? <X className="h-5 w-5 text-[#00f0ff]" /> : <Menu className="h-5 w-5 text-[#00f0ff]" />}
         </button>
       </motion.header>
 
@@ -172,33 +172,71 @@ export default function Navbar() {
       <AnimatePresence>
         {open && (
           <motion.div
-            initial={{ opacity: 0, y: -20 }}
+            initial={{ opacity: 0, y: -15 }}
             animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -20 }}
-            transition={{ duration: 0.25 }}
-            className="fixed inset-x-0 top-16 z-40 flex flex-col gap-4 border-b border-[#7042f8]/30 bg-[#030014]/95 p-6 backdrop-blur-2xl md:hidden"
+            exit={{ opacity: 0, y: -15 }}
+            transition={{ duration: 0.22 }}
+            className="fixed inset-x-0 top-16 z-40 flex flex-col gap-3 border-b border-[#7042f8]/40 bg-[#030014]/95 p-5 backdrop-blur-2xl md:hidden shadow-2xl"
           >
-            {navLinks.map((item) => (
-              <Link
-                key={item.id}
-                href={item.href}
-                onClick={(e) => handleNav(e, item.id)}
-                className="font-mono text-base font-semibold text-gray-200 hover:text-[#00f0ff] py-1"
+            {navLinks.map((item) => {
+              const isActive = active === item.id;
+              return (
+                <Link
+                  key={item.id}
+                  href={item.href}
+                  onClick={(e) => handleNav(e, item.id)}
+                  className={`flex items-center justify-between rounded-xl px-4 py-2.5 font-mono text-sm font-semibold transition-all ${
+                    isActive
+                      ? "border border-[#00f0ff]/40 bg-[#00f0ff]/10 text-[#00f0ff] shadow-[0_0_15px_rgba(0,240,255,0.2)]"
+                      : "text-gray-200 hover:text-[#00f0ff] hover:bg-[#7042f8]/15"
+                  }`}
+                >
+                  <span>{item.label}</span>
+                  {isActive && <span className="h-1.5 w-1.5 rounded-full bg-[#00f0ff] animate-ping" />}
+                </Link>
+              );
+            })}
+
+            {/* Mobile Resume CTA Button */}
+            <div className="pt-2">
+              <a
+                href={resumeUrl}
+                target="_blank"
+                rel="noreferrer"
+                className="flex w-full items-center justify-center gap-2 rounded-xl border border-[#00f0ff]/60 bg-gradient-to-r from-[#7042f8]/40 via-[#00f0ff]/20 to-[#7042f8]/40 py-3 font-mono text-xs font-bold text-white shadow-[0_0_20px_rgba(0,240,255,0.3)] active:scale-95 transition-all"
               >
-                {item.label}
-              </Link>
-            ))}
-            <div className="pt-2 border-t border-[#7042f8]/20 flex items-center justify-between">
-              <span className="text-xs font-mono text-gray-400">Socials:</span>
+                <Download className="h-4 w-4 text-[#00f0ff]" />
+                <span>Download Resume / CV</span>
+              </a>
+            </div>
+
+            {/* Mobile Social Matrix */}
+            <div className="pt-3 border-t border-[#7042f8]/20 flex items-center justify-between">
+              <span className="text-xs font-mono text-gray-400">Transmissions:</span>
               <div className="flex items-center gap-3">
-                <Link href={`https://github.com/${siteConfig.githubUsername}`} target="_blank" className="text-gray-300 hover:text-[#00f0ff]">
-                  <Github className="h-5 w-5" />
+                <Link
+                  href={`https://github.com/${siteConfig.githubUsername}`}
+                  target="_blank"
+                  aria-label="GitHub"
+                  className="flex h-10 w-10 items-center justify-center rounded-xl border border-[#7042f8]/40 bg-[#07011d]/90 text-gray-300 hover:text-[#00f0ff] hover:border-[#00f0ff] transition-all"
+                >
+                  <Github className="h-4 w-4" />
                 </Link>
-                <Link href={siteConfig.linkedinUrl} target="_blank" className="text-gray-300 hover:text-[#00f0ff]">
-                  <Linkedin className="h-5 w-5" />
+                <Link
+                  href={siteConfig.linkedinUrl}
+                  target="_blank"
+                  aria-label="LinkedIn"
+                  className="flex h-10 w-10 items-center justify-center rounded-xl border border-[#7042f8]/40 bg-[#07011d]/90 text-gray-300 hover:text-[#00f0ff] hover:border-[#00f0ff] transition-all"
+                >
+                  <Linkedin className="h-4 w-4" />
                 </Link>
-                <Link href={`https://leetcode.com/u/${siteConfig.leetcodeUsername}/`} target="_blank" className="text-gray-300 hover:text-[#00f0ff]">
-                  <Code2 className="h-5 w-5" />
+                <Link
+                  href={`https://leetcode.com/u/${siteConfig.leetcodeUsername}/`}
+                  target="_blank"
+                  aria-label="LeetCode"
+                  className="flex h-10 w-10 items-center justify-center rounded-xl border border-[#7042f8]/40 bg-[#07011d]/90 text-gray-300 hover:text-[#00f0ff] hover:border-[#00f0ff] transition-all"
+                >
+                  <Code2 className="h-4 w-4" />
                 </Link>
               </div>
             </div>

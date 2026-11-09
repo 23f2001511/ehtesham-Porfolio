@@ -1,5 +1,5 @@
 import "./globals.css";
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Inter, JetBrains_Mono, Space_Grotesk } from "next/font/google";
 import { ScrollProgress } from "@/components/shared/PageBackground";
 import ClientSpaceBackground from "@/components/ClientSpaceBackground";
@@ -22,6 +22,13 @@ const spaceGrotesk = Space_Grotesk({
   weight: ["400", "500", "600", "700"],
   variable: "--font-space"
 });
+
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  maximumScale: 5,
+  themeColor: "#030014"
+};
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://ehtesham-aalam.dev"),

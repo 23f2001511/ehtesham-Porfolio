@@ -29,16 +29,16 @@ function FeaturedProject({
 
   return (
     <Reveal delay={0.05}>
-      <div className={cn("group relative grid items-center gap-0 lg:grid-cols-12", isOdd && "lg:text-right")}>
+      <div className={cn("group relative grid items-center gap-4 lg:gap-0 lg:grid-cols-12", isOdd && "lg:text-right")}>
         {/* Image side */}
         <div
           className={cn(
-            "relative col-span-full row-start-1 aspect-[16/10] overflow-hidden rounded-lg lg:col-span-7",
+            "relative col-span-full aspect-[16/10] overflow-hidden rounded-xl border border-[#7042f8]/30 shadow-2xl lg:col-span-7 lg:row-start-1",
             isOdd ? "lg:col-start-6" : "lg:col-start-1"
           )}
         >
           <div
-            className="relative h-full w-full cursor-pointer overflow-hidden rounded-lg"
+            className="relative h-full w-full cursor-pointer overflow-hidden rounded-xl"
             onClick={() => onOpen(project)}
             role="button"
             tabIndex={0}
@@ -52,13 +52,13 @@ function FeaturedProject({
                   alt={`${project.title} preview`}
                   fill
                   sizes="(min-width: 1024px) 58vw, 100vw"
-                  className="object-cover transition-all duration-700 group-hover:scale-105 group-hover:opacity-40"
+                  className="object-cover transition-all duration-700 group-hover:scale-105"
                 />
-                <div className="absolute inset-0 bg-primary/20 mix-blend-multiply transition-opacity duration-500 group-hover:opacity-0" />
+                <div className="absolute inset-0 bg-[#07011d]/20 mix-blend-multiply transition-opacity duration-500 group-hover:opacity-0" />
               </>
             ) : (
               <div className="grid h-full place-items-center bg-[radial-gradient(ellipse_at_30%_30%,rgba(79,156,255,0.14),transparent_70%)] transition-opacity duration-500 group-hover:opacity-50">
-                <Rocket className="h-12 w-12 text-primary/30" aria-hidden="true" />
+                <Rocket className="h-12 w-12 text-[#00f0ff]/40" aria-hidden="true" />
               </div>
             )}
           </div>
@@ -67,13 +67,13 @@ function FeaturedProject({
         {/* Content side */}
         <div
           className={cn(
-            "relative z-10 col-span-full row-start-1 flex flex-col py-8 lg:col-span-7",
+            "relative z-10 col-span-full flex flex-col p-5 sm:p-6 lg:p-0 rounded-2xl lg:rounded-none bg-[#07011d]/90 lg:bg-transparent border border-[#7042f8]/30 lg:border-0 backdrop-blur-xl lg:backdrop-blur-none lg:col-span-7 lg:row-start-1",
             isOdd ? "lg:col-start-1 lg:items-start lg:text-left" : "lg:col-start-6 lg:items-end lg:text-right"
           )}
         >
-          <p className="font-mono text-xs font-medium text-primary">Featured Project</p>
+          <p className="font-mono text-xs font-semibold text-[#00f0ff] uppercase tracking-wider">Featured Project</p>
           <h3
-            className="font-display mt-2 cursor-pointer text-2xl font-bold tracking-tight text-foreground transition-colors hover:text-primary sm:text-3xl"
+            className="font-display mt-2 cursor-pointer text-xl sm:text-2xl lg:text-3xl font-bold tracking-tight text-white transition-colors hover:text-[#00f0ff]"
             onClick={() => onOpen(project)}
             role="button"
             tabIndex={0}
@@ -82,8 +82,8 @@ function FeaturedProject({
             {project.title}
           </h3>
 
-          <div className="mt-5 rounded-lg border border-border/60 bg-[var(--glass-bg)] p-5 shadow-xl backdrop-blur-xl sm:p-6">
-            <p className="text-sm leading-7 text-muted-foreground">
+          <div className="mt-3 lg:mt-5 rounded-xl border border-[#7042f8]/40 bg-[#07011d]/95 p-4 sm:p-5 shadow-2xl backdrop-blur-xl">
+            <p className="text-xs sm:text-sm leading-relaxed text-gray-300">
               {project.description || project.summary}
             </p>
           </div>
@@ -92,7 +92,7 @@ function FeaturedProject({
             {project.tags.slice(0, 6).map((tag) => (
               <span
                 key={tag}
-                className="font-mono text-xs text-muted-foreground"
+                className="font-mono text-[11px] px-2.5 py-0.5 rounded-md border border-[#7042f8]/30 bg-purple-950/40 text-purple-200"
               >
                 {tag}
               </span>
@@ -106,9 +106,9 @@ function FeaturedProject({
                 target="_blank"
                 rel="noreferrer"
                 aria-label={`${project.title} source code`}
-                className="text-muted-foreground transition-colors hover:text-primary"
+                className="flex h-9 w-9 items-center justify-center rounded-lg border border-[#7042f8]/40 bg-[#07011d]/80 text-gray-300 hover:text-[#00f0ff] hover:border-[#00f0ff] transition-all"
               >
-                <Github className="h-5 w-5" aria-hidden="true" />
+                <Github className="h-4 w-4" aria-hidden="true" />
               </Link>
             ) : null}
             {project.liveUrl ? (
@@ -117,9 +117,9 @@ function FeaturedProject({
                 target="_blank"
                 rel="noreferrer"
                 aria-label={`${project.title} live demo`}
-                className="text-muted-foreground transition-colors hover:text-primary"
+                className="flex h-9 w-9 items-center justify-center rounded-lg border border-[#00f0ff]/40 bg-[#07011d]/80 text-[#00f0ff] hover:border-[#00f0ff] hover:shadow-[0_0_15px_rgba(0,240,255,0.4)] transition-all"
               >
-                <ExternalLink className="h-5 w-5" aria-hidden="true" />
+                <ExternalLink className="h-4 w-4" aria-hidden="true" />
               </Link>
             ) : null}
           </div>

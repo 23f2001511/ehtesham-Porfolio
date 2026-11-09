@@ -93,7 +93,7 @@ export default function SideNav() {
   };
 
   return (
-    <div ref={navRef} className="fixed right-3 sm:right-6 top-1/2 -translate-y-1/2 z-50">
+    <div ref={navRef} className="fixed right-3 sm:right-6 top-1/2 -translate-y-1/2 z-50 select-none">
       <AnimatePresence mode="wait">
         {!isOpen ? (
           /* ── Floating Launcher Trigger Button (Hidden Sidebar State) ── */
@@ -109,17 +109,17 @@ export default function SideNav() {
               type="button"
               onClick={() => setIsOpen(true)}
               aria-label="Open navigation sidebar"
-              className="relative flex flex-col items-center gap-1.5 rounded-full border border-[#7042f8]/60 bg-[#07011d]/90 p-3 sm:p-3.5 text-[#00f0ff] shadow-[0_0_25px_rgba(112,66,248,0.4)] backdrop-blur-xl transition-all duration-300 hover:scale-110 hover:border-[#00f0ff] hover:shadow-[0_0_30px_rgba(0,240,255,0.6)] cursor-pointer"
+              className="relative flex flex-col items-center gap-1 rounded-full border border-[#7042f8]/60 bg-[#07011d]/90 p-2.5 sm:p-3.5 text-[#00f0ff] shadow-[0_0_25px_rgba(112,66,248,0.4)] backdrop-blur-xl transition-all duration-300 hover:scale-110 hover:border-[#00f0ff] hover:shadow-[0_0_30px_rgba(0,240,255,0.6)] cursor-pointer active:scale-95"
             >
               {/* Outer pulsing ring */}
               <span className="absolute -inset-1 rounded-full border border-[#00f0ff]/40 animate-ping pointer-events-none opacity-40" />
 
               <Compass className="h-5 w-5 sm:h-6 sm:w-6 animate-spin-slow transition-transform group-hover:rotate-45" style={{ animationDuration: "20s" }} />
 
-              <ChevronLeft className="h-3.5 w-3.5 text-purple-300 animate-pulse" />
+              <ChevronLeft className="h-3 w-3 sm:h-3.5 sm:w-3.5 text-purple-300 animate-pulse" />
 
-              {/* Tooltip on hover */}
-              <span className="absolute right-full mr-3.5 top-1/2 -translate-y-1/2 hidden group-hover:flex items-center pointer-events-none select-none z-50">
+              {/* Tooltip on desktop hover */}
+              <span className="absolute right-full mr-3.5 top-1/2 -translate-y-1/2 hidden lg:group-hover:flex items-center pointer-events-none select-none z-50">
                 <span className="relative flex items-center rounded-lg border border-[#7042f8]/50 bg-[#0d042a]/95 px-3 py-1.5 shadow-[0_0_20px_rgba(112,66,248,0.5)] backdrop-blur-md">
                   <span className="text-xs font-mono font-semibold text-white whitespace-nowrap">
                     Quick Menu
@@ -133,15 +133,15 @@ export default function SideNav() {
           /* ── Expanded Sidebar Navigation Dock ── */
           <motion.nav
             key="side-nav-panel"
-            initial={{ opacity: 0, x: 60, scale: 0.92 }}
+            initial={{ opacity: 0, x: 50, scale: 0.92 }}
             animate={{ opacity: 1, x: 0, scale: 1 }}
-            exit={{ opacity: 0, x: 60, scale: 0.92 }}
+            exit={{ opacity: 0, x: 50, scale: 0.92 }}
             transition={{ type: "spring", stiffness: 350, damping: 28 }}
             aria-label="Floating side navigation"
-            className="flex flex-col items-center gap-y-3 rounded-3xl border border-[#7042f8]/50 bg-[#07011d]/95 p-3.5 backdrop-blur-2xl shadow-[0_0_35px_rgba(112,66,248,0.45)] ring-1 ring-[#00f0ff]/20"
+            className="flex max-h-[85vh] overflow-y-auto flex-col items-center gap-y-2.5 rounded-3xl border border-[#7042f8]/50 bg-[#07011d]/95 p-3 backdrop-blur-2xl shadow-[0_0_35px_rgba(112,66,248,0.45)] ring-1 ring-[#00f0ff]/20"
           >
             {/* Header / Close button */}
-            <div className="flex w-full items-center justify-between pb-2 mb-1 border-b border-[#7042f8]/30 px-1 gap-3">
+            <div className="flex w-full items-center justify-between pb-2 mb-1 border-b border-[#7042f8]/30 px-1 gap-2">
               <span className="text-[10px] font-mono font-bold tracking-widest text-[#00f0ff] uppercase">
                 NAV
               </span>
@@ -149,14 +149,14 @@ export default function SideNav() {
                 type="button"
                 onClick={() => setIsOpen(false)}
                 aria-label="Close navigation sidebar"
-                className="flex h-6 w-6 items-center justify-center rounded-full border border-purple-500/40 text-purple-300 hover:text-white hover:border-[#00f0ff] hover:bg-purple-900/40 transition-colors cursor-pointer"
+                className="flex h-6 w-6 items-center justify-center rounded-full border border-purple-500/40 text-purple-300 hover:text-white hover:border-[#00f0ff] hover:bg-purple-900/40 transition-colors cursor-pointer active:scale-90"
               >
                 <X className="h-3.5 w-3.5" />
               </button>
             </div>
 
             {/* Nav list */}
-            <div className="flex flex-col items-center gap-y-2.5">
+            <div className="flex flex-col items-center gap-y-2">
               {NAV_ITEMS.map((item) => {
                 const Icon = item.icon;
                 const isActive = active === item.id;
@@ -166,15 +166,15 @@ export default function SideNav() {
                     key={item.id}
                     href={item.href}
                     onClick={(e) => handleScroll(e, item.id)}
-                    className={`group relative flex h-10 w-10 items-center justify-center rounded-full transition-all duration-300 ${
+                    className={`group relative flex h-9 w-9 sm:h-10 sm:w-10 items-center justify-center rounded-full transition-all duration-300 ${
                       isActive
-                        ? "bg-gradient-to-r from-[#7042f8] to-[#00f0ff] text-white shadow-[0_0_20px_rgba(0,240,255,0.6)] scale-110"
+                        ? "bg-gradient-to-r from-[#7042f8] to-[#00f0ff] text-white shadow-[0_0_20px_rgba(0,240,255,0.6)] scale-105"
                         : "text-purple-300/70 hover:text-white hover:bg-purple-900/35 hover:scale-105"
                     }`}
                     aria-label={item.name}
                   >
-                    {/* Tooltip on Left */}
-                    <div className="absolute right-14 hidden group-hover:flex items-center pointer-events-none select-none z-50">
+                    {/* Tooltip on Left (Desktop only) */}
+                    <div className="absolute right-14 hidden lg:group-hover:flex items-center pointer-events-none select-none z-50">
                       <div className="relative flex items-center rounded-lg border border-[#7042f8]/50 bg-[#0d042a]/95 px-3 py-1.5 shadow-[0_0_20px_rgba(112,66,248,0.5)] backdrop-blur-md">
                         <span className="text-xs font-mono font-semibold text-white whitespace-nowrap">
                           {item.name}
@@ -183,7 +183,7 @@ export default function SideNav() {
                       </div>
                     </div>
 
-                    <Icon className="h-5 w-5 transition-transform group-hover:scale-110" />
+                    <Icon className="h-4 w-4 sm:h-5 sm:w-5 transition-transform group-hover:scale-110" />
                   </Link>
                 );
               })}

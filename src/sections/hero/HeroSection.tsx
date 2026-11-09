@@ -91,7 +91,7 @@ export default function HeroSection() {
   return (
     <section
       id="home"
-      className="relative flex min-h-[95vh] items-center justify-center overflow-hidden pt-24 pb-14"
+      className="relative flex min-h-[95vh] items-center justify-center overflow-hidden pt-20 sm:pt-24 pb-12 sm:pb-16"
     >
       {/* ── Top Celestial Accretion Black Hole Video (Sanidhyy Space Signature) ── */}
       <video
@@ -107,11 +107,11 @@ export default function HeroSection() {
 
       {/* ── Ambient Radial Cosmic Aura ── */}
       <div className="pointer-events-none absolute inset-0 -z-10">
-        <div className="absolute top-1/4 left-1/2 -translate-x-1/2 h-[500px] w-[500px] rounded-full bg-[#7042f8]/12 blur-[140px]" />
+        <div className="absolute top-1/4 left-1/2 -translate-x-1/2 h-[350px] sm:h-[500px] w-[350px] sm:w-[500px] rounded-full bg-[#7042f8]/12 blur-[100px] sm:blur-[140px]" />
         <div className="absolute bottom-0 inset-x-0 h-32 bg-gradient-to-t from-[#030014] to-transparent" />
       </div>
 
-      <div className="section-shell relative z-10 grid w-full items-center gap-12 lg:grid-cols-[1.15fr_0.85fr]">
+      <div className="section-shell relative z-10 grid w-full items-center gap-8 lg:gap-12 lg:grid-cols-[1.15fr_0.85fr]">
         {/* ── Left Column: Space & Modern Merged Typography ── */}
         <div className="flex flex-col items-start max-w-2xl">
           {/* Sanidhyy Space Signature Welcome Badge */}
@@ -119,10 +119,10 @@ export default function HeroSection() {
             variants={slideInFromTop(0.1)}
             initial="hidden"
             animate="visible"
-            className="welcome-box mb-6 bg-[#030014]/90 border border-[#7042f8]/60 shadow-[0_0_20px_rgba(112,66,248,0.35)]"
+            className="welcome-box mb-4 sm:mb-6 bg-[#030014]/90 border border-[#7042f8]/60 shadow-[0_0_20px_rgba(112,66,248,0.35)]"
           >
-            <Sparkles className="w-4 h-4 text-[#00f0ff]" />
-            <span className="welcome-text font-bold">Fullstack Developer Portfolio</span>
+            <Sparkles className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-[#00f0ff]" />
+            <span className="welcome-text font-bold text-xs sm:text-sm">Fullstack Developer Portfolio</span>
           </motion.div>
 
           {/* Sanidhyy Space Signature Hero Headline */}
@@ -130,7 +130,7 @@ export default function HeroSection() {
             variants={slideInFromLeft(0.25)}
             initial="hidden"
             animate="visible"
-            className="text-4xl sm:text-6xl lg:text-7xl font-extrabold tracking-tight text-white leading-[1.12]"
+            className="text-3xl sm:text-5xl lg:text-6xl xl:text-7xl font-extrabold tracking-tight text-white leading-[1.14]"
           >
             Providing{" "}
             <span className="inline-block text-transparent bg-clip-text bg-gradient-to-r from-purple-500 via-violet-400 to-cyan-400 font-extrabold">
@@ -143,13 +143,13 @@ export default function HeroSection() {
             variants={slideInFromLeft(0.4)}
             initial="hidden"
             animate="visible"
-            className="mt-5 flex items-center gap-2.5 px-4 py-2 rounded-xl border border-[#7042f8]/40 bg-[#07011d]/90 backdrop-blur-md shadow-[0_0_15px_rgba(42,14,97,0.4)]"
+            className="mt-4 sm:mt-5 flex items-center gap-2 sm:gap-2.5 px-3 sm:px-4 py-1.5 sm:py-2 rounded-xl border border-[#7042f8]/40 bg-[#07011d]/90 backdrop-blur-md shadow-[0_0_15px_rgba(42,14,97,0.4)]"
           >
-            <span className="text-sm font-mono font-bold text-[#00f0ff]">&gt;</span>
-            <span className="font-mono text-sm sm:text-lg font-semibold text-purple-200">
+            <span className="text-xs sm:text-sm font-mono font-bold text-[#00f0ff]">&gt;</span>
+            <span className="font-mono text-xs sm:text-base lg:text-lg font-semibold text-purple-200">
               {typed}
             </span>
-            <span className="inline-block w-2 h-4 bg-[#00f0ff] animate-pulse" />
+            <span className="inline-block w-1.5 sm:w-2 h-3.5 sm:h-4 bg-[#00f0ff] animate-pulse" />
           </motion.div>
 
           {/* Descriptive Intro Bio */}
@@ -157,7 +157,7 @@ export default function HeroSection() {
             variants={slideInFromLeft(0.55)}
             initial="hidden"
             animate="visible"
-            className="mt-6 text-sm sm:text-base leading-relaxed text-gray-200 max-w-xl"
+            className="mt-5 sm:mt-6 text-xs sm:text-base leading-relaxed text-gray-200 max-w-xl"
           >
             I&apos;m <span className="text-white font-bold">{siteConfig.name}</span>, a Full Stack Developer &amp; Data Science scholar at{" "}
             <span className="text-[#00f0ff] font-semibold">IIT Madras</span>. I engineer scalable web platforms, high-throughput APIs, and motion-rich interactive experiences with Next.js 15, TypeScript, and MongoDB.
@@ -168,17 +168,17 @@ export default function HeroSection() {
             variants={slideInFromLeft(0.7)}
             initial="hidden"
             animate="visible"
-            className="mt-8 flex flex-wrap items-center gap-6"
+            className="mt-6 sm:mt-8 flex flex-wrap items-center gap-4 sm:gap-6"
           >
             {/* Sanidhyy Modern Signature Rotating Projects Button */}
             <ProjectsBtn href="#projects" />
 
-            <div className="flex flex-col gap-3">
+            <div className="flex flex-col gap-2.5 sm:gap-3">
               <a
                 href={profile.resumeUrl || siteConfig.resumeUrl}
                 target="_blank"
                 rel="noreferrer"
-                className="button-secondary flex items-center gap-2"
+                className="button-secondary flex items-center justify-center gap-2 text-xs sm:text-sm py-2 sm:py-2.5 px-4 sm:px-6"
               >
                 <Download className="w-4 h-4 text-[#00f0ff]" />
                 <span>Resume / CV</span>
@@ -199,17 +199,17 @@ export default function HeroSection() {
             variants={slideInFromLeft(0.85)}
             initial="hidden"
             animate="visible"
-            className="mt-10 grid grid-cols-3 gap-3 w-full max-w-lg"
+            className="mt-8 sm:mt-10 grid grid-cols-3 gap-2 sm:gap-3 w-full max-w-lg"
           >
             {stats.map((item) => (
               <div
                 key={item.label}
-                className="space-card px-4 py-3 text-center border-[#7042f8]/40 bg-[#07011d]/85"
+                className="space-card px-2 sm:px-4 py-2 sm:py-3 text-center border-[#7042f8]/40 bg-[#07011d]/85"
               >
-                <div className="text-xl sm:text-2xl font-bold font-mono text-transparent bg-clip-text bg-gradient-to-r from-purple-300 via-violet-200 to-cyan-300">
+                <div className="text-lg sm:text-2xl font-bold font-mono text-transparent bg-clip-text bg-gradient-to-r from-purple-300 via-violet-200 to-cyan-300">
                   {typeof item.value === "number" ? item.value.toLocaleString() : item.value}
                 </div>
-                <div className="text-[10px] sm:text-[11px] font-mono uppercase tracking-wider text-gray-300 mt-1">
+                <div className="text-[9px] sm:text-[11px] font-mono uppercase tracking-wider text-gray-300 mt-1">
                   {item.label}
                 </div>
               </div>
@@ -217,7 +217,7 @@ export default function HeroSection() {
           </motion.div>
         </div>
 
-        {/* ── Right Column: Smart Avatar / 3D Hologram Fallback ── */}
+        {/* ── Right Column: Smart Avatar ── */}
         <motion.div
           variants={slideInFromTop(0.35)}
           initial="hidden"
@@ -236,11 +236,11 @@ export default function HeroSection() {
       <motion.button
         type="button"
         onClick={() => scrollTo("about")}
-        className="absolute bottom-3 left-1/2 -translate-x-1/2 flex flex-col items-center gap-1 text-gray-300 hover:text-[#00f0ff] transition-colors cursor-pointer select-none"
+        className="absolute bottom-2 sm:bottom-3 left-1/2 -translate-x-1/2 flex flex-col items-center gap-1 text-gray-300 hover:text-[#00f0ff] transition-colors cursor-pointer select-none"
         aria-label="Scroll down"
       >
-        <span className="text-[10px] font-mono uppercase tracking-widest text-purple-300">SCROLL</span>
-        <ChevronDown className="w-4 h-4 animate-bounce text-[#00f0ff]" />
+        <span className="text-[9px] sm:text-[10px] font-mono uppercase tracking-widest text-purple-300">SCROLL</span>
+        <ChevronDown className="w-3.5 h-3.5 sm:w-4 sm:h-4 animate-bounce text-[#00f0ff]" />
       </motion.button>
     </section>
   );
@@ -253,7 +253,7 @@ function SocialLink({ href, label, Icon }: { href: string; label: string; Icon: 
       target={href.startsWith("http") ? "_blank" : undefined}
       rel={href.startsWith("http") ? "noreferrer" : undefined}
       aria-label={label}
-      className="grid h-10 w-10 place-items-center rounded-xl border border-[#7042f8]/40 bg-[#07011d]/80 text-gray-300 backdrop-blur-md transition-all duration-200 hover:-translate-y-0.5 hover:border-[#00f0ff] hover:text-[#00f0ff] hover:shadow-[0_0_15px_rgba(0,240,255,0.4)]"
+      className="grid h-9 w-9 sm:h-10 sm:w-10 place-items-center rounded-xl border border-[#7042f8]/40 bg-[#07011d]/80 text-gray-300 backdrop-blur-md transition-all duration-200 hover:-translate-y-0.5 hover:border-[#00f0ff] hover:text-[#00f0ff] hover:shadow-[0_0_15px_rgba(0,240,255,0.4)]"
     >
       <Icon className="h-4 w-4" aria-hidden="true" />
     </Link>
