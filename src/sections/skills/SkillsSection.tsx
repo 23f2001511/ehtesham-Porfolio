@@ -14,6 +14,7 @@ import {
 import Reveal from "@/components/shared/Reveal";
 import { EmptyState } from "@/components/ui/empty-state";
 import { Skeleton } from "@/components/ui/skeleton";
+import { fallbackSkills } from "@/constants";
 import { useCollection } from "@/hooks/useCollection";
 import { cn } from "@/lib/utils";
 import type { Skill } from "@/types";
@@ -78,7 +79,8 @@ function SkillChip({ skill }: { skill: Skill }) {
 }
 
 export default function SkillsSection() {
-  const { data: skills, isLoading, error } = useCollection<Skill>("/api/skills");
+  const { data: rawSkills, isLoading, error } = useCollection<Skill>("/api/skills");
+  const skills = rawSkills.length ? rawSkills : fallbackSkills;
 
   const grouped = skills.reduce<Record<string, Skill[]>>((acc, skill) => {
     (acc[skill.category] ||= []).push(skill);

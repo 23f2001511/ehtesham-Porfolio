@@ -17,13 +17,15 @@ import {
 interface HeroAvatarProps {
   imageSrc?: string;
   name?: string;
+  leetcodeSolved?: number;
 }
 
 type StudioMode = "cosmic" | "cyber" | "studio";
 
 export default function HeroAvatar({
   imageSrc = "/profile.png",
-  name = "Ehtesham Aalam"
+  name = "Ehtesham Aalam",
+  leetcodeSolved = 103
 }: HeroAvatarProps) {
   const [imgLoaded, setImgLoaded] = useState(false);
   const [imgError, setImgError] = useState(false);
@@ -375,7 +377,7 @@ export default function HeroAvatar({
           className="absolute bottom-24 -right-3 sm:-right-2 z-30 flex items-center gap-1.5 px-3 py-1.5 rounded-xl border border-[#00f0ff]/50 bg-[#07011d]/90 shadow-[0_0_15px_rgba(0,240,255,0.4)] backdrop-blur-xl hover:scale-105 transition-transform"
         >
           <Flame className="w-3.5 h-3.5 text-amber-400" />
-          <span className="text-[11px] font-mono font-bold text-white">150+ LeetCode</span>
+          <span className="text-[11px] font-mono font-bold text-white">{leetcodeSolved} Solved</span>
         </motion.div>
       </motion.div>
     </div>

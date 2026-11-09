@@ -76,11 +76,11 @@ export default function HeroSection() {
   const stats = [
     {
       label: "Repositories",
-      value: github ? github.profile.publicRepos : "12+"
+      value: github ? github.profile.publicRepos : "8+"
     },
     {
       label: "LeetCode Solved",
-      value: leetcode ? leetcode.solved.all : "150+"
+      value: leetcode ? leetcode.solved.all : 103
     },
     {
       label: "GitHub Stars",
@@ -227,6 +227,7 @@ export default function HeroSection() {
           <HeroAvatar
             imageSrc={profile.avatarUrl || "/profile.png"}
             name={profile.name || siteConfig.name}
+            leetcodeSolved={leetcode?.solved?.all || 103}
           />
         </motion.div>
       </div>

@@ -58,19 +58,19 @@ export default function StatsSection() {
     },
     {
       label: "Problems solved",
-      value: leetcode ? leetcode.solved.all : null,
+      value: leetcode ? leetcode.solved.all : 103,
       hint: "on LeetCode",
       loading: leetcodeLoading
     },
     {
       label: "LeetCode ranking",
-      value: leetcode?.ranking ?? null,
+      value: leetcode?.ranking ?? 1676901,
       hint: "global",
       loading: leetcodeLoading
     },
     {
       label: "Active days",
-      value: leetcode ? activeDays(leetcode) : null,
+      value: leetcode ? activeDays(leetcode) : 50,
       hint: "with submissions",
       loading: leetcodeLoading
     },

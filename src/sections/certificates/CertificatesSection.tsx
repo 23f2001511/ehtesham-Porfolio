@@ -7,14 +7,16 @@ import Reveal from "@/components/shared/Reveal";
 import SectionHeading from "@/components/shared/SectionHeading";
 import { EmptyState } from "@/components/ui/empty-state";
 import { Skeleton } from "@/components/ui/skeleton";
+import { fallbackCertificates } from "@/constants";
 import { useCollection } from "@/hooks/useCollection";
 import { formatDate } from "@/lib/utils";
 import type { Certificate } from "@/types";
 
 export default function CertificatesSection() {
-  const { data: certificates, isLoading, error } = useCollection<Certificate>(
+  const { data: rawCertificates, isLoading, error } = useCollection<Certificate>(
     "/api/certificates"
   );
+  const certificates = rawCertificates.length ? rawCertificates : fallbackCertificates;
 
   return (
     <section id="certificates" className="section-pad">

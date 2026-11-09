@@ -8,6 +8,7 @@ import { useMemo, useState } from "react";
 import Reveal from "@/components/shared/Reveal";
 import { EmptyState } from "@/components/ui/empty-state";
 import { Skeleton } from "@/components/ui/skeleton";
+import { fallbackProjects } from "@/constants";
 import { useCollection } from "@/hooks/useCollection";
 import { cn } from "@/lib/utils";
 import type { Project } from "@/types";
@@ -235,7 +236,8 @@ function FilterPill({
 /* ── Main section ───────────────────────────────────────────────────── */
 
 export default function ProjectsSection() {
-  const { data: projects, isLoading, error } = useCollection<Project>("/api/projects");
+  const { data: rawProjects, isLoading, error } = useCollection<Project>("/api/projects");
+  const projects = useMemo(() => (rawProjects.length ? rawProjects : fallbackProjects), [rawProjects]);
   const [selected, setSelected] = useState<Project | null>(null);
   const [activeCategory, setActiveCategory] = useState<string | null>(null);
   const [showAll, setShowAll] = useState(false);

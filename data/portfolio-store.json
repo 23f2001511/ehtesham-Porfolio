@@ -4,29 +4,7 @@
     "name": "Ehtesham Aalam",
     "email": "alamehtesham88@gmail.com",
     "role": "admin",
-    "resumeUrl": "/resume/ehtesham-aalam-resume.pdf",
-    "socials": [
-      {
-        "label": "GitHub",
-        "href": "https://github.com/23f2001511",
-        "icon": "Github"
-      },
-      {
-        "label": "LinkedIn",
-        "href": "https://www.linkedin.com/in/ehtesham-aalam",
-        "icon": "Linkedin"
-      },
-      {
-        "label": "LeetCode",
-        "href": "https://leetcode.com/u/Ehteshsam_alam/",
-        "icon": "Code"
-      },
-      {
-        "label": "Email",
-        "href": "mailto:alamehtesham88@gmail.com",
-        "icon": "Mail"
-      }
-    ],
+    "resumeUrl": "/resume/resume-1aa0a0b8-2ec5-47cb-8fa8-1c0d34919408.pdf",
     "githubUsername": "",
     "leetcodeUsername": "",
     "collegeEmail": "",
