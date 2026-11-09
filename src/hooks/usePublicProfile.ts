@@ -24,6 +24,10 @@ const fallbackProfile: UserProfile = {
 
 let profileRequest: Promise<UserProfile> | null = null;
 
+export function invalidatePublicProfileCache() {
+  profileRequest = null;
+}
+
 async function fetchPublicProfile() {
   if (!profileRequest) {
     profileRequest = fetch("/api/auth?scope=public-profile", {
@@ -68,5 +72,12 @@ export function usePublicProfile() {
     };
   }, []);
 
-  return { profile, resolved };
+  const refetch = async () => {
+    invalidatePublicProfileCache();
+    const fresh = await fetchPublicProfile();
+    setProfile(fresh);
+    return fresh;
+  };
+
+  return { profile, resolved, refetch };
 }

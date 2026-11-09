@@ -1,38 +1,40 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { FileText, Save } from "lucide-react";
+import { FileText, Save, ExternalLink, CheckCircle2 } from "lucide-react";
 import FileUploader from "@/components/admin/FileUploader";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { invalidatePublicProfileCache } from "@/hooks/usePublicProfile";
 import type { ApiResponse, UserProfile } from "@/types";
 
 export default function ResumeManager() {
   const [resumeUrl, setResumeUrl] = useState("");
-  const [socials, setSocials] = useState<UserProfile["socials"]>([]);
-  const [feedback, setFeedback] = useState("");
+  const [feedback, setFeedback] = useState<{ message: string; type: "success" | "error" } | null>(null);
   const [isSaving, setIsSaving] = useState(false);
 
   useEffect(() => {
     async function loadProfile() {
-      const response = await fetch("/api/auth", {
-        cache: "no-store"
-      });
-      const payload = (await response.json()) as ApiResponse<UserProfile>;
+      try {
+        const response = await fetch("/api/auth", { cache: "no-store" });
+        const payload = (await response.json()) as ApiResponse<UserProfile>;
 
-      if (payload.success) {
-        setResumeUrl(payload.data.resumeUrl || "");
-        setSocials(payload.data.socials || []);
+        if (payload.success && payload.data.resumeUrl) {
+          setResumeUrl(payload.data.resumeUrl);
+        }
+      } catch (e) {
+        console.error("Failed to load profile for resume:", e);
       }
     }
 
     loadProfile();
   }, []);
 
-  async function saveResume() {
+  async function saveResume(targetUrl?: string) {
+    const urlToSave = targetUrl !== undefined ? targetUrl : resumeUrl;
     setIsSaving(true);
-    setFeedback("");
+    setFeedback(null);
 
     try {
       const response = await fetch("/api/auth", {
@@ -40,7 +42,7 @@ export default function ResumeManager() {
         headers: {
           "Content-Type": "application/json"
         },
-        body: JSON.stringify({ resumeUrl, socials })
+        body: JSON.stringify({ resumeUrl: urlToSave })
       });
       const payload = (await response.json()) as ApiResponse<UserProfile>;
 
@@ -48,12 +50,26 @@ export default function ResumeManager() {
         throw new Error(payload.success ? "Unable to save resume." : payload.error);
       }
 
-      setFeedback("Resume updated successfully.");
+      invalidatePublicProfileCache();
+      setResumeUrl(urlToSave);
+      setFeedback({
+        message: "Resume saved and updated across entire portfolio!",
+        type: "success"
+      });
     } catch (error) {
-      setFeedback(error instanceof Error ? error.message : "Unable to save resume.");
+      setFeedback({
+        message: error instanceof Error ? error.message : "Unable to save resume.",
+        type: "error"
+      });
     } finally {
       setIsSaving(false);
     }
+  }
+
+  // When a file is uploaded, auto-save it immediately so user doesn't have to click another button
+  async function handleFileUploaded(newUrl: string) {
+    setResumeUrl(newUrl);
+    await saveResume(newUrl);
   }
 
   return (
@@ -63,12 +79,23 @@ export default function ResumeManager() {
       </div>
       <h1 className="mt-5 text-2xl font-black text-white">Resume</h1>
       <p className="mt-2 text-sm leading-6 text-muted-foreground">
-        Upload a PDF and save its public URL so the homepage resume button always points to the latest file.
+        Upload your PDF resume below. It will automatically save and update the download buttons across the entire portfolio (Navbar, Hero, and Footer).
       </p>
 
-      <div className="mt-6 grid gap-4">
+      <div className="mt-6 grid gap-5">
+        {/* Upload box */}
         <div className="space-y-2">
-          <Label htmlFor="resumeUrl">Resume URL</Label>
+          <Label>Upload New PDF Resume</Label>
+          <FileUploader
+            type="resume"
+            accept="application/pdf"
+            onUploaded={handleFileUploaded}
+          />
+        </div>
+
+        {/* URL Input and Manual Save */}
+        <div className="space-y-2">
+          <Label htmlFor="resumeUrl">Live Resume URL / Path</Label>
           <Input
             id="resumeUrl"
             value={resumeUrl}
@@ -77,17 +104,46 @@ export default function ResumeManager() {
           />
         </div>
 
-        <FileUploader type="resume" accept="application/pdf" onUploaded={setResumeUrl} />
+        {/* Live Preview Button if resumeUrl exists */}
+        {resumeUrl && (
+          <div className="flex items-center gap-3 p-3 rounded-lg border border-[#7042f8]/30 bg-[#07011d]/60">
+            <CheckCircle2 className="h-4 w-4 text-emerald-400 shrink-0" />
+            <span className="text-xs text-gray-300 truncate font-mono">
+              Current File: <strong className="text-white">{resumeUrl}</strong>
+            </span>
+            <a
+              href={resumeUrl}
+              target="_blank"
+              rel="noreferrer"
+              className="ml-auto inline-flex items-center gap-1.5 text-xs font-mono font-bold text-[#00f0ff] hover:underline shrink-0"
+            >
+              <span>Preview</span>
+              <ExternalLink className="h-3.5 w-3.5" />
+            </a>
+          </div>
+        )}
 
-        {feedback ? (
-          <p className="rounded-md border border-cyan-300/20 bg-cyan-300/10 px-3 py-2 text-sm text-cyan-100">
-            {feedback}
+        {/* Status Feedback */}
+        {feedback && (
+          <p
+            className={`rounded-md border px-3 py-2 text-sm ${
+              feedback.type === "success"
+                ? "border-emerald-500/30 bg-emerald-500/10 text-emerald-300"
+                : "border-rose-500/30 bg-rose-500/10 text-rose-300"
+            }`}
+          >
+            {feedback.message}
           </p>
-        ) : null}
+        )}
 
-        <Button type="button" className="w-full sm:w-max" onClick={saveResume} disabled={isSaving}>
+        <Button
+          type="button"
+          className="w-full sm:w-max"
+          onClick={() => saveResume()}
+          disabled={isSaving}
+        >
           <Save className="h-4 w-4" aria-hidden="true" />
-          {isSaving ? "Saving..." : "Save Resume"}
+          {isSaving ? "Saving..." : "Save Resume URL"}
         </Button>
       </div>
     </section>

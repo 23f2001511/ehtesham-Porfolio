@@ -83,9 +83,19 @@ export async function POST(request: Request) {
     const filename = `${uploadTypeValue}-${randomUUID()}${extension}`;
     const directory = path.join(process.cwd(), "public", config.folder);
     const destination = path.join(directory, filename);
+    const buffer = Buffer.from(await file.arrayBuffer());
 
     await mkdir(directory, { recursive: true });
-    await writeFile(destination, Buffer.from(await file.arrayBuffer()));
+    await writeFile(destination, buffer);
+
+    if (uploadTypeValue === "resume") {
+      try {
+        const defaultDestination = path.join(directory, "ehtesham-aalam-resume.pdf");
+        await writeFile(defaultDestination, buffer);
+      } catch (err) {
+        console.warn("Could not write default resume file:", err);
+      }
+    }
 
     return ok(
       {

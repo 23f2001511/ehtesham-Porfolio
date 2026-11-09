@@ -175,7 +175,7 @@ export default function HeroSection() {
 
             <div className="flex flex-col gap-3">
               <a
-                href={siteConfig.resumeUrl}
+                href={profile.resumeUrl || siteConfig.resumeUrl}
                 target="_blank"
                 rel="noreferrer"
                 className="button-secondary flex items-center gap-2"

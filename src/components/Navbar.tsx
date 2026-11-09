@@ -6,6 +6,7 @@ import { AnimatePresence, motion, useMotionValueEvent, useScroll } from "framer-
 import { Code2, Github, Linkedin, Menu, X, Orbit, FileText } from "lucide-react";
 import { useEffect, useState } from "react";
 import { siteConfig } from "@/constants";
+import { usePublicProfile } from "@/hooks/usePublicProfile";
 
 const navLinks = [
   { label: "About", id: "about", href: "/#about" },
@@ -22,6 +23,8 @@ export default function Navbar() {
   const pathname = usePathname();
   const router = useRouter();
   const isHome = pathname === "/";
+  const { profile } = usePublicProfile();
+  const resumeUrl = profile.resumeUrl || siteConfig.resumeUrl;
 
   const { scrollY } = useScroll();
   useMotionValueEvent(scrollY, "change", (latest) => {
@@ -144,7 +147,7 @@ export default function Navbar() {
           </Link>
 
           <a
-            href={siteConfig.resumeUrl}
+            href={resumeUrl}
             target="_blank"
             rel="noreferrer"
             className="ml-2 inline-flex items-center gap-1.5 rounded-lg border border-[#00f0ff]/60 bg-[#00f0ff]/10 px-3.5 py-1.5 font-mono text-xs font-bold text-[#00f0ff] hover:bg-[#00f0ff]/20 hover:shadow-[0_0_15px_rgba(0,240,255,0.4)] transition-all"

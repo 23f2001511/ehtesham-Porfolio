@@ -4,43 +4,34 @@
     "name": "Ehtesham Aalam",
     "email": "alamehtesham88@gmail.com",
     "role": "admin",
-    "githubUsername": "23f2001511",
-    "leetcodeUsername": "Ehteshsam_alam",
-    "collegeEmail": "ehteshama.ug24.ee@nitp.ac.in",
-    "otherEmail": "23f2001511@ds.study.iitm.ac.in",
-    "tagline": "Full-stack developer building data-driven products and polished web experiences.",
-    "experience": [
+    "resumeUrl": "/resume/ehtesham-aalam-resume.pdf",
+    "socials": [
       {
-        "role": "Full Stack Developer",
-        "company": "Independent Projects",
-        "period": "2024 - Present",
-        "summary": "Building production-style portfolio, dashboard, and data-backed web applications using the Next.js ecosystem.",
-        "impact": [
-          "App Router architecture",
-          "MongoDB data modeling",
-          "Motion-rich interfaces"
-        ]
+        "label": "GitHub",
+        "href": "https://github.com/23f2001511",
+        "icon": "Github"
       },
       {
-        "role": "Data Science Student",
-        "company": "IIT Madras BS Degree",
-        "period": "2023 - Present",
-        "summary": "Strengthening fundamentals in programming, statistics, databases, and analytical thinking.",
-        "impact": [
-          "Python and SQL foundations",
-          "Data storytelling",
-          "Problem decomposition"
-        ]
-      }
-    ],
-    "education": [
+        "label": "LinkedIn",
+        "href": "https://www.linkedin.com/in/ehtesham-aalam",
+        "icon": "Linkedin"
+      },
       {
-        "title": "BS in Data Science and Applications",
-        "institution": "IIT Madras",
-        "period": "2023 - Present"
+        "label": "LeetCode",
+        "href": "https://leetcode.com/u/Ehteshsam_alam/",
+        "icon": "Code"
+      },
+      {
+        "label": "Email",
+        "href": "mailto:alamehtesham88@gmail.com",
+        "icon": "Mail"
       }
     ],
-    "avatarUrl": "/profile.png",
+    "githubUsername": "",
+    "leetcodeUsername": "",
+    "collegeEmail": "",
+    "otherEmail": "",
+    "tagline": "",
     "aboutBio": "",
     "phone": "",
     "location": ""

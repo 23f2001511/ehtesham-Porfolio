@@ -1,6 +1,5 @@
 "use client";
 
-import Link from "next/link";
 import { motion, useReducedMotion } from "framer-motion";
 import { Download, FileText } from "lucide-react";
 import Reveal from "@/components/shared/Reveal";
@@ -10,7 +9,8 @@ import { usePublicProfile } from "@/hooks/usePublicProfile";
 export default function ResumeSection() {
   const { profile, resolved } = usePublicProfile();
   const reducedMotion = useReducedMotion();
-  const hasResume = Boolean(profile.resumeUrl && profile.resumeUrl.trim().length > 0);
+  const resumeHref = profile.resumeUrl || siteConfig.resumeUrl;
+  const hasResume = Boolean(resumeHref && resumeHref.trim().length > 0);
 
   return (
     <section id="resume" className="border-y border-border bg-surface/40 section-pad !py-24">
@@ -44,14 +44,16 @@ export default function ResumeSection() {
 
                 {hasResume ? (
                   <div className="mt-8 flex flex-col items-center gap-3 sm:flex-row sm:justify-center">
-                    <Link
-                      href={profile.resumeUrl!}
+                    <a
+                      href={resumeHref}
+                      target="_blank"
+                      rel="noreferrer"
                       download
                       className="inline-flex h-12 w-full items-center justify-center gap-2.5 rounded-xl bg-primary px-6 text-sm font-semibold text-primary-foreground transition-all duration-300 hover:scale-[1.03] hover:shadow-[0_0_30px_rgba(79,156,255,0.25)] active:scale-[0.98] sm:w-auto"
                     >
                       <Download className="h-4 w-4" aria-hidden="true" />
                       Download PDF
-                    </Link>
+                    </a>
                   </div>
                 ) : (
                   <div className="mt-8 rounded-xl border border-dashed border-border bg-surface/50 px-4 py-6">

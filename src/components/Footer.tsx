@@ -162,7 +162,7 @@ export default function Footer() {
 
             <div className="mt-5">
               <a
-                href={siteConfig.resumeUrl}
+                href={profile.resumeUrl || siteConfig.resumeUrl}
                 target="_blank"
                 rel="noreferrer"
                 className="button-primary w-full justify-center text-xs sm:text-sm gap-2"
