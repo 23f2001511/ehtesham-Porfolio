@@ -1,9 +1,15 @@
 "use client";
 
 import Image from "next/image";
-import { useState, useEffect } from "react";
-import { motion } from "framer-motion";
-import { Sparkles, Award, Atom, Layers, Code2, Database } from "lucide-react";
+import { useState, useEffect, useRef } from "react";
+import { motion, useMotionValue, useSpring, useTransform } from "framer-motion";
+import {
+  GraduationCap,
+  Layers,
+  Code2,
+  Database,
+  Flame
+} from "lucide-react";
 
 interface HeroAvatarProps {
   imageSrc?: string;
@@ -16,6 +22,7 @@ export default function HeroAvatar({
 }: HeroAvatarProps) {
   const [imgLoaded, setImgLoaded] = useState(false);
   const [imgError, setImgError] = useState(false);
+  const containerRef = useRef<HTMLDivElement>(null);
 
   // Check if image loads cleanly
   useEffect(() => {
@@ -39,158 +46,209 @@ export default function HeroAvatar({
     };
   }, [imageSrc]);
 
+  // Interactive 3D Parallax Tilt with Framer Motion
+  const mouseX = useMotionValue(0);
+  const mouseY = useMotionValue(0);
+
+  const springConfig = { damping: 25, stiffness: 180 };
+  const smoothX = useSpring(mouseX, springConfig);
+  const smoothY = useSpring(mouseY, springConfig);
+
+  const rotateX = useTransform(smoothY, [-0.5, 0.5], [8, -8]);
+  const rotateY = useTransform(smoothX, [-0.5, 0.5], [-12, 12]);
+  const reverseTranslateX = useTransform(smoothX, [-0.5, 0.5], [15, -15]);
+  const reverseTranslateY = useTransform(smoothY, [-0.5, 0.5], [10, -10]);
+
+  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
+    if (!containerRef.current) return;
+    const rect = containerRef.current.getBoundingClientRect();
+    const x = (e.clientX - rect.left) / rect.width - 0.5;
+    const y = (e.clientY - rect.top) / rect.height - 0.5;
+    mouseX.set(x);
+    mouseY.set(y);
+  };
+
+  const handleMouseLeave = () => {
+    mouseX.set(0);
+    mouseY.set(0);
+  };
+
   return (
-    <div className="relative mx-auto flex aspect-square w-full max-w-[28rem] sm:max-w-[34rem] items-center justify-center lg:max-w-none lg:h-[520px]">
+    <div
+      ref={containerRef}
+      onMouseMove={handleMouseMove}
+      onMouseLeave={handleMouseLeave}
+      className="relative mx-auto flex w-full max-w-[420px] sm:max-w-[480px] lg:max-w-[540px] items-center justify-center select-none py-6 perspective-[1000px]"
+    >
       {/* ── Ambient Radial Cosmic Aura ── */}
-      <div className="absolute inset-0 rounded-full bg-gradient-to-tr from-[#7042f8]/30 via-[#00f0ff]/20 to-transparent blur-3xl -z-10" />
+      <div className="absolute inset-0 rounded-full bg-gradient-to-tr from-[#7042f8]/35 via-[#00f0ff]/25 to-purple-900/10 blur-3xl -z-20 pointer-events-none" />
 
-      {/* ── Outer Tech Orbital SVG Illustration (Sanidhyy Signature) ── */}
-      <div className="absolute inset-0 flex items-center justify-center pointer-events-none opacity-85 select-none -z-10">
-        <Image
-          src="/hero-bg.svg"
-          alt="Orbital Tech Elements"
-          width={600}
-          height={600}
-          priority
-          className="animate-spin-slow opacity-90 drop-shadow-[0_0_30px_rgba(112,66,248,0.4)]"
-          style={{ animationDuration: "90s" }}
-        />
-      </div>
-
-      {/* ── Center Concentric Cyber Aperture ── */}
-      <div className="relative flex h-[280px] w-[280px] sm:h-[340px] sm:w-[340px] items-center justify-center">
-        {/* Outer Orbit Track */}
+      {/* ── Parallax 3D Card Shell ── */}
+      <motion.div
+        style={{
+          rotateX,
+          rotateY,
+          transformStyle: "preserve-3d"
+        }}
+        className="relative flex flex-col items-center justify-center w-full min-h-[500px] sm:min-h-[580px] lg:min-h-[620px]"
+      >
+        {/* ── Background Cyber Holographic Arch & Portal ── */}
         <motion.div
-          animate={{ rotate: 360 }}
-          transition={{ duration: 35, repeat: Infinity, ease: "linear" }}
-          className="absolute inset-0 rounded-full border border-dashed border-[#7042f8]/50"
-        />
+          style={{ x: reverseTranslateX, y: reverseTranslateY }}
+          className="absolute inset-x-6 top-8 bottom-12 rounded-[2.5rem] border border-[#7042f8]/40 bg-gradient-to-b from-[#16063b]/70 via-[#0b0321]/50 to-[#030014]/90 backdrop-blur-xl shadow-[0_0_50px_rgba(112,66,248,0.25)] -z-10 overflow-hidden pointer-events-none"
+        >
+          {/* Cyber Matrix Grid Pattern */}
+          <div className="absolute inset-0 bg-[radial-gradient(#00f0ff_1px,transparent_1px)] [background-size:20px_20px] opacity-15" />
 
-        {/* Counter-Spinning Cyan Track */}
-        <motion.div
-          animate={{ rotate: -360 }}
-          transition={{ duration: 22, repeat: Infinity, ease: "linear" }}
-          className="absolute inset-3 rounded-full border border-[#00f0ff]/40 shadow-[0_0_20px_rgba(0,240,255,0.25)]"
-        />
+          {/* Rotating Celestial Orbital SVG */}
+          <div className="absolute -top-16 -right-16 h-[320px] w-[320px] rounded-full border border-dashed border-[#7042f8]/40 animate-spin-slow pointer-events-none" style={{ animationDuration: "60s" }} />
+          <div className="absolute -bottom-16 -left-16 h-[280px] w-[280px] rounded-full border border-[#00f0ff]/30 animate-spin-slow pointer-events-none" style={{ animationDuration: "45s" }} />
 
-        {/* Inner Pulsing Ring */}
-        <motion.div
-          animate={{ scale: [1, 1.03, 1], opacity: [0.6, 0.9, 0.6] }}
-          transition={{ duration: 3.5, repeat: Infinity, ease: "easeInOut" }}
-          className="absolute inset-7 rounded-full border-2 border-[#7042f8]/60 shadow-[0_0_25px_rgba(112,66,248,0.5)]"
-        />
+          {/* Vertical Light Flare */}
+          <div className="absolute inset-x-0 top-0 h-40 bg-gradient-to-b from-[#00f0ff]/15 via-transparent to-transparent" />
+        </motion.div>
 
-        {/* ── Main Display Aperture ── */}
-        <div className="relative z-10 flex h-[230px] w-[230px] sm:h-[280px] sm:w-[280px] items-center justify-center overflow-hidden rounded-full border-2 border-[#00f0ff]/70 bg-gradient-to-b from-[#1b0849]/95 via-[#0b0424]/95 to-[#040114] shadow-[0_0_35px_rgba(0,240,255,0.4)] backdrop-blur-md">
+        {/* ── Outer Orbital SVG Illustration (Sanidhyy Signature) ── */}
+        <div className="absolute inset-0 flex items-center justify-center pointer-events-none opacity-40 select-none -z-10">
+          <Image
+            src="/hero-bg.svg"
+            alt="Orbital Tech Elements"
+            width={640}
+            height={640}
+            priority
+            className="animate-spin-slow drop-shadow-[0_0_30px_rgba(112,66,248,0.3)]"
+            style={{ animationDuration: "90s" }}
+          />
+        </div>
+
+        {/* ── Main Dynamic Profile Silhouette ── */}
+        <div className="relative z-10 flex flex-col items-center justify-end w-full h-[460px] sm:h-[530px] lg:h-[580px]">
           {imgLoaded && !imgError ? (
-            /* ── User Photo with Cyber Holographic Frame ── */
+            /* ── Full Cutout Standing Profile with Float Animation & Neon Glow ── */
             <motion.div
-              initial={{ opacity: 0, scale: 0.9 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ duration: 0.6 }}
-              className="relative h-full w-full"
+              animate={{ y: [-8, 8, -8] }}
+              transition={{ duration: 5, repeat: Infinity, ease: "easeInOut" }}
+              className="relative flex items-end justify-center w-full h-full group"
             >
-              <Image
-                src={imageSrc}
-                alt={name}
-                fill
-                sizes="(max-width: 640px) 230px, 280px"
-                className="object-cover object-center transition-transform duration-500 hover:scale-105"
-                priority
-              />
-              <div className="absolute inset-0 bg-gradient-to-t from-[#030014]/60 via-transparent to-transparent pointer-events-none" />
+              {/* Dynamic Aura behind cutout */}
+              <div className="absolute inset-x-12 bottom-12 top-10 rounded-full bg-gradient-to-t from-[#00f0ff]/20 via-[#7042f8]/30 to-transparent blur-2xl -z-10 pointer-events-none opacity-80 group-hover:opacity-100 transition-opacity duration-500" />
+
+              {/* The Subject Image */}
+              <div className="relative w-full h-full flex items-end justify-center">
+                <Image
+                  src={imageSrc}
+                  alt={name}
+                  width={433}
+                  height={577}
+                  priority
+                  className="h-full w-auto max-h-[460px] sm:max-h-[530px] lg:max-h-[580px] object-contain object-bottom transition-all duration-500 drop-shadow-[0_10px_25px_rgba(112,66,248,0.45)] drop-shadow-[0_0_15px_rgba(0,240,255,0.35)] group-hover:drop-shadow-[0_15px_35px_rgba(0,240,255,0.65)] group-hover:drop-shadow-[0_0_30px_rgba(112,66,248,0.6)] group-hover:scale-[1.02]"
+                />
+              </div>
+
+              {/* Holographic light sweep streak */}
+              <div className="absolute inset-0 bg-gradient-to-tr from-transparent via-white/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-700 pointer-events-none" />
             </motion.div>
           ) : (
             /* ── Futuristic Holographic Cyber Avatar Fallback ── */
-            <div className="relative flex flex-col items-center justify-center h-full w-full p-6 text-center select-none overflow-hidden">
-              <div className="absolute inset-0 bg-[radial-gradient(#00f0ff_1px,transparent_1px)] [background-size:14px_14px] opacity-25" />
-
-              {/* Pulsing Core Energy Orb */}
+            <div className="relative flex flex-col items-center justify-center h-full w-full p-6 text-center select-none">
               <motion.div
-                animate={{ scale: [1, 1.1, 1], opacity: [0.75, 1, 0.75] }}
+                animate={{ scale: [1, 1.08, 1], opacity: [0.8, 1, 0.8] }}
                 transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
-                className="relative mb-3 flex h-20 w-20 items-center justify-center rounded-full border-2 border-[#00f0ff] bg-gradient-to-tr from-[#7042f8]/70 via-[#1b0849] to-[#00f0ff]/40 shadow-[0_0_25px_rgba(0,240,255,0.7)]"
+                className="relative mb-4 flex h-28 w-28 items-center justify-center rounded-full border-2 border-[#00f0ff] bg-gradient-to-tr from-[#7042f8] via-[#1b0849] to-[#00f0ff]/40 shadow-[0_0_35px_rgba(0,240,255,0.7)]"
               >
-                <span className="font-mono text-2xl font-black tracking-wider text-transparent bg-clip-text bg-gradient-to-r from-white via-cyan-200 to-purple-200">
+                <span className="font-mono text-3xl font-black tracking-wider text-transparent bg-clip-text bg-gradient-to-r from-white via-cyan-200 to-purple-200">
                   EA
                 </span>
-                <span className="absolute -inset-1 rounded-full border border-[#00f0ff]/50 animate-ping opacity-35" />
+                <span className="absolute -inset-2 rounded-full border border-[#00f0ff]/50 animate-ping opacity-35" />
               </motion.div>
-
-              <span className="text-sm font-bold tracking-tight text-white">
-                {name}
-              </span>
-              <span className="text-[11px] font-mono text-[#00f0ff] mt-0.5 tracking-wider">
+              <span className="text-lg font-bold tracking-tight text-white">{name}</span>
+              <span className="text-xs font-mono text-[#00f0ff] mt-1 tracking-wider">
                 Full-Stack Space Developer
               </span>
             </div>
           )}
         </div>
 
-        {/* ── Floating Tech Badges (Surrounding Orbit) ── */}
+        {/* ── Holographic Base Pedestal (Where the subject stands) ── */}
+        <div className="relative z-10 -mt-6 sm:-mt-8 flex flex-col items-center justify-center pointer-events-none">
+          {/* Ground Contact Shadow */}
+          <div className="h-4 w-48 sm:w-60 rounded-full bg-black/80 blur-md -mb-2" />
+
+          {/* Elliptical Glowing Stage */}
+          <div className="relative flex items-center justify-center">
+            <div className="h-7 w-56 sm:w-72 rounded-[100%] border border-[#00f0ff]/70 bg-gradient-to-r from-[#7042f8]/60 via-[#00f0ff]/40 to-[#7042f8]/60 shadow-[0_0_35px_rgba(0,240,255,0.6)] backdrop-blur-md" />
+            <div className="absolute h-5 w-48 sm:w-60 rounded-[100%] border border-[#7042f8]/50 bg-cyan-400/20 blur-sm animate-pulse" />
+          </div>
+        </div>
+
+        {/* ── Floating Tech Badges (Surrounding Subject with 3D Depth) ── */}
+        {/* Top-Left: Live Status Badge */}
         <motion.div
           animate={{ y: [-4, 4, -4] }}
-          transition={{ duration: 4.5, repeat: Infinity, ease: "easeInOut" }}
-          className="absolute -top-2 left-2 z-20 flex items-center gap-1.5 px-3 py-1.5 rounded-xl border border-[#7042f8]/50 bg-[#07011d]/90 shadow-[0_0_15px_rgba(112,66,248,0.4)] backdrop-blur-md"
+          transition={{ duration: 4.2, repeat: Infinity, ease: "easeInOut" }}
+          className="absolute top-4 -left-2 sm:left-2 z-30 flex items-center gap-2 px-3 py-1.5 rounded-full border border-emerald-500/50 bg-[#07011d]/90 shadow-[0_0_20px_rgba(16,185,129,0.35)] backdrop-blur-xl"
+        >
+          <span className="relative flex h-2 w-2">
+            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75" />
+            <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500" />
+          </span>
+          <span className="text-[11px] font-mono font-bold text-white tracking-wide">
+            Available for Hire
+          </span>
+        </motion.div>
+
+        {/* Top-Right: Academic Distinction Badge */}
+        <motion.div
+          animate={{ y: [4, -4, 4] }}
+          transition={{ duration: 4.8, repeat: Infinity, ease: "easeInOut" }}
+          className="absolute top-4 -right-2 sm:right-2 z-30 flex items-center gap-2 px-3 py-1.5 rounded-xl border border-[#00f0ff]/50 bg-[#07011d]/90 shadow-[0_0_20px_rgba(0,240,255,0.35)] backdrop-blur-xl"
+        >
+          <GraduationCap className="w-4 h-4 text-[#00f0ff]" />
+          <div className="text-left">
+            <span className="block text-[10px] font-mono font-extrabold text-white">IIT Madras</span>
+            <span className="block text-[9px] font-mono text-cyan-300">BS Data Science</span>
+          </div>
+        </motion.div>
+
+        {/* Middle-Left: Next.js + React Chip */}
+        <motion.div
+          animate={{ y: [-5, 5, -5], x: [-2, 2, -2] }}
+          transition={{ duration: 5.2, repeat: Infinity, ease: "easeInOut" }}
+          className="absolute top-1/3 -left-4 sm:-left-3 z-30 flex items-center gap-1.5 px-3 py-1.5 rounded-xl border border-[#7042f8]/60 bg-[#07011d]/90 shadow-[0_0_15px_rgba(112,66,248,0.45)] backdrop-blur-xl hover:scale-105 transition-transform"
         >
           <Layers className="w-3.5 h-3.5 text-[#00f0ff]" />
           <span className="text-[11px] font-mono font-bold text-white">Next.js 15</span>
         </motion.div>
 
+        {/* Middle-Right: TypeScript Chip */}
         <motion.div
-          animate={{ y: [4, -4, 4] }}
-          transition={{ duration: 5, repeat: Infinity, ease: "easeInOut" }}
-          className="absolute -top-2 right-2 z-20 flex items-center gap-1.5 px-3 py-1.5 rounded-xl border border-[#00f0ff]/50 bg-[#07011d]/90 shadow-[0_0_15px_rgba(0,240,255,0.4)] backdrop-blur-md"
+          animate={{ y: [5, -5, 5], x: [2, -2, 2] }}
+          transition={{ duration: 5.6, repeat: Infinity, ease: "easeInOut" }}
+          className="absolute top-1/3 -right-4 sm:-right-3 z-30 flex items-center gap-1.5 px-3 py-1.5 rounded-xl border border-[#00f0ff]/60 bg-[#07011d]/90 shadow-[0_0_15px_rgba(0,240,255,0.4)] backdrop-blur-xl hover:scale-105 transition-transform"
         >
           <Code2 className="w-3.5 h-3.5 text-[#b49bff]" />
           <span className="text-[11px] font-mono font-bold text-white">TypeScript</span>
         </motion.div>
 
+        {/* Lower-Left: Backend / MongoDB Chip */}
         <motion.div
-          animate={{ y: [-5, 5, -5] }}
-          transition={{ duration: 5.5, repeat: Infinity, ease: "easeInOut" }}
-          className="absolute -bottom-2 left-4 z-20 flex items-center gap-1.5 px-3 py-1.5 rounded-xl border border-[#7042f8]/50 bg-[#07011d]/90 shadow-[0_0_15px_rgba(112,66,248,0.4)] backdrop-blur-md"
+          animate={{ y: [-4, 4, -4] }}
+          transition={{ duration: 4.6, repeat: Infinity, ease: "easeInOut" }}
+          className="absolute bottom-20 -left-3 sm:-left-2 z-30 flex items-center gap-1.5 px-3 py-1.5 rounded-xl border border-[#7042f8]/50 bg-[#07011d]/90 shadow-[0_0_15px_rgba(112,66,248,0.4)] backdrop-blur-xl hover:scale-105 transition-transform"
         >
-          <Atom className="w-3.5 h-3.5 text-[#00f0ff]" />
-          <span className="text-[11px] font-mono font-bold text-white">React 19</span>
-        </motion.div>
-
-        <motion.div
-          animate={{ y: [5, -5, 5] }}
-          transition={{ duration: 4.8, repeat: Infinity, ease: "easeInOut" }}
-          className="absolute -bottom-2 right-4 z-20 flex items-center gap-1.5 px-3 py-1.5 rounded-xl border border-[#00f0ff]/50 bg-[#07011d]/90 shadow-[0_0_15px_rgba(0,240,255,0.4)] backdrop-blur-md"
-        >
-          <Database className="w-3.5 h-3.5 text-[#b49bff]" />
+          <Database className="w-3.5 h-3.5 text-[#00f0ff]" />
           <span className="text-[11px] font-mono font-bold text-white">MongoDB</span>
         </motion.div>
-      </div>
 
-      {/* ── Floating Glass HUD Chip 1 (Top-Right) ── */}
-      <motion.div
-        initial={{ opacity: 0, scale: 0.8, y: -10 }}
-        animate={{ opacity: 1, scale: 1, y: 0 }}
-        transition={{ delay: 0.5, duration: 0.5 }}
-        className="absolute -top-3 right-1 sm:right-4 z-30 hidden sm:flex items-center gap-2.5 rounded-xl border border-[#7042f8]/40 bg-[#07011d]/90 px-3.5 py-2 backdrop-blur-md shadow-[0_0_20px_rgba(112,66,248,0.35)]"
-      >
-        <Sparkles className="h-4 w-4 text-[#00f0ff]" />
-        <div className="text-left">
-          <p className="text-[9px] font-mono uppercase tracking-wider text-purple-300">Specialization</p>
-          <p className="text-xs font-semibold text-white">Next.js • React • TypeScript</p>
-        </div>
-      </motion.div>
-
-      {/* ── Floating Glass HUD Chip 2 (Bottom-Left) ── */}
-      <motion.div
-        initial={{ opacity: 0, scale: 0.8, y: 10 }}
-        animate={{ opacity: 1, scale: 1, y: 0 }}
-        transition={{ delay: 0.7, duration: 0.5 }}
-        className="absolute -bottom-3 left-1 sm:left-4 z-30 hidden sm:flex items-center gap-2.5 rounded-xl border border-[#00f0ff]/40 bg-[#07011d]/90 px-3.5 py-2 backdrop-blur-md shadow-[0_0_20px_rgba(0,240,255,0.3)]"
-      >
-        <Award className="h-4 w-4 text-[#00f0ff]" />
-        <div className="text-left">
-          <p className="text-[9px] font-mono uppercase tracking-wider text-cyan-300">Academics</p>
-          <p className="text-xs font-semibold text-white">IIT Madras • BS Data Science</p>
-        </div>
+        {/* Lower-Right: LeetCode Metrics Chip */}
+        <motion.div
+          animate={{ y: [4, -4, 4] }}
+          transition={{ duration: 5, repeat: Infinity, ease: "easeInOut" }}
+          className="absolute bottom-20 -right-3 sm:-right-2 z-30 flex items-center gap-1.5 px-3 py-1.5 rounded-xl border border-[#00f0ff]/50 bg-[#07011d]/90 shadow-[0_0_15px_rgba(0,240,255,0.4)] backdrop-blur-xl hover:scale-105 transition-transform"
+        >
+          <Flame className="w-3.5 h-3.5 text-amber-400" />
+          <span className="text-[11px] font-mono font-bold text-white">150+ LeetCode</span>
+        </motion.div>
       </motion.div>
     </div>
   );

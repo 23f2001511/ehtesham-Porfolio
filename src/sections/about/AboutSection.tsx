@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import { BookOpen, Compass, GraduationCap, Sparkles } from "lucide-react";
 import ScrollReveal from "@/components/ScrollReveal";
 import SectionHeading from "@/components/shared/SectionHeading";
@@ -36,12 +37,37 @@ export default function AboutSection() {
         <div className="mt-12 grid gap-6 lg:grid-cols-[1.05fr_0.95fr]">
           {/* Lead card */}
           <ScrollReveal direction="left">
-            <div className="panel card-lift h-full p-7 sm:p-8">
-              <span className="eyebrow">Who I am</span>
-              <h3 className="font-display mt-5 text-balance text-2xl font-bold leading-snug tracking-tight text-foreground sm:text-3xl">
-                I build practical products with a sharp eye for the details users feel.
-              </h3>
-              <p className="mt-5 text-base leading-8 text-muted-foreground">{bio}</p>
+            <div className="panel card-lift h-full p-7 sm:p-8 flex flex-col justify-between">
+              <div>
+                <div className="flex items-center justify-between gap-4">
+                  <span className="eyebrow">Who I am</span>
+                  <div className="flex items-center gap-2 px-3 py-1 rounded-full border border-[#00f0ff]/30 bg-[#07011d]/80 text-xs font-mono text-[#00f0ff]">
+                    <span className="h-2 w-2 rounded-full bg-emerald-400 animate-pulse" />
+                    IIT Madras BS
+                  </div>
+                </div>
+
+                <div className="mt-5 flex items-center gap-4 p-3 rounded-2xl border border-[#7042f8]/30 bg-[#07011d]/70 backdrop-blur-md">
+                  <div className="relative h-16 w-16 shrink-0 overflow-hidden rounded-xl border border-[#00f0ff]/50 bg-gradient-to-tr from-[#1b0849] to-[#00f0ff]/30 shadow-[0_0_15px_rgba(0,240,255,0.3)]">
+                    <Image
+                      src={profile.avatarUrl || "/profile.png"}
+                      alt={siteConfig.name}
+                      fill
+                      className="object-cover object-top"
+                    />
+                  </div>
+                  <div>
+                    <h4 className="text-base font-bold text-white">{siteConfig.name}</h4>
+                    <p className="text-xs font-mono text-purple-300">{siteConfig.role}</p>
+                    <p className="text-[11px] font-mono text-cyan-300 mt-0.5">IIT Madras • Data Science</p>
+                  </div>
+                </div>
+
+                <h3 className="font-display mt-6 text-balance text-2xl font-bold leading-snug tracking-tight text-foreground sm:text-3xl">
+                  I build practical products with a sharp eye for the details users feel.
+                </h3>
+                <p className="mt-4 text-base leading-8 text-muted-foreground">{bio}</p>
+              </div>
               <dl className="mt-8 grid grid-cols-2 gap-6 border-t border-border pt-6 sm:grid-cols-3">
                 <div>
                   <dt className="text-xs uppercase tracking-wide text-muted-foreground">Role</dt>

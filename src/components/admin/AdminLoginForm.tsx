@@ -172,7 +172,7 @@ export default function AdminLoginForm() {
                     type="email"
                     value={email}
                     onChange={(event) => setEmail(event.target.value)}
-                    placeholder="alamehtesham88@gmail.com"
+                    placeholder="Email@gmail.com"
                     autoComplete="email"
                     required
                   />

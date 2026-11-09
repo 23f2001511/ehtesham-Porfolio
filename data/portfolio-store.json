@@ -4,34 +4,11 @@
     "name": "Ehtesham Aalam",
     "email": "alamehtesham88@gmail.com",
     "role": "admin",
-    "resumeUrl": "/resume/ehtesham-aalam-resume.pdf",
-    "socials": [
-      {
-        "label": "GitHub",
-        "href": "https://github.com/23f2001511",
-        "icon": "Github"
-      },
-      {
-        "label": "LinkedIn",
-        "href": "https://www.linkedin.com/in/ehtesham-aalam",
-        "icon": "Linkedin"
-      },
-      {
-        "label": "LeetCode",
-        "href": "https://leetcode.com/u/Ehteshsam_alam/",
-        "icon": "Code"
-      },
-      {
-        "label": "Email",
-        "href": "mailto:alamehtesham88@gmail.com",
-        "icon": "Mail"
-      }
-    ],
-    "tagline": "Full-stack developer building data-driven products and polished web experiences.",
     "githubUsername": "23f2001511",
     "leetcodeUsername": "Ehteshsam_alam",
     "collegeEmail": "ehteshama.ug24.ee@nitp.ac.in",
     "otherEmail": "23f2001511@ds.study.iitm.ac.in",
+    "tagline": "Full-stack developer building data-driven products and polished web experiences.",
     "experience": [
       {
         "role": "Full Stack Developer",
@@ -62,7 +39,11 @@
         "institution": "IIT Madras",
         "period": "2023 - Present"
       }
-    ]
+    ],
+    "avatarUrl": "/profile.png",
+    "aboutBio": "",
+    "phone": "",
+    "location": ""
   },
   "projects": [
     {
